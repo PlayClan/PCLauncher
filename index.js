@@ -10,7 +10,7 @@ const isDev                             = require('./app/assets/js/isdev')
 const path                              = require('path')
 const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
-const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
+const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, PC_OPCODE, PC_REPLY_TYPE, PC_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {
@@ -216,6 +216,62 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
     msftLogoutWindow.loadURL('https://login.microsoftonline.com/common/oauth2/v2.0/logout')
 })
 
+const PLAYCLAN_URL = 'https://api.playclan.hu/kliens/success?'
+
+// PlayClan Auth Login
+let pcAuthWindow
+let pcAuthSuccess
+let pcAuthViewSuccess
+let pcAuthViewOnClose
+ipcMain.on(PC_OPCODE.OPEN_LOGIN, (ipcEvent, ...arguments_) => {
+    if (pcAuthWindow) {
+        ipcEvent.reply(PC_OPCODE.REPLY_LOGIN, PC_REPLY_TYPE.ERROR, PC_ERROR.ALREADY_OPEN, pcAuthViewOnClose)
+        return
+    }
+    pcAuthSuccess = false
+    pcAuthViewSuccess = arguments_[0]
+    pcAuthViewOnClose = arguments_[1]
+    pcAuthWindow = new BrowserWindow({
+        title: 'PlayClan Bejelentkezés',
+        backgroundColor: '#222222',
+        width: 520,
+        height: 600,
+        frame: true,
+        icon: getPlatformIcon('SealCircle')
+    })
+
+    pcAuthWindow.on('closed', () => {
+        pcAuthWindow = undefined
+    })
+
+    pcAuthWindow.on('close', () => {
+        if(!pcAuthSuccess) {
+            ipcEvent.reply(PC_OPCODE.REPLY_LOGIN, PC_REPLY_TYPE.ERROR, PC_ERROR.NOT_FINISHED, pcAuthViewOnClose)
+        }
+    })
+    
+    pcAuthWindow.webContents.on('did-navigate', (_, uri) => {
+        if (uri.startsWith(PLAYCLAN_URL)) {
+            let queries = uri.substring(PLAYCLAN_URL.length).toString().split('&')
+            let queryMap = {}
+
+            queries.forEach(query => {
+                const [name, value] = query.split('=')
+                queryMap[name] = decodeURI(value)
+            })
+
+            ipcEvent.reply(PC_OPCODE.REPLY_LOGIN, PC_REPLY_TYPE.SUCCESS, queryMap, pcAuthViewSuccess)
+
+            pcAuthSuccess = true
+            pcAuthWindow.close()
+            pcAuthWindow = null
+        }
+    })
+
+    pcAuthWindow.removeMenu()
+    pcAuthWindow.loadURL('https://api.playclan.hu/kliens/')
+})
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -261,12 +317,12 @@ function createMenu() {
         let applicationSubMenu = {
             label: 'Application',
             submenu: [{
-                label: 'About Application',
+                label: 'Az alkalmazásról',
                 selector: 'orderFrontStandardAboutPanel:'
             }, {
                 type: 'separator'
             }, {
-                label: 'Quit',
+                label: 'Kilépés',
                 accelerator: 'Command+Q',
                 click: () => {
                     app.quit()
@@ -337,11 +393,7 @@ app.on('ready', createWindow)
 app.on('ready', createMenu)
 
 app.on('window-all-closed', () => {
-    // On macOS it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
+    app.quit()
 })
 
 app.on('activate', () => {

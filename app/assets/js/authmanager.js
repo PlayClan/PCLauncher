@@ -199,6 +199,47 @@ exports.removeMicrosoftAccount = async function(uuid){
     }
 }
 
+exports.removePlayClanAccount = async function(uuid){
+    try {
+        ConfigManager.removeAuthAccount(uuid)
+        ConfigManager.save()
+        return Promise.resolve()
+    } catch (err){
+        log.error('Error while removing account', err)
+        return Promise.reject(err)
+    }
+}
+
+exports.addPlayClanAccount = async function(authCode) {
+
+    const formData = new FormData()
+    formData.append('type', 'request')
+    formData.append('data', 'all')
+
+    const fullAuth = await fetch('https://api.playclan.hu/kliens/api', {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${authCode}`
+        }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        return data
+    })
+
+    const ret = ConfigManager.addPlayClanAuthAccount(
+        fullAuth.data.request.create_date + "",
+        authCode,
+        fullAuth.data.request.name,
+        fullAuth.data.request.playcoin,
+        fullAuth.data.request.jatekido,
+    )
+    ConfigManager.save()
+
+    return ret
+}
+
 /**
  * Validate the selected account with Mojang's authserver. If the account is not valid,
  * we will attempt to refresh the access token and update that value. If that fails, a
@@ -297,6 +338,38 @@ async function validateSelectedMicrosoftAccount(){
     }
 }
 
+async function validateSelectedPlayClanAccount(){
+    const current = ConfigManager.getSelectedAccount()
+    
+    const formData = new FormData();
+    formData.append('type', 'request');
+    formData.append('data', 'all');
+
+    const response = await fetch('https://api.playclan.hu/kliens/api', {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${current.accessToken}`
+        }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        return data
+    })
+
+    if (response.response.status == 1) {
+        ConfigManager.updatePlayClanAuthAccount(
+            current.uuid,
+            response.data.request.playcoin,
+            response.data.request.jatekido
+        )
+        ConfigManager.save()
+        return true
+    } else {
+        return false
+    }
+}
+
 /**
  * Validate the selected auth account.
  * 
@@ -308,6 +381,8 @@ exports.validateSelected = async function(){
 
     if(current.type === 'microsoft') {
         return await validateSelectedMicrosoftAccount()
+    } else if(current.type === 'playclan') {
+        return await validateSelectedPlayClanAccount()
     } else {
         return await validateSelectedMojangAccount()
     }

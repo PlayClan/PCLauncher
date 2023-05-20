@@ -1,7 +1,7 @@
 // NOTE FOR THIRD-PARTY
 // REPLACE THIS CLIENT ID WITH YOUR APPLICATION ID.
-// SEE https://github.com/dscalzi/HeliosLauncher/blob/master/docs/MicrosoftAuth.md
-exports.AZURE_CLIENT_ID = '1ce6e35a-126f-48fd-97fb-54d143ac6d45'
+// SEE https://github.com/PlayClan/PCLauncher/blob/master/docs/MicrosoftAuth.md
+exports.AZURE_CLIENT_ID = '3e3a35fb-63ff-4db0-a088-68ba8cfe514f'
 // SEE NOTE ABOVE.
 
 
@@ -12,15 +12,29 @@ exports.MSFT_OPCODE = {
     REPLY_LOGIN: 'MSFT_AUTH_REPLY_LOGIN',
     REPLY_LOGOUT: 'MSFT_AUTH_REPLY_LOGOUT'
 }
+exports.PC_OPCODE = {
+    OPEN_LOGIN: 'PC_AUTH_OPEN_LOGIN',
+    OPEN_LOGOUT: 'PC_AUTH_OPEN_LOGOUT',
+    REPLY_LOGIN: 'PC_AUTH_REPLY_LOGIN',
+    REPLY_LOGOUT: 'PC_AUTH_REPLY_LOGOUT'
+}
 // Reply types for REPLY opcode.
 exports.MSFT_REPLY_TYPE = {
     SUCCESS: 'MSFT_AUTH_REPLY_SUCCESS',
     ERROR: 'MSFT_AUTH_REPLY_ERROR'
 }
+exports.PC_REPLY_TYPE = {
+    SUCCESS: 'PC_AUTH_REPLY_SUCCESS',
+    ERROR: 'PC_AUTH_REPLY_ERROR'
+}
 // Error types for ERROR reply.
 exports.MSFT_ERROR = {
     ALREADY_OPEN: 'MSFT_AUTH_ERR_ALREADY_OPEN',
     NOT_FINISHED: 'MSFT_AUTH_ERR_NOT_FINISHED'
+}
+exports.PC_ERROR = {
+    ALREADY_OPEN: 'PC_AUTH_ERR_ALREADY_OPEN',
+    NOT_FINISHED: 'PC_AUTH_ERR_NOT_FINISHED'
 }
 
 exports.SHELL_OPCODE = {

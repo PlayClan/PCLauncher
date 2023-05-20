@@ -1,6 +1,6 @@
 {
     "html": {
-        "avatarOverlay": "Edit"
+        "avatarOverlay": "Szerkeszt"
     },
     "js": {
         "login": {
@@ -42,7 +42,7 @@
         },
         "landing": {
             "launch": {
-                "pleaseWait": "Please wait.."
+                "pleaseWait": "Betöltés folyamatban..."
             }
         }
     }

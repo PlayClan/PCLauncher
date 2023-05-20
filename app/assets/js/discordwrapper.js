@@ -8,18 +8,27 @@ const { Client } = require('discord-rpc-patch')
 let client
 let activity
 
-exports.initRPC = function(genSettings, servSettings, initialDetails = 'Waiting for Client..'){
+exports.initRPC = function(genSettings, servSettings, initialDetails = 'Várakozás a kliensre...'){
     client = new Client({ transport: 'ipc' })
-
     activity = {
         details: initialDetails,
-        state: 'Server: ' + servSettings.shortId,
+        state: 'Szerver: ' + servSettings.shortId,
         largeImageKey: servSettings.largeImageKey,
         largeImageText: servSettings.largeImageText,
         smallImageKey: genSettings.smallImageKey,
         smallImageText: genSettings.smallImageText,
         startTimestamp: new Date().getTime(),
-        instance: false
+        instance: false,
+        buttons: [
+            {
+                label: 'Discord',
+                url: 'https://discord.gg/uahcEgvKgX',
+            },
+            {
+                label: 'Weboldal',
+                url: "https://playclan.hu",
+            },
+        ]
     }
 
     client.on('ready', () => {

@@ -3,7 +3,7 @@ const os     = require('os')
 const semver = require('semver')
 
 const DropinModUtil  = require('./assets/js/dropinmodutil')
-const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR } = require('./assets/js/ipcconstants')
+const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, PC_OPCODE, PC_REPLY_TYPE, PC_ERROR } = require('./assets/js/ipcconstants')
 
 const settingsState = {
     invalid: new Set()
@@ -340,6 +340,7 @@ settingsNavDone.onclick = () => {
  */
 
 const msftLoginLogger = LoggerUtil.getLogger('Microsoft Login')
+const pcLoginLogger = LoggerUtil.getLogger('PlayClan Login')
 const msftLogoutLogger = LoggerUtil.getLogger('Microsoft Logout')
 
 // Bind the add mojang account button.
@@ -355,6 +356,13 @@ document.getElementById('settingsAddMojangAccount').onclick = (e) => {
 document.getElementById('settingsAddMicrosoftAccount').onclick = (e) => {
     switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
         ipcRenderer.send(MSFT_OPCODE.OPEN_LOGIN, VIEWS.settings, VIEWS.settings)
+    })
+}
+
+// Bind the add playclan account button.
+document.getElementById('settingsAddPlayClanAccount').onclick = (e) => {
+    switchView(getCurrentView(), VIEWS.waitingpc, 500, 500, () => {
+        ipcRenderer.send(PC_OPCODE.OPEN_LOGIN, VIEWS.settings, VIEWS.settings)
     })
 }
 
@@ -447,6 +455,70 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
     }
 })
 
+// Bind reply for PlayClan Login.
+ipcRenderer.on(PC_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
+    if (arguments_[0] === PC_REPLY_TYPE.ERROR) {
+
+        const viewOnClose = arguments_[2]
+        console.log(arguments_)
+        switchView(getCurrentView(), viewOnClose, 500, 500, () => {
+
+            if(arguments_[1] === PC_ERROR.NOT_FINISHED) {
+                // User cancelled.
+                msftLoginLogger.info('Login cancelled by user.')
+                return
+            }
+
+            // Unexpected error.
+            setOverlayContent(
+                'Something Went Wrong',
+                'PlayClan authentication failed. Please try again.',
+                'OK'
+            )
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+            })
+            toggleOverlay(true)
+        })
+    } else if(arguments_[0] === PC_REPLY_TYPE.SUCCESS) {
+        const queryMap = arguments_[1]
+        const viewOnClose = arguments_[2]
+
+        pcLoginLogger.info('Acquired authCode, proceeding with authentication.')
+
+        const authCode = queryMap.token
+        AuthManager.addPlayClanAccount(authCode).then(value => {
+            updateSelectedAccount(value)
+            switchView(getCurrentView(), viewOnClose, 500, 500, async () => {
+                await prepareSettings()
+            })
+        })
+            .catch((displayableError) => {
+
+                let actualDisplayableError
+                if(isDisplayableError(displayableError)) {
+                    pcLoginLogger.error('Error while logging in.', displayableError)
+                    actualDisplayableError = displayableError
+                } else {
+                    // Uh oh.
+                    pcLoginLogger.error('Unhandled error during login.', displayableError)
+                    actualDisplayableError = {
+                        title: 'Unknown Error During Login',
+                        desc: 'An unknown error has occurred. Please see the console for details.'
+                    }
+                }
+
+                switchView(getCurrentView(), viewOnClose, 500, 500, () => {
+                    setOverlayContent(actualDisplayableError.title, actualDisplayableError.desc, Lang.queryJS('login.tryAgain'))
+                    setOverlayHandler(() => {
+                        toggleOverlay(false)
+                    })
+                    toggleOverlay(true)
+                })
+            })
+    }
+})
+
 /**
  * Bind functionality for the account selection buttons. If another account
  * is selected, the UI of the previously selected account will be updated.
@@ -461,11 +533,11 @@ function bindAuthAccountSelect(){
             for(let i=0; i<selectBtns.length; i++){
                 if(selectBtns[i].hasAttribute('selected')){
                     selectBtns[i].removeAttribute('selected')
-                    selectBtns[i].innerHTML = 'Select Account'
+                    selectBtns[i].innerHTML = 'Fiók kiválasztása'
                 }
             }
             val.setAttribute('selected', '')
-            val.innerHTML = 'Selected Account &#10004;'
+            val.innerHTML = 'Kiválasztott fiók &#10004;'
             setSelectedAccount(val.closest('.settingsAuthAccount').getAttribute('uuid'))
         }
     })
@@ -511,7 +583,7 @@ let msAccDomElementCache
  * @param {Element} val The log out button element.
  * @param {boolean} isLastAccount If this logout is on the last added account.
  */
-function processLogOut(val, isLastAccount){
+async function processLogOut(val, isLastAccount){
     const parent = val.closest('.settingsAuthAccount')
     const uuid = parent.getAttribute('uuid')
     const prevSelAcc = ConfigManager.getSelectedAccount()
@@ -520,6 +592,36 @@ function processLogOut(val, isLastAccount){
         msAccDomElementCache = parent
         switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
             ipcRenderer.send(MSFT_OPCODE.OPEN_LOGOUT, uuid, isLastAccount)
+        })
+    } else if(targetAcc.type === 'playclan') {
+        const formData = new FormData();
+        formData.append('type', 'logout');
+        formData.append('data', 'this');
+
+        await fetch('https://api.playclan.hu/kliens/api', {
+            method: "POST",
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${targetAcc.accessToken}`
+            }
+        })
+
+        AuthManager.removePlayClanAccount(uuid).then(() => {
+            if(!isLastAccount && uuid === prevSelAcc.uuid){
+                const selAcc = ConfigManager.getSelectedAccount()
+                refreshAuthAccountSelected(selAcc.uuid)
+                updateSelectedAccount(selAcc)
+                validateSelectedAccount()
+            }
+            if(isLastAccount) {
+                loginOptionsCancelEnabled(false)
+                loginOptionsViewOnLoginSuccess = VIEWS.settings
+                loginOptionsViewOnLoginCancel = VIEWS.loginOptions
+                switchView(getCurrentView(), VIEWS.loginOptions)
+            }
+        })
+        $(parent).fadeOut(250, () => {
+            parent.remove()
         })
     } else {
         AuthManager.removeMojangAccount(uuid).then(() => {
@@ -611,18 +713,27 @@ function refreshAuthAccountSelected(uuid){
         const selBtn = val.getElementsByClassName('settingsAuthAccountSelect')[0]
         if(uuid === val.getAttribute('uuid')){
             selBtn.setAttribute('selected', '')
-            selBtn.innerHTML = 'Selected Account &#10004;'
+            selBtn.innerHTML = 'Kiválasztott fiók &#10004;'
         } else {
             if(selBtn.hasAttribute('selected')){
                 selBtn.removeAttribute('selected')
             }
-            selBtn.innerHTML = 'Select Account'
+            selBtn.innerHTML = 'Fiók kiválasztása'
         }
     })
 }
 
 const settingsCurrentMicrosoftAccounts = document.getElementById('settingsCurrentMicrosoftAccounts')
+const settingsCurrentPlayClanAccounts = document.getElementById('settingsCurrentPlayClanAccounts')
 const settingsCurrentMojangAccounts = document.getElementById('settingsCurrentMojangAccounts')
+
+function convertSecondsToTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+  
+    return `${hours} óra ${minutes} perc`
+  }
 
 /**
  * Add auth account elements for each one stored in the authentication database.
@@ -636,37 +747,72 @@ function populateAuthAccounts(){
     const selectedUUID = ConfigManager.getSelectedAccount().uuid
 
     let microsoftAuthAccountStr = ''
+    let playclanAuthAccountStr = ''
     let mojangAuthAccountStr = ''
 
     authKeys.forEach((val) => {
         const acc = authAccounts[val]
 
-        const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
-            <div class="settingsAuthAccountLeft">
-                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://mc-heads.net/body/${acc.uuid}/60">
-            </div>
-            <div class="settingsAuthAccountRight">
-                <div class="settingsAuthAccountDetails">
-                    <div class="settingsAuthAccountDetailPane">
-                        <div class="settingsAuthAccountDetailTitle">Username</div>
-                        <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
+        let accHtml = ""
+
+        if (acc.type === 'playclan') {
+            accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
+                <div class="settingsAuthAccountLeft">
+                    <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${acc.displayName}">
+                </div>
+                <div class="settingsAuthAccountRight">
+                    <div class="settingsAuthAccountDetails">
+                        <div class="settingsAuthAccountDetailPane">
+                            <div class="settingsAuthAccountDetailTitle">Játékosnév</div>
+                            <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
+                        </div>
+                        <div class="settingsAuthAccountDetailPane">
+                            <div class="settingsAuthAccountDetailTitle">PlayCoin</div>
+                            <div class="settingsAuthAccountDetailValue">${acc.playcoin}</div>
+                        </div>
+                        <div class="settingsAuthAccountDetailPane">
+                            <div class="settingsAuthAccountDetailTitle">Játékidő</div>
+                            <div class="settingsAuthAccountDetailValue">${convertSecondsToTime(acc.playtime)}</div>
+                        </div>
                     </div>
-                    <div class="settingsAuthAccountDetailPane">
-                        <div class="settingsAuthAccountDetailTitle">UUID</div>
-                        <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
+                    <div class="settingsAuthAccountActions">
+                        <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>Kiválasztott fiók &#10004;' : '>Fiók kiválasztása'}</button>
+                        <div class="settingsAuthAccountWrapper">
+                            <button class="settingsAuthAccountLogOut">Kijelentkezés</button>
+                        </div>
                     </div>
                 </div>
-                <div class="settingsAuthAccountActions">
-                    <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>Selected Account &#10004;' : '>Select Account'}</button>
-                    <div class="settingsAuthAccountWrapper">
-                        <button class="settingsAuthAccountLogOut">Log Out</button>
+            </div>`
+        } else {
+            accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
+                <div class="settingsAuthAccountLeft">
+                    <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://mc-heads.net/body/${acc.uuid}/60">
+                </div>
+                <div class="settingsAuthAccountRight">
+                    <div class="settingsAuthAccountDetails">
+                        <div class="settingsAuthAccountDetailPane">
+                            <div class="settingsAuthAccountDetailTitle">Játékosnév</div>
+                            <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
+                        </div>
+                        <div class="settingsAuthAccountDetailPane">
+                            <div class="settingsAuthAccountDetailTitle">UUID</div>
+                            <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
+                        </div>
+                    </div>
+                    <div class="settingsAuthAccountActions">
+                        <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>Kiválasztott fiók &#10004;' : '>Fiók kiválasztása'}</button>
+                        <div class="settingsAuthAccountWrapper">
+                            <button class="settingsAuthAccountLogOut">Kijelentkezés</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>`
+            </div>`
+        }
 
         if(acc.type === 'microsoft') {
             microsoftAuthAccountStr += accHtml
+        } else if(acc.type === 'playclan') {
+            playclanAuthAccountStr += accHtml
         } else {
             mojangAuthAccountStr += accHtml
         }
@@ -674,6 +820,7 @@ function populateAuthAccounts(){
     })
 
     settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr
+    settingsCurrentPlayClanAccounts.innerHTML = playclanAuthAccountStr
     settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr
 }
 
@@ -1456,7 +1603,7 @@ function populateAboutVersionInformation(){
  */
 function populateReleaseNotes(){
     $.ajax({
-        url: 'https://github.com/dscalzi/HeliosLauncher/releases.atom',
+        url: 'https://github.com/PlayClan/PCLauncher/releases.atom',
         success: (data) => {
             const version = 'v' + remote.app.getVersion()
             const entries = $(data).find('entry')

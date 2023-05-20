@@ -21,7 +21,8 @@ const VIEWS = {
     login: '#loginContainer',
     settings: '#settingsContainer',
     welcome: '#welcomeContainer',
-    waiting: '#waitingContainer'
+    waiting: '#waitingContainer',
+    waitingpc: '#waitingpcContainer'
 }
 
 // The currently shown view container.
@@ -341,8 +342,9 @@ async function validateSelectedAccount(){
             setOverlayHandler(() => {
 
                 const isMicrosoft = selectedAcc.type === 'microsoft'
+                const isPlayClan = selectedAcc.type === 'playclan'
 
-                if(isMicrosoft) {
+                if(isMicrosoft || isPlayClan) {
                     // Empty for now
                 } else {
                     // Mojang

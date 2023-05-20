@@ -7,7 +7,7 @@ const logger = LoggerUtil.getLogger('ConfigManager')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 
-const dataPath = path.join(sysRoot, '.helioslauncher')
+const dataPath = path.join(sysRoot, '.pclauncher')
 
 const launcherDir = require('@electron/remote').app.getPath('userData')
 
@@ -370,6 +370,12 @@ exports.updateMicrosoftAuthAccount = function(uuid, accessToken, msAccessToken, 
     return config.authenticationDatabase[uuid]
 }
 
+exports.updatePlayClanAuthAccount = function(uuid, playcoin, playtime) {
+    config.authenticationDatabase[uuid].playcoin = playcoin
+    config.authenticationDatabase[uuid].playtime = playtime
+    return config.authenticationDatabase[uuid]
+}
+
 /**
  * Adds an authenticated microsoft account to the database to be stored.
  * 
@@ -397,6 +403,20 @@ exports.addMicrosoftAuthAccount = function(uuid, accessToken, name, mcExpires, m
             refresh_token: msRefreshToken,
             expires_at: msExpires
         }
+    }
+    return config.authenticationDatabase[uuid]
+}
+
+exports.addPlayClanAuthAccount = function(uuid, accessToken, name, playcoin, playtime) {
+    config.selectedAccount = uuid
+    config.authenticationDatabase[uuid] = {
+        type: 'playclan',
+        accessToken,
+        username: name.trim(),
+        uuid: uuid.trim(),
+        displayName: name.trim(),
+        playcoin: playcoin,
+        playtime: playtime
     }
     return config.authenticationDatabase[uuid]
 }

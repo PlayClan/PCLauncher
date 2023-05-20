@@ -304,10 +304,17 @@ function populateAccountListings(){
     const accounts = Array.from(Object.keys(accountsObj), v=>accountsObj[v])
     let htmlString = ''
     for(let i=0; i<accounts.length; i++){
-        htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
-            <img src="https://mc-heads.net/head/${accounts[i].uuid}/40">
-            <div class="accountListingName">${accounts[i].displayName}</div>
-        </button>`
+        if (accounts[i].type === 'playclan') {
+            htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
+                <img src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=true&vr=-25&hr=45&displayHair=true&user=${accounts[i].displayName}" style="height: 40px; width: 43px;">
+                <div class="accountListingName">${accounts[i].displayName}</div>
+            </button>`
+        } else {
+            htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
+                <img src="https://mc-heads.net/head/${accounts[i].uuid}/40">
+                <div class="accountListingName">${accounts[i].displayName}</div>
+            </button>`
+        }
     }
     document.getElementById('accountSelectListScrollable').innerHTML = htmlString
 

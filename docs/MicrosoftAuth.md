@@ -1,6 +1,6 @@
 # Microsoft Authentication
 
-Authenticating with Microsoft is fully supported by Helios Launcher.
+Authenticating with Microsoft is fully supported by PlayClan Launcher.
 
 ## Acquiring an Azure Client ID
 
@@ -24,7 +24,7 @@ Authenticating with Microsoft is fully supported by Helios Launcher.
 
 Reference: https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app
 
-## Adding the Azure Client ID to Helios Launcher.
+## Adding the Azure Client ID to PlayClan Launcher.
 
 In `app/assets/js/ipcconstants.js` you'll find **`AZURE_CLIENT_ID`**. Set it to your application's id.
 
