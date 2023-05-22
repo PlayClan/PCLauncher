@@ -12,7 +12,7 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Várakoz
     client = new Client({ transport: 'ipc' })
     activity = {
         details: initialDetails,
-        state: 'Szerver: ' + servSettings.shortId,
+        state: servSettings.shortId,
         largeImageKey: servSettings.largeImageKey,
         largeImageText: servSettings.largeImageText,
         smallImageKey: genSettings.smallImageKey,

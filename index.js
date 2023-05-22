@@ -307,7 +307,28 @@ function createWindow() {
     win.on('closed', () => {
         win = null
     })
+
+    win.focus()
 }
+
+ipcMain.on('hide-window', () => {
+    win.hide()
+    if (process.platform === 'darwin') {
+        app.dock.hide()
+    } else {
+        win.setSkipTaskbar(true)
+    }
+})
+
+ipcMain.on('show-window', () => {
+    win.show()
+    win.focus()
+    if (process.platform === 'darwin') {
+        app.dock.show()
+    } else {
+        win.setSkipTaskbar(false)
+    }
+})
 
 function createMenu() {
     
