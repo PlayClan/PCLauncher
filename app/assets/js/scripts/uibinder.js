@@ -116,9 +116,9 @@ function showFatalStartupError(){
         $('#loadingContainer').fadeOut(250, () => {
             document.getElementById('overlayContainer').style.background = 'none'
             setOverlayContent(
-                'Fatal Error: Unable to Load Distribution Index',
-                'A connection could not be established to our servers to download the distribution index. No local copies were available to load. <br><br>The distribution index is an essential file which provides the latest server information. The launcher is unable to start without it. Ensure you are connected to the internet and relaunch the application.',
-                'Close'
+                'Végzetes hiba: Nem sikerült betölteni az terjesztési indexet',
+                'Nem sikerült kapcsolatot létesíteni a szervereinkkel a terjesztési index letöltéséhez. Nem volt elérhető betölthető helyi példány.<br><br>A terjesztési index egy alapvető fájl, amely a legfrissebb szerverinformációkat tartalmazza. A launcher nem tud elindulni nélküle. Győződjön meg arról, hogy csatlakozik az internethez, és indítsa újra az alkalmazást.',
+                'Bezárás'
             )
             setOverlayHandler(() => {
                 const window = remote.getCurrentWindow()
@@ -334,10 +334,10 @@ async function validateSelectedAccount(){
             ConfigManager.save()
             const accLen = Object.keys(ConfigManager.getAuthAccounts()).length
             setOverlayContent(
-                'Failed to Refresh Login',
-                `We were unable to refresh the login for <strong>${selectedAcc.displayName}</strong>. Please ${accLen > 0 ? 'select another account or ' : ''} login again.`,
-                'Login',
-                'Select Another Account'
+                'Nem sikerült a bejelentkezési adatok frissítése',
+                `Nem tudtuk frissíteni a bejelentkezést <strong>${selectedAcc.displayName}</strong> fiókjának. Kérlek ${accLen > 0 ? 'válassz másik fiókot vagy ' : ''}jelentkezz be újra.`,
+                'Bejelentkezés',
+                'Másik fiók választása'
             )
             setOverlayHandler(() => {
 
@@ -353,7 +353,7 @@ async function validateSelectedAccount(){
                     validateEmail(selectedAcc.username)
                 }
                 
-                loginOptionsViewOnLoginSuccess = getCurrentView()
+                loginOptionsViewOnLoginSuccess = getCurrentView() === VIEWS.loginOptions ? VIEWS.landing : getCurrentView()
                 loginOptionsViewOnLoginCancel = VIEWS.loginOptions
 
                 if(accLen > 0) {
@@ -380,7 +380,9 @@ async function validateSelectedAccount(){
                     loginOptionsCancelEnabled(false)
                 }
                 toggleOverlay(false)
-                switchView(getCurrentView(), VIEWS.loginOptions)
+                if (getCurrentView() !== VIEWS.loginOptions) {
+                    switchView(getCurrentView(), VIEWS.loginOptions)
+                }
             })
             setDismissHandler(() => {
                 if(accLen > 1){

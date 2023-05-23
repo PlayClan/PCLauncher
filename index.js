@@ -308,7 +308,9 @@ function createWindow() {
         win = null
     })
 
-    win.focus()
+    setTimeout(() => {
+        win.focus()
+    }, 1000);
 }
 
 ipcMain.on('hide-window', () => {
@@ -338,7 +340,7 @@ function createMenu() {
         let applicationSubMenu = {
             label: 'Application',
             submenu: [{
-                label: 'Az alkalmazásról',
+                label: 'A PlayClan Launcher-ről',
                 selector: 'orderFrontStandardAboutPanel:'
             }, {
                 type: 'separator'
@@ -353,31 +355,31 @@ function createMenu() {
 
         // New edit menu adds support for text-editing keyboard shortcuts
         let editSubMenu = {
-            label: 'Edit',
+            label: 'Szerkesztés',
             submenu: [{
-                label: 'Undo',
+                label: 'Visszavonás',
                 accelerator: 'CmdOrCtrl+Z',
                 selector: 'undo:'
             }, {
-                label: 'Redo',
+                label: 'Mégis',
                 accelerator: 'Shift+CmdOrCtrl+Z',
                 selector: 'redo:'
             }, {
                 type: 'separator'
             }, {
-                label: 'Cut',
+                label: 'Kivágás',
                 accelerator: 'CmdOrCtrl+X',
                 selector: 'cut:'
             }, {
-                label: 'Copy',
+                label: 'Másolás',
                 accelerator: 'CmdOrCtrl+C',
                 selector: 'copy:'
             }, {
-                label: 'Paste',
+                label: 'Beillesztés',
                 accelerator: 'CmdOrCtrl+V',
                 selector: 'paste:'
             }, {
-                label: 'Select All',
+                label: 'Minden kijelölése',
                 accelerator: 'CmdOrCtrl+A',
                 selector: 'selectAll:'
             }]

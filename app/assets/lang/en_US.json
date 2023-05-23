@@ -5,40 +5,40 @@
     "js": {
         "login": {
             "error": {
-                "invalidValue": "* Invalid Value",
-                "requiredValue": "* Required",
+                "invalidValue": "* Helytelen érték",
+                "requiredValue": "* Kötelező",
                 "userMigrated": {
-                    "title": "Error During Login:<br>Invalid Credentials",
-                    "desc": "You've attempted to login with a migrated account. Try again using the account email as the username."
+                    "title": "Hiba a bejelentkezés során:<br>Érvénytelen hitelesítő adatok",
+                    "desc": "Áttelepített fiókkal próbált meg bejelentkezni. Próbálja újra a fiók e-mail címét felhasználónévként."
                 },
                 "invalidCredentials": {
-                    "title": "Error During Login:<br>Invalid Credentials",
-                    "desc": "The email or password you've entered is incorrect. Please try again."
+                    "title": "Hiba a bejelentkezés során:<br>Érvénytelen hitelesítő adatok",
+                    "desc": "A megadott e-mail cím vagy jelszó helytelen. Kérlek próbáld újra."
                 },
                 "rateLimit": {
-                    "title": "Error During Login:<br>Too Many Attempts",
-                    "desc": "There have been too many login attempts with this account recently. Please try again later."
+                    "title": "Hiba a bejelentkezés során:<br>Túl sok próbálkozás",
+                    "desc": "Az utóbbi időben túl sok bejelentkezési kísérlet történt ezzel a fiókkal. Kérlek, próbáld újra később."
                 },
                 "noInternet": {
-                    "title": "Error During Login:<br>No Internet Connection",
-                    "desc": "You must be connected to the internet in order to login. Please connect and try again."
+                    "title": "Hiba a bejelentkezés során:<br>Nincs internetkapcsolat",
+                    "desc": "A bejelentkezéshez csatlakoznia kell az internethez. Kérjük, csatlakozzon, és próbálja újra."
                 },
                 "authDown": {
-                    "title": "Error During Login:<br>Authentication Server Offline",
-                    "desc": "Mojang's authentication server is currently offline or unreachable. Please wait a bit and try again. You can check the status of the server on <a href=\"https://help.mojang.com/\">Mojang's help portal</a>."
+                    "title": "Hiba a bejelentkezés során:<br>Hitelesítési kiszolgáló offline állapotban",
+                    "desc": "A Mojang hitelesítő szervere jelenleg nem érhető el. Kérjük, várjon egy kicsit, és próbálja újra. A szerver állapotát a <a href=\"https://help.mojang.com/\">Mojang súgóportálján</a> ellenőrizheti."
                 },
                 "notPaid": {
-                    "title": "Error During Login:<br>Game Not Purchased",
-                    "desc": "The account you are trying to login with has not purchased a copy of Minecraft.<br>You may purchase a copy on <a href=\"https://minecraft.net/\">Minecraft.net</a>"
+                    "title": "Hiba a bejelentkezés során:<br>A játék nincs megvásárolva",
+                    "desc": "Az a fiók, amellyel bejelentkezni próbál, nem vásárolta meg a Minecraft-ot.<br>Megvásárolhatja a <a href=\"https://minecraft.net/\">Minecraft.net</a> oldalon."
                 },
                 "unknown": {
-                    "title": "Error During Login:<br>Unknown Error"
+                    "title": "Hiba a bejelentkezés során:<br>Ismeretlen hiba"
                 }
             },
-            "login": "LOGIN",
-            "loggingIn": "LOGGING IN",
-            "success": "SUCCESS",
-            "tryAgain": "Try Again"
+            "login": "BEJELENTKEZÉS",
+            "loggingIn": "BELÉPÉS FOLYAMATBAN",
+            "success": "SIKER",
+            "tryAgain": "Próbáld újra"
         },
         "landing": {
             "launch": {
