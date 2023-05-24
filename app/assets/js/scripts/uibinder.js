@@ -400,6 +400,7 @@ async function validateSelectedAccount(){
                 }
             })
             toggleOverlay(true, accLen > 0)
+            return false
         } else {
             return true
         }
