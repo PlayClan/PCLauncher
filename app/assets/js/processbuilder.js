@@ -485,7 +485,13 @@ class ProcessBuilder {
                             val = this.authUser.accessToken
                             break
                         case 'user_type':
-                            val = this.authUser.type === 'microsoft' ? 'msa' : 'mojang'
+                            if (this.authUser.type === 'playclan') {
+                                val = 'legacy'
+                            } else if (this.authUser.type === 'microsoft') {
+                                val = 'msa'
+                            } else {
+                                val = 'mojang'
+                            }
                             break
                         case 'version_type':
                             val = this.versionData.type

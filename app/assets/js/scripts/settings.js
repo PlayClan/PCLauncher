@@ -594,9 +594,9 @@ async function processLogOut(val, isLastAccount){
             ipcRenderer.send(MSFT_OPCODE.OPEN_LOGOUT, uuid, isLastAccount)
         })
     } else if(targetAcc.type === 'playclan') {
-        const formData = new FormData();
-        formData.append('type', 'logout');
-        formData.append('data', 'this');
+        const formData = new FormData()
+        formData.append('type', 'logout')
+        formData.append('data', 'this')
 
         await fetch('https://api.playclan.hu/kliens/api', {
             method: "POST",

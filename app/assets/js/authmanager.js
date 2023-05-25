@@ -341,11 +341,11 @@ async function validateSelectedMicrosoftAccount(){
 async function validateSelectedPlayClanAccount(){
     const current = ConfigManager.getSelectedAccount()
     
-    const formData = new FormData();
-    formData.append('type', 'request');
-    formData.append('data', 'all');
+    const formData = new FormData()
+    formData.append('type', 'request')
+    formData.append('data', 'all')
 
-    const response = await fetch('https://api.playclan.hu/kliens/api', {
+    const responseData = await fetch('https://api.playclan.hu/kliens/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -357,13 +357,48 @@ async function validateSelectedPlayClanAccount(){
         return data
     })
 
-    if (response.response.status == 1) {
+    if (responseData.response.status == 1) {
         ConfigManager.updatePlayClanAuthAccount(
             current.uuid,
-            response.data.request.playcoin,
-            response.data.request.jatekido
+            responseData.data.request.playcoin,
+            responseData.data.request.jatekido
         )
         ConfigManager.save()
+
+        const ipFormData = new FormData()
+        ipFormData.append('type', 'request')
+        ipFormData.append('data', 'ip')
+
+        const ipResponse = await fetch('https://api.playclan.hu/kliens/api', {
+            method: "POST",
+            body: ipFormData,
+            headers: {
+                'Authorization': `Bearer ${current.accessToken}`
+            }
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            return data
+        })
+
+        if (ipResponse.data.request !== null && 
+            ipResponse.data.request !== 0 && 
+            ipResponse.data.request !== "" && 
+            ipResponse.data.request !== undefined) {
+
+            const ipUpdateFormData = new FormData()
+            ipUpdateFormData.append('type', 'update')
+            ipUpdateFormData.append('data', 'ip')
+            ipUpdateFormData.append('ip', ipResponse.response["token-ip"]);
+
+            await fetch('https://api.playclan.hu/kliens/api', {
+                method: "POST",
+                body: ipUpdateFormData,
+                headers: {
+                    'Authorization': `Bearer ${current.accessToken}`
+                }
+            })
+        }
         return true
     } else {
         return false
