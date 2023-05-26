@@ -2881,8 +2881,8 @@ input:checked + .toggleSwitchSlider:before {
     content: '';
     height: 100%;
     width: 100%;
-    top: 0%;
-    left: 0%;
+    top: 15%;
+    left: 12%;
     border-radius: 50%;
     box-shadow: 0 0 15px #43c628;
     animation: glow-grow 4s ease-out infinite;
@@ -2906,8 +2906,8 @@ input:checked + .toggleSwitchSlider:before {
     padding: 2px;
     position: absolute;
     z-index: 1;
-    top: 115%;
-    left: -17.5px;
+    top: 145%;
+    left: -10px;
     font-family: 'Avenir Medium';
     font-size: 12px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
