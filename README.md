@@ -38,18 +38,18 @@ This is not an exhaustive list. Download and install the launcher to gauge all i
 
 ## Downloads
 
-You can download from [GitHub Releases](https://github.com/PlayClan/PCLaucnher/releases)
+You can download from [GitHub Releases](https://github.com/PlayClan/PCLauncher/releases)
 
 #### Latest Release
 
-[![](https://img.shields.io/github/release/PlayClan/PCLaucnher.svg?style=flat-square)](https://github.com/PlayClan/PCLaucnher/releases/latest)
+[![](https://img.shields.io/github/release/PlayClan/PCLauncher.svg?style=flat-square)](https://github.com/PlayClan/PCLauncher/releases/latest)
 
 #### Latest Pre-Release
-[![](https://img.shields.io/github/release/PlayClan/PCLaucnher/all.svg?style=flat-square)](https://github.com/PlayClan/PCLaucnher/releases)
+[![](https://img.shields.io/github/release/PlayClan/PCLauncher/all.svg?style=flat-square)](https://github.com/PlayClan/PCLauncher/releases)
 
 **Supported Platforms**
 
-If you download from the [Releases](https://github.com/PlayClan/PCLaucnher/releases) tab, select the installer for your system.
+If you download from the [Releases](https://github.com/PlayClan/PCLauncher/releases) tab, select the installer for your system.
 
 | Platform | File |
 | -------- | ---- |
@@ -90,7 +90,7 @@ This section details the setup of a basic developmentment environment.
 **Clone and Install Dependencies**
 
 ```console
-> git clone https://github.com/PlayClan/PCLaucnher.git
+> git clone https://github.com/PlayClan/PCLauncher.git
 > cd HeliosLauncher
 > npm install
 ```
@@ -180,7 +180,7 @@ Note that you **cannot** open the DevTools window while using this debug configu
 
 Please give credit to the original author and provide a link to the original source. This is free software, please do at least this much.
 
-For instructions on setting up Microsoft Authentication, see https://github.com/PlayClan/PCLaucnher/blob/master/docs/MicrosoftAuth.md.
+For instructions on setting up Microsoft Authentication, see https://github.com/PlayClan/PCLauncher/blob/master/docs/MicrosoftAuth.md.
 
 ---
 
@@ -205,6 +205,6 @@ The best way to contact the developers is on Discord.
 [rendererprocess]: https://electronjs.org/docs/tutorial/application-architecture#main-and-renderer-processes 'Renderer Process'
 [chromedebugger]: https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome 'Debugger for Chrome'
 [discord]: https://discord.gg/zNWUXdt 'Discord'
-[wiki]: https://github.com/PlayClan/PCLaucnher/wiki 'wiki'
+[wiki]: https://github.com/PlayClan/PCLauncher/wiki 'wiki'
 [nebula]: https://github.com/dscalzi/Nebula 'dscalzi/Nebula'
-[v2branch]: https://github.com/PlayClan/PCLaucnher/tree/ts-refactor 'v2 branch'
+[v2branch]: https://github.com/PlayClan/PCLauncher/tree/ts-refactor 'v2 branch'
