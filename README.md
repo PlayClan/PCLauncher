@@ -18,7 +18,7 @@
     * A bejelentkezési adatokat nem tároljuk, egyből továbbítjuk a Microsoftnak/Mojangnak.
   * PlayClan fiók bejelentkezés.
     * Automatikus bejelentkezés a szerverre.
-    * Autmatikus IP levédés amennyiben van beállítva a fiókodon.
+    * Automatikus IP levédés amennyiben van beállítva a fiókodon.
 * 📂 Hatékony fájl kezelés.
   * Automatikusan megkapod a kliens frissítéseket, amikor kiadjuk azokat.
   * A fájlok ellenőrizve vannak indítás előtt. A hibás fájlokat újra letöltjük.
@@ -75,7 +75,7 @@ Ha ki akarod exportálni a Konzolod tartalmát, csak kattints jobb klikkel bárh
 
 ## Fejlesztés
 
-Amennyiben szertnéd bővíteni a Launcher-t, vagy csak saját magadnak szeretnéd ki buildelni az alkalmazást.
+Amennyiben szeretnéd bővíteni a Launcher-t, vagy csak saját magadnak szeretnéd ki buildelni az alkalmazást.
 
 ### Hozzákezdés
 
@@ -176,7 +176,7 @@ Vedd figyelembe, hogy **nem** nyithatsz meg DevTools ablakot, miközben ezt a de
 
 ### Megjegyzés a harmadik fél általi használathoz
 
-Kérjük, nevezze meg az eredeti készítőt, és adjon meg egy linket az eredeti forráshoz. Ez egy ingyenes szoftver, kérjük, legalább ennyit tegyen meg. <small>*(Az eredeti [készítő][fork] kérése)*</small>
+Kérjük, nevezze meg az eredeti készítőt, és adjon meg egy linket az eredeti forráshoz. Ez egy ingyenes szoftver, kérjük, legalább ennyit tegyen meg. <small>*(Az [eredeti készítő][fork] kérése)*</small>
 
 A Microsoft Authentication beállításához lásd: https://github.com/PlayClan/PCLauncher/blob/master/docs/MicrosoftAuth.md.
 
