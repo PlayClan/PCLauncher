@@ -86,6 +86,7 @@ const DEFAULT_CONFIG = {
         },
         launcher: {
             allowPrerelease: false,
+            allowDiscord: true,
             dataDirectory: dataPath
         }
     },
@@ -810,4 +811,12 @@ exports.getAllowPrerelease = function(def = false){
  */
 exports.setAllowPrerelease = function(allowPrerelease){
     config.settings.launcher.allowPrerelease = allowPrerelease
+}
+
+exports.getAllowDiscord = function(def = false){
+    return !def ? config.settings.launcher.allowDiscord : DEFAULT_CONFIG.settings.launcher.allowDiscord
+}
+
+exports.setAllowDiscord = function(allowDiscord){
+    config.settings.launcher.allowDiscord = allowDiscord
 }

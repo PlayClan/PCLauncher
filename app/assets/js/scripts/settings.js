@@ -207,6 +207,8 @@ function saveSettingsValues(){
                     // Special Conditions
                     if(cVal === 'AllowPrerelease'){
                         changeAllowPrerelease(v.checked)
+                    } else if(cVal === 'AllowDiscord'){
+                        ConfigManager.setAllowDiscord(v.checked)
                     }
                 }
             } else if(v.tagName === 'DIV'){

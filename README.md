@@ -7,6 +7,9 @@
 
 <p align="center">Csatlakozz a PlayClan szerverére pár kattintással!</p>
 
+
+[<p align="center"><img src="https://img.shields.io/github/downloads/PlayClan/PCLauncher/total.svg?style=for-the-badge&label=LETÖLTÉSEK" alt="letöltések">](https://github.com/PlayClan/PCLauncher/releases) <img src="https://img.shields.io/github/release/PlayClan/PCLauncher.svg?style=for-the-badge&label=STABIL%20VERZIÓ" alt="stabil verzió"> <img src="https://img.shields.io/github/release/PlayClan/PCLauncher/all.svg?style=for-the-badge&label=BÉTA%20VERZIÓ" alt="béta verzió"></p>
+
 ![Képernyőkép 1](https://i.imgur.com/jUe0wkh.png)
 ![Képernyőkép 2](https://i.imgur.com/d2BFyhG.png)
 
@@ -38,14 +41,7 @@ De ez még nem minden! Töltsd le és telepítsd a kliensünket, hogy felfedezd,
 
 ## Letöltés
 
-A kliens-t letudod tölteni [innen](https://github.com/PlayClan/PCLauncher/releases).
-
-#### Utolsó stabil verzió
-
-[![](https://img.shields.io/github/release/PlayClan/PCLauncher.svg?style=flat-square)](https://github.com/PlayClan/PCLauncher/releases/latest)
-
-#### Utolsó béta verzió
-[![](https://img.shields.io/github/release/PlayClan/PCLauncher/all.svg?style=flat-square)](https://github.com/PlayClan/PCLauncher/releases)
+A klienst letudod tölteni [innen](https://github.com/PlayClan/PCLauncher/releases).
 
 **Támogatott platformok**
 

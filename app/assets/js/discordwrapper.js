@@ -32,8 +32,10 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Várakoz
     }
 
     client.on('ready', () => {
-        logger.info('Discord RPC Connected')
-        client.setActivity(activity)
+        if (ConfigManager.getAllowDiscord()) {
+            logger.info('Discord RPC Connected')
+            client.setActivity(activity)
+        }
     })
     
     client.login({clientId: genSettings.clientId}).catch(error => {
@@ -46,8 +48,10 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Várakoz
 }
 
 exports.updateDetails = function(details){
-    activity.details = details
-    client.setActivity(activity)
+    if (ConfigManager.getAllowDiscord()) {
+        activity.details = details
+        client.setActivity(activity)
+    }
 }
 
 exports.shutdownRPC = function(){
