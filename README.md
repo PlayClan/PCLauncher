@@ -8,7 +8,7 @@
 <p align="center">Csatlakozz a PlayClan szerverére pár kattintással!</p>
 
 
-[<p align="center"><img src="https://img.shields.io/github/downloads/PlayClan/PCLauncher/total.svg?style=for-the-badge&label=LETÖLTÉSEK" alt="letöltések">](https://github.com/PlayClan/PCLauncher/releases) <img src="https://img.shields.io/github/release/PlayClan/PCLauncher.svg?style=for-the-badge&label=STABIL%20VERZIÓ" alt="stabil verzió"> <img src="https://img.shields.io/github/release/PlayClan/PCLauncher/all.svg?style=for-the-badge&label=BÉTA%20VERZIÓ" alt="béta verzió"></p>
+[<p align="center"><img src="https://img.shields.io/github/downloads/PlayClan/PCLauncher/total.svg?style=for-the-badge&label=LET%C3%96LT%C3%89SEK" alt="letöltések">](https://github.com/PlayClan/PCLauncher/releases) <img src="https://img.shields.io/github/release/PlayClan/PCLauncher.svg?style=for-the-badge&label=STABIL%20VERZI%C3%93" alt="stabil verzió"> <img src="https://img.shields.io/github/release/PlayClan/PCLauncher/all.svg?style=for-the-badge&label=B%C3%89TA%20VERZI%C3%93" alt="béta verzió"></p>
 
 ![Képernyőkép 1](https://i.imgur.com/jUe0wkh.png)
 ![Képernyőkép 2](https://i.imgur.com/d2BFyhG.png)
