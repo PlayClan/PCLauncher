@@ -742,7 +742,7 @@ exports.validateGameHeight = function(resHeight){
  * @returns {boolean} Whether or not the game is set to launch in fullscreen mode.
  */
 exports.getFullscreen = function(def = false){
-    return !def ? config.settings.game.fullscreen : DEFAULT_CONFIG.settings.game.fullscreen
+    return false
 }
 
 /**
