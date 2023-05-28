@@ -307,10 +307,6 @@ function createWindow() {
     win.on('closed', () => {
         win = null
     })
-
-    setTimeout(() => {
-        win.focus()
-    }, 1000);
 }
 
 ipcMain.on('hide-window', () => {
