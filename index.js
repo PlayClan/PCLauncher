@@ -217,6 +217,8 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
 })
 
 const PLAYCLAN_URL = 'https://api.playclan.hu/kliens/success?'
+const SHOP_URL = 'https://playclan.hu/shop/profil'
+const LOGOUT_URL = 'https://playclan.hu/shop/bejelentkezes'
 
 // PlayClan Auth Login
 let pcAuthWindow
@@ -265,6 +267,12 @@ ipcMain.on(PC_OPCODE.OPEN_LOGIN, (ipcEvent, ...arguments_) => {
             pcAuthSuccess = true
             pcAuthWindow.close()
             pcAuthWindow = null
+        }
+        if (uri.startsWith(SHOP_URL)) {
+            pcAuthWindow.loadURL('https://playclan.hu/shop/kijelentkezes')
+        }
+        if (uri.startsWith(LOGOUT_URL)) {
+            pcAuthWindow.loadURL('https://api.playclan.hu/kliens/')
         }
     })
 
