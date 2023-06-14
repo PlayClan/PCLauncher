@@ -3745,7 +3745,6 @@ input:checked + .toggleSwitchSlider:before {
 /* Server listing image. */
 .serverListingImg {
     margin: 0px 10px 0px 5px;
-    border: 1px solid #fff;
     height: 50px;
     width: 50px;
 }
@@ -3850,6 +3849,10 @@ input:checked + .toggleSwitchSlider:before {
     margin-top: 25px;
 }
 
+#serverSelectActions {
+    margin-top: 5px;
+}
+
 /* Server selection confirm button styles. */
 #serverSelectConfirm,
 #accountSelectConfirm {
@@ -3881,7 +3884,7 @@ input:checked + .toggleSwitchSlider:before {
 #serverSelectCancel,
 #accountSelectCancel {
     font-weight: bold;
-    font-size: 10px;
+    font-size: 13px;
     text-decoration: none;
     padding-top: 2.5px;
     color: rgba(202, 202, 202, 0.75);
