@@ -224,9 +224,7 @@ document.getElementById('serverSelectCancel').addEventListener('click', () => {
 })
 
 document.getElementById('accountSelectCancel').addEventListener('click', () => {
-    $('#accountSelectContent').fadeOut(250, () => {
-        $('#overlayContent').fadeIn(250)
-    })
+    toggleOverlay(false)
 })
 
 function setServerListingHandlers(){
@@ -308,15 +306,16 @@ function populateAccountListings(){
     const accounts = Array.from(Object.keys(accountsObj), v=>accountsObj[v])
     let htmlString = ''
     for(let i=0; i<accounts.length; i++){
+        const current = ConfigManager.getSelectedAccount()
         if (accounts[i].type === 'playclan') {
-            htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
+            htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${accounts[i].uuid===current.uuid ? 'selected' : ''}>
                 <img src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=true&vr=-25&hr=45&displayHair=true&user=${accounts[i].displayName}" style="height: 40px; width: 43px;">
-                <div class="accountListingName">${accounts[i].displayName}</div>
+                <div class="accountListingName">${accounts[i].displayName} (PlayClan)</div>
             </button>`
         } else {
-            htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
+            htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${accounts[i].uuid===current.uuid ? 'selected' : ''}>
                 <img src="https://mc-heads.net/head/${accounts[i].uuid}/40">
-                <div class="accountListingName">${accounts[i].displayName}</div>
+                <div class="accountListingName">${accounts[i].displayName} (Microsoft)</div>
             </button>`
         }
     }

@@ -145,6 +145,15 @@ document.getElementById('avatarOverlay').onclick = async e => {
     })
 }
 
+document.getElementById('user_text').onclick = async e => {
+    prepareAccountSelectionList()
+    bindOverlayKeys(true, 'accountSelectContent', true)
+    setDismissHandler(() => {
+        toggleOverlay(false)
+    })
+    toggleOverlay(true, true, 'accountSelectContent')
+}
+
 // Bind selected account
 function updateSelectedAccount(authUser){
     let username = 'Nincs fiók kiválasztva'
