@@ -1883,7 +1883,7 @@ input:checked + .toggleSwitchSlider:before {
 /* Main select container. */
 .settingsSelectContainer {
     position: relative;
-    width: 50%;
+    width: 100%;
 }
 
 /* Div which displays the selected option. */

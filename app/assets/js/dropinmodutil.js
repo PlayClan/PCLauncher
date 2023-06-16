@@ -11,8 +11,9 @@ const DISABLED_EXT = '.disabled'
 
 const SHADER_REGEX = /^(.+)\.zip$/
 const SHADER_OPTION = /shaderPack=(.+)/
+const SHADER_TOGGLE = /enableShaders=(.+)/
 const SHADER_DIR = 'shaderpacks'
-const SHADER_CONFIG = 'optionsshaders.txt'
+const SHADER_CONFIG = 'oculus.properties'
 
 /**
  * Validate that the given directory exists. If not, it is
@@ -156,7 +157,7 @@ exports.scanForShaderpacks = function(instanceDir){
     const shaderDir = path.join(instanceDir, SHADER_DIR)
     const packsDiscovered = [{
         fullName: 'OFF',
-        name: 'Off (Default)'
+        name: 'Kikapcsolva'
     }]
     if(fs.existsSync(shaderDir)){
         let modCandidates = fs.readdirSync(shaderDir)
@@ -182,6 +183,7 @@ exports.scanForShaderpacks = function(instanceDir){
  * @returns {string} The file name of the enabled shaderpack.
  */
 exports.getEnabledShaderpack = function(instanceDir){
+    instanceDir = path.join(instanceDir, "config/")
     exports.validateDir(instanceDir)
 
     const optionsShaders = path.join(instanceDir, SHADER_CONFIG)
@@ -204,6 +206,7 @@ exports.getEnabledShaderpack = function(instanceDir){
  * @param {string} pack the file name of the shaderpack.
  */
 exports.setEnabledShaderpack = function(instanceDir, pack){
+    instanceDir = path.join(instanceDir, "config/")
     exports.validateDir(instanceDir)
 
     const optionsShaders = path.join(instanceDir, SHADER_CONFIG)
@@ -211,8 +214,9 @@ exports.setEnabledShaderpack = function(instanceDir, pack){
     if(fs.existsSync(optionsShaders)){
         buf = fs.readFileSync(optionsShaders, {encoding: 'utf-8'})
         buf = buf.replace(SHADER_OPTION, `shaderPack=${pack}`)
+        buf = buf.replace(SHADER_TOGGLE, `enableShaders=${pack == 'OFF' ? 'false' : 'true'}`)
     } else {
-        buf = `shaderPack=${pack}`
+        buf = `shaderPack=${pack}\nenableShaders=${pack == 'OFF' ? 'false' : 'true'}`
     }
     fs.writeFileSync(optionsShaders, buf, {encoding: 'utf-8'})
 }
