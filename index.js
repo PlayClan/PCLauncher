@@ -301,6 +301,7 @@ function createWindow() {
     remoteMain.enable(win.webContents)
 
     ejse.data('bkid', Math.floor((Math.random() * fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length)))
+    ejse.data('maxpic', fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length)
 
     win.loadURL(pathToFileURL(path.join(__dirname, 'app', 'app.ejs')).toString())
 

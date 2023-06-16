@@ -70,11 +70,14 @@ async function showMainUI(data){
     updateSelectedServer(data.getServerById(ConfigManager.getSelectedServer()))
     refreshServerStatus()
     setTimeout(() => {
+        $('#loadCenterText').animate({opacity:0})
+    }, 250)
+    setTimeout(() => {
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
         document.body.style.backgroundImage = `url('assets/images/backgrounds/${document.body.getAttribute('bkid')}.png')`
         setInterval(() => {
-            document.body.style.backgroundImage = `url('assets/images/backgrounds/${Math.floor(Math.random() * 4)}.png')`
-        }, 30000);
+            document.body.style.backgroundImage = `url('assets/images/backgrounds/${Math.floor(Math.random() * document.body.getAttribute('maxpic'))}.png')`
+        }, 15000);
         $('#main').show()
 
         const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
