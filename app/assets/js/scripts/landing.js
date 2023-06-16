@@ -980,7 +980,7 @@ function displayArticle(articleObject, index){
     newsArticleTitle.innerHTML = articleObject.title
     newsArticleTitle.href = articleObject.link
     newsArticleAuthor.innerHTML = 'Írta: ' + articleObject.author
-    newsArticleDate.innerHTML = articleObject.date
+    newsArticleDate.innerHTML = articleObject.displayDate
     newsArticleComments.innerHTML = articleObject.comments
     newsArticleComments.href = articleObject.commentsLink
     newsArticleContentScrollable.innerHTML = '<div id="newsArticleContentWrapper"><div class="newsArticleSpacerTop"></div>' + articleObject.content + '<div class="newsArticleSpacerBot"></div></div>'
@@ -1021,7 +1021,9 @@ async function loadNews(){
                     const el = $(items[i])
 
                     // Resolve date.
-                    const date = new Date(el.find('pubDate').text()).toLocaleDateString('hu-HU', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
+                    const date = new Date(el.find('pubDate').text()).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
+
+                    const displayDate = new Date(el.find('pubDate').text()).toLocaleDateString('hu-HU', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
 
                     // Resolve comments.
                     let comments = el.find('slash\\:comments').text() || '0'
@@ -1045,6 +1047,7 @@ async function loadNews(){
                             link,
                             title,
                             date,
+                            displayDate,
                             author,
                             content,
                             comments,
