@@ -41,6 +41,8 @@ const launch_progress_label   = document.getElementById('launch_progress_label')
 const launch_details_text     = document.getElementById('launch_details_text')
 const server_selection_button = document.getElementById('server_selection_button')
 const user_text               = document.getElementById('user_text')
+const avatarOverlay           = document.getElementById('avatarOverlay')
+const settingsMediaButton     = document.getElementById('settingsMediaButton')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
@@ -55,9 +57,15 @@ function toggleLaunchArea(loading){
     if(loading){
         launch_details.style.display = 'flex'
         launch_content.style.display = 'none'
+        user_text.disabled = true
+        avatarOverlay.disabled = true
+        settingsMediaButton.disabled = true
     } else {
         launch_details.style.display = 'none'
         launch_content.style.display = 'inline-flex'
+        user_text.disabled = false
+        avatarOverlay.disabled = false
+        settingsMediaButton.disabled = false
     }
 }
 
@@ -133,25 +141,31 @@ document.getElementById('launch_button').addEventListener('click', async e => {
 
 // Bind settings button
 document.getElementById('settingsMediaButton').onclick = async e => {
-    await prepareSettings()
-    switchView(getCurrentView(), VIEWS.settings)
+    if (!document.getElementById('settingsMediaButton').disabled) {
+        await prepareSettings()
+        switchView(getCurrentView(), VIEWS.settings)
+    }
 }
 
 // Bind avatar overlay button.
 document.getElementById('avatarOverlay').onclick = async e => {
-    await prepareSettings()
-    switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
-        settingsNavItemListener(document.getElementById('settingsNavAccount'), false)
-    })
+    if (!document.getElementById('avatarOverlay').disabled) {
+        await prepareSettings()
+        switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
+            settingsNavItemListener(document.getElementById('settingsNavAccount'), false)
+        })
+    }
 }
 
-document.getElementById('user_text').onclick = async e => {
-    prepareAccountSelectionList()
-    bindOverlayKeys(true, 'accountSelectContent', true)
-    setDismissHandler(() => {
-        toggleOverlay(false)
-    })
-    toggleOverlay(true, true, 'accountSelectContent')
+user_text.onclick = async e => {
+    if (!user_text.disabled) {
+        prepareAccountSelectionList()
+        bindOverlayKeys(true, 'accountSelectContent', true)
+        setDismissHandler(() => {
+            toggleOverlay(false)
+        })
+        toggleOverlay(true, true, 'accountSelectContent')
+    }
 }
 
 // Bind selected account
