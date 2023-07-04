@@ -185,7 +185,7 @@ function updateSelectedAccount(authUser){
             }
         }
     }
-    user_text.innerHTML = username
+    user_text.innerHTML = username + "\n(" + (authUser.type == "playclan" ? "PlayClan" : "Microsoft") + ")"
 }
 validateSelectedAccount()
 updateSelectedAccount(ConfigManager.getSelectedAccount())
