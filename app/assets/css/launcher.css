@@ -3828,7 +3828,7 @@ input:checked + .toggleSwitchSlider:before {
 .serverListingStarTooltip {
     visibility: hidden;
     opacity: 0;
-    width: 65px;
+    width: 85px;
     background-color: rgba(0, 0, 0, 0.40);
     text-align: center;
     border-radius: 4px;
