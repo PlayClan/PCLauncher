@@ -190,10 +190,15 @@ exports.getEnabledShaderpack = function(instanceDir){
     if(fs.existsSync(optionsShaders)){
         const buf = fs.readFileSync(optionsShaders, {encoding: 'utf-8'})
         const match = SHADER_OPTION.exec(buf)
-        if(match != null){
-            return match[1]
+        const enabled = SHADER_TOGGLE.exec(buf)
+        if (enabled[1] == "false") {
+            return 'OFF'
         } else {
-            console.warn('WARNING: Shaderpack regex failed.')
+            if(match != null){
+                return match[1]
+            } else {
+                console.warn('WARNING: Shaderpack regex failed.')
+            }
         }
     }
     return 'OFF'
