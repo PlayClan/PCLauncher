@@ -2625,7 +2625,7 @@ input:checked + .toggleSwitchSlider:before {
 #newsArticleDate,
 #newsArticleAuthor {
     display: inline-block;
-    font-size: 10px;
+    font-size: 11px;
     padding: 0px 5px;
     font-weight: bold;
     border-radius: 2px;
@@ -2647,7 +2647,7 @@ input:checked + .toggleSwitchSlider:before {
 #newsArticleComments {
     margin-top: 5px;
     display: inline-block;
-    font-size: 10px;
+    font-size: 12px;
     color: #ffffff;
     text-decoration: none;
     transition: 0.25s ease;
@@ -2671,7 +2671,7 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Article content styles. */
 #newsArticleContentScrollable {
-    font-size: 12px;
+    font-size: 14px;
     overflow-y: scroll;
     height: 100%;
     padding: 0px 15px 0px 15px;
