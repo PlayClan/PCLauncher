@@ -597,12 +597,12 @@ async function dlAsync(login = true) {
         setLaunchDetails('Játék elindítása...')
 
         // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
-        const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
+        const SERVER_JOINED_REGEX = new RegExp(`Sikeresen bejelentkezés!`)
 
         const onLoadComplete = () => {
             toggleLaunchArea(false)
             if(hasRPC){
-                DiscordWrapper.updateDetails('Játék betöltése...')
+                DiscordWrapper.updateDetails('Játék betöltése...') 
                 proc.stdout.on('data', gameStateChange)
             }
             proc.stdout.removeListener('data', tempListener)
@@ -629,9 +629,9 @@ async function dlAsync(login = true) {
         const gameStateChange = function(data){
             data = data.trim()
             if(SERVER_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Felfedezi a világot!')
+                DiscordWrapper.updateDetails('Felfedezi a szervert!')
             } else if(GAME_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('PlayClan-on játszik!')
+                DiscordWrapper.updateDetails('Főképernyőn...')
             }
         }
 

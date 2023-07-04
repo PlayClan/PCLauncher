@@ -16,7 +16,7 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Várakoz
         largeImageKey: servSettings.largeImageKey,
         largeImageText: servSettings.largeImageText,
         smallImageKey: genSettings.smallImageKey,
-        smallImageText: genSettings.smallImageText,
+        smallImageText: genSettings.smallImageText + " v" + remote.app.getVersion(),
         startTimestamp: new Date().getTime(),
         instance: false,
         buttons: [
