@@ -216,7 +216,7 @@ exports.addPlayClanAccount = async function(authCode) {
     formData.append('type', 'request')
     formData.append('data', 'all')
 
-    const fullAuth = await fetch('https://api.playclan.hu/kliens/api', {
+    const fullAuth = await fetch('https://playclan.hu/shop/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -345,7 +345,7 @@ async function validateSelectedPlayClanAccount(){
     formData.append('type', 'request')
     formData.append('data', 'all')
 
-    const responseData = await fetch('https://api.playclan.hu/kliens/api', {
+    const responseData = await fetch('https://playclan.hu/shop/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -369,7 +369,7 @@ async function validateSelectedPlayClanAccount(){
         ipFormData.append('type', 'request')
         ipFormData.append('data', 'ip')
 
-        const ipResponse = await fetch('https://api.playclan.hu/kliens/api', {
+        const ipResponse = await fetch('https://playclan.hu/shop/api', {
             method: "POST",
             body: ipFormData,
             headers: {
@@ -391,7 +391,7 @@ async function validateSelectedPlayClanAccount(){
             ipUpdateFormData.append('data', 'ip')
             ipUpdateFormData.append('ip', ipResponse.response["token-ip"]);
 
-            await fetch('https://api.playclan.hu/kliens/api', {
+            await fetch('https://playclan.hu/shop/api', {
                 method: "POST",
                 body: ipUpdateFormData,
                 headers: {

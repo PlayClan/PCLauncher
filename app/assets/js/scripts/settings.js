@@ -600,7 +600,7 @@ async function processLogOut(val, isLastAccount){
         formData.append('type', 'logout')
         formData.append('data', 'this')
 
-        await fetch('https://api.playclan.hu/kliens/api', {
+        await fetch('https://playclan.hu/shop/api', {
             method: "POST",
             body: formData,
             headers: {
