@@ -197,7 +197,7 @@ function updateSelectedServer(serv){
     }
     ConfigManager.setSelectedServer(serv != null ? serv.rawServer.id : null)
     ConfigManager.save()
-    server_selection_button.innerHTML = '\u2022 ' + (serv != null ? serv.rawServer.name : 'Nincs szerver kiválasztva')
+    server_selection_button.innerHTML = '\u2022 ' + (serv != null ? serv.rawServer.name + (serv.rawServer.mainServer ? "" : " <span class='warning'>(!)</span>") : 'Nincs szerver kiválasztva')
     if(getCurrentView() === VIEWS.settings){
         animateSettingsTabRefresh()
     }
