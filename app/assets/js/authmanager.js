@@ -340,6 +340,8 @@ async function validateSelectedMicrosoftAccount(){
 
 async function validateSelectedPlayClanAccount(){
     const current = ConfigManager.getSelectedAccount()
+
+    let isServerDown = false;
     
     const formData = new FormData()
     formData.append('type', 'request')
@@ -352,10 +354,16 @@ async function validateSelectedPlayClanAccount(){
             'Authorization': `Bearer ${current.accessToken}`
         }
     }).then(response => {
-        return response.json()
+        if (response.ok) {
+            return response.json()
+        }
+        throw new Error('Sikertelen kommunikáció a szerverrel.');
     }).then(data => {
         return data
-    })
+    }).catch((error) => {
+        console.log(error)
+        isServerDown = true;
+    });
 
     if (responseData.response.status == 1) {
         ConfigManager.updatePlayClanAuthAccount(
@@ -401,6 +409,9 @@ async function validateSelectedPlayClanAccount(){
         }
         return true
     } else {
+        if (isServerDown) {
+            return true
+        }
         return false
     }
 }
