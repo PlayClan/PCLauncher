@@ -177,7 +177,7 @@ function updateSelectedAccount(authUser){
         }
         if (authUser.type == "playclan") {
             if(authUser.uuid != null){
-                document.getElementById('avatarContainer').style.backgroundImage = `url('https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${authUser.displayName}')`
+                document.getElementById('avatarContainer').style.backgroundImage = `url('https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${authUser.displayName}&time=${Date.now()}')`
             }
         } else {
             if(authUser.uuid != null){

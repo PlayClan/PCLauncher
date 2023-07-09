@@ -760,7 +760,7 @@ function populateAuthAccounts(){
         if (acc.type === 'playclan') {
             accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
                 <div class="settingsAuthAccountLeft">
-                    <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${acc.displayName}">
+                    <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${acc.displayName}&time=${Date.now()}">
                 </div>
                 <div class="settingsAuthAccountRight">
                     <div class="settingsAuthAccountDetails">
