@@ -478,6 +478,7 @@ let hasRPC = false
 // Joined server regex
 // Change this if your server uses something different.
 const GAME_JOINED_REGEX = /\[.+\]: Sound engine started/
+const DISCONNECTED_REGEX = /\[.+\]: Disconnected from server/
 const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+)$/
 const MIN_LINGER = 5000
 
@@ -630,7 +631,7 @@ async function dlAsync(login = true) {
             data = data.trim()
             if(SERVER_JOINED_REGEX.test(data)){
                 DiscordWrapper.updateDetails('Felfedezi a szervert!')
-            } else if(GAME_JOINED_REGEX.test(data)){
+            } else if(GAME_JOINED_REGEX.test(data) || DISCONNECTED_REGEX.test(data)){
                 DiscordWrapper.updateDetails('Főképernyőn...')
             }
         }

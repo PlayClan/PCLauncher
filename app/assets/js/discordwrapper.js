@@ -14,9 +14,9 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Várakoz
         details: initialDetails,
         state: servSettings.shortId,
         largeImageKey: servSettings.largeImageKey,
-        largeImageText: servSettings.largeImageText,
-        smallImageKey: genSettings.smallImageKey,
-        smallImageText: genSettings.smallImageText + " v" + remote.app.getVersion(),
+        largeImageText: servSettings.largeImageText + " v" + remote.app.getVersion(),
+        smallImageKey: "https://playclan.hu/shop/player_skin?nev=" + ConfigManager.getSelectedAccount().username + "&time=" + Date.now(),
+        smallImageText: ConfigManager.getSelectedAccount().username,
         startTimestamp: new Date().getTime(),
         instance: false,
         buttons: [
