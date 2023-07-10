@@ -184,8 +184,10 @@ function updateSelectedAccount(authUser){
                 document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/body/${authUser.uuid}/right')`
             }
         }
+        user_text.innerHTML = username + "\n(" + (authUser.type == "playclan" ? "PlayClan" : "Microsoft") + ")"
+    } else {
+        user_text.innerHTML = username
     }
-    user_text.innerHTML = username + "\n(" + (authUser.type == "playclan" ? "PlayClan" : "Microsoft") + ")"
 }
 validateSelectedAccount()
 updateSelectedAccount(ConfigManager.getSelectedAccount())
