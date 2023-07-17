@@ -209,6 +209,10 @@ function saveSettingsValues(){
                         changeAllowPrerelease(v.checked)
                     } else if(cVal === 'AllowDiscord'){
                         ConfigManager.setAllowDiscord(v.checked)
+                    } else if(cVal === 'AllowLauncherHide'){
+                        ConfigManager.setAllowLauncherHide(v.checked)
+                    } else if(cVal === 'AllowIPProtection'){
+                        ConfigManager.setAllowIPProtection(v.checked)
                     }
                 }
             } else if(v.tagName === 'DIV'){
@@ -769,12 +773,8 @@ function populateAuthAccounts(){
                             <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
                         </div>
                         <div class="settingsAuthAccountDetailPane">
-                            <div class="settingsAuthAccountDetailTitle">PlayCoin</div>
-                            <div class="settingsAuthAccountDetailValue">${acc.playcoin}</div>
-                        </div>
-                        <div class="settingsAuthAccountDetailPane">
-                            <div class="settingsAuthAccountDetailTitle">Játékidő</div>
-                            <div class="settingsAuthAccountDetailValue">${convertSecondsToTime(acc.playtime)}</div>
+                            <div class="settingsAuthAccountDetailTitle">Bejelentkezés érvényes</div>
+                            <div class="settingsAuthAccountDetailValue">${acc.accessExpires}</div>
                         </div>
                     </div>
                     <div class="settingsAuthAccountActions">

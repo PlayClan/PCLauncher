@@ -659,13 +659,17 @@ async function dlAsync(login = true) {
             // Init Discord Hook
             DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
             hasRPC = true
-            ipcRenderer.send('hide-window')
+            if (ConfigManager.getAllowLauncherHide()) {
+                ipcRenderer.send('hide-window')
+            }
             proc.on('close', (code, signal) => {
                 loggerLaunchSuite.info('Shutting down Discord Rich Presence..')
                 DiscordWrapper.shutdownRPC()
                 hasRPC = false
                 proc = null
-                ipcRenderer.send('show-window')
+                if (ConfigManager.getAllowLauncherHide()) {
+                    ipcRenderer.send('show-window')
+                }
             })
 
         } catch(err) {

@@ -87,6 +87,8 @@ const DEFAULT_CONFIG = {
         launcher: {
             allowPrerelease: false,
             allowDiscord: true,
+            allowLauncherHide: true,
+            allowIPProtection: true,
             dataDirectory: dataPath
         }
     },
@@ -371,9 +373,10 @@ exports.updateMicrosoftAuthAccount = function(uuid, accessToken, msAccessToken, 
     return config.authenticationDatabase[uuid]
 }
 
-exports.updatePlayClanAuthAccount = function(uuid, playcoin, playtime) {
+exports.updatePlayClanAuthAccount = function(uuid, playcoin, playtime, accessExpires) {
     config.authenticationDatabase[uuid].playcoin = playcoin
     config.authenticationDatabase[uuid].playtime = playtime
+    config.authenticationDatabase[uuid].accessExpires = accessExpires
     return config.authenticationDatabase[uuid]
 }
 
@@ -408,7 +411,7 @@ exports.addMicrosoftAuthAccount = function(uuid, accessToken, name, mcExpires, m
     return config.authenticationDatabase[uuid]
 }
 
-exports.addPlayClanAuthAccount = function(uuid, accessToken, name, playcoin, playtime) {
+exports.addPlayClanAuthAccount = function(uuid, accessToken, name, playcoin, playtime, accessExpires) {
     config.selectedAccount = uuid
     config.authenticationDatabase[uuid] = {
         type: 'playclan',
@@ -417,7 +420,8 @@ exports.addPlayClanAuthAccount = function(uuid, accessToken, name, playcoin, pla
         uuid: uuid.trim(),
         displayName: name.trim(),
         playcoin: playcoin,
-        playtime: playtime
+        playtime: playtime,
+        accessExpires: accessExpires
     }
     return config.authenticationDatabase[uuid]
 }
@@ -819,4 +823,20 @@ exports.getAllowDiscord = function(def = false){
 
 exports.setAllowDiscord = function(allowDiscord){
     config.settings.launcher.allowDiscord = allowDiscord
+}
+
+exports.getAllowLauncherHide = function(def = false){
+    return !def ? config.settings.launcher.allowLauncherHide : DEFAULT_CONFIG.settings.launcher.allowLauncherHide
+}
+
+exports.setAllowLauncherHide = function(allowLauncherHide){
+    config.settings.launcher.allowLauncherHide = allowLauncherHide
+}
+
+exports.getAllowIPProtection = function(def = false){
+    return !def ? config.settings.launcher.allowIPProtection : DEFAULT_CONFIG.settings.launcher.allowIPProtection
+}
+
+exports.setAllowIPProtection = function(allowIPProtection){
+    config.settings.launcher.allowIPProtection = allowIPProtection
 }
