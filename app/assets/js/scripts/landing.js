@@ -1018,7 +1018,7 @@ async function loadNews(){
         const newsFeed = distroData.rawDistribution.rss
         const newsHost = new URL(newsFeed).origin + '/'
         $.ajax({
-            url: newsFeed,
+            url: newsFeed + '?time=' + Date.now(),
             success: (data) => {
                 const items = $(data).find('item')
                 const articles = []
