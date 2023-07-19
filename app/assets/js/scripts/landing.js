@@ -29,6 +29,8 @@ const {
     extractJdk
 }                             = require('helios-core/java')
 
+const { dialog }              = require('electron')
+
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')
 const ProcessBuilder          = require('./assets/js/processbuilder')
@@ -696,6 +698,11 @@ const newsNavigationStatus          = document.getElementById('newsNavigationSta
 const newsArticleContentScrollable  = document.getElementById('newsArticleContentScrollable')
 const nELoadSpan                    = document.getElementById('nELoadSpan')
 
+//Shop slide
+let shopActive = false
+let shopPage = "profil"
+let selectedSkinFile = null
+
 // News slide caches.
 let newsActive = false
 let newsGlideCount = 0
@@ -746,6 +753,1108 @@ function slide_(up){
         lCLCenter.style.top = '0px'
         lCLRight.style.top = '0px'
         newsBtn.style.top = '10px'
+    }
+}
+
+function slideShop(down){
+    const lCUpper = document.querySelector('#landingContainer > #upper')
+    const lCLLeft = document.querySelector('#landingContainer > #lower > #left')
+    const lCLCenter = document.querySelector('#landingContainer > #lower > #center')
+    const lCLRight = document.querySelector('#landingContainer > #lower > #right')
+    const shopBtn = document.querySelector('#landingContainer > #upper > .center_shop #content')
+    const landingContainer = document.getElementById('landingContainer')
+    const shopContainer = document.querySelector('#landingContainer > #shopContainer')
+    const shopText = document.getElementById('shopButtonText')
+
+    if(down){
+        lCUpper.style.top = '+100vh'
+        lCLLeft.style.top = '+100vh'
+        lCLCenter.style.top = '+100vh'
+        lCLRight.style.top = '+100vh'
+        shopBtn.style.top = '-25vh'
+        shopContainer.style.bottom = '0px'
+        //date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
+        //landingContainer.style.background = 'rgba(29, 29, 29, 0.55)'
+        landingContainer.style.background = 'rgba(0, 0, 0, 0.50)'
+        $('#shopButtonText').fadeOut(500, function() {
+            $('#shopButtonText').text('SHOP BEZÁRÁSA').fadeIn(500)
+        })
+    } else {
+        landingContainer.style.background = null
+        lCLCenter.style.transition = null
+        shopContainer.style.bottom = '100%'
+        lCUpper.style.top = '0px'
+        lCLLeft.style.top = '0px'
+        lCLCenter.style.top = '0px'
+        lCLRight.style.top = '0px'
+        shopBtn.style.top = '10px'
+        $('#shopButtonText').fadeOut(500, function() {
+            $('#shopButtonText').text('SHOP MEGNYITÁSA').fadeIn(500)
+        })
+    }
+}
+
+async function requestShopData(token) {
+    const formData = new FormData()
+    formData.append('type', 'request')
+    formData.append('data', 'all')
+
+    const fullData = await fetch('https://playclan.hu/shop/api', {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        return data
+    }).catch(err => {
+        console.log(err)
+        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+    })
+
+    return fullData
+}
+
+async function requestShopFriends(token) {
+    const formData = new FormData()
+    formData.append('type', 'request')
+    formData.append('data', 'friends')
+
+    const fullData = await fetch('https://playclan.hu/shop/api', {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        return data
+    }).catch(err => {
+        console.log(err)
+        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+    })
+
+    return fullData
+}
+
+async function requestHasPermission(token) {
+    const formData = new FormData()
+    formData.append('type', 'request')
+    formData.append('data', 'permission')
+    formData.append('permission', 'playclan.kinezet')
+
+    const fullData = await fetch('https://playclan.hu/shop/api', {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        return data
+    }).catch(err => {
+        console.log(err)
+        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+    })
+
+    return fullData
+}
+
+async function updateSpecificSetting(token, data, data1, value1, data2, value2) {
+    const formData = new FormData()
+    formData.append('type', 'update')
+    formData.append('data', data)
+    formData.append(data1, value1)
+    if (data2 != null) {
+        formData.append(data2, value2)
+    }
+
+    const fullData = await fetch('https://playclan.hu/shop/api', {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        return data
+    }).catch(err => {
+        console.log(err)
+        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+    })
+
+    return fullData
+}
+
+async function checkExistingPlayer(token, player) {
+    const formData = new FormData()
+    formData.append('type', 'request')
+    formData.append('data', 'exists')
+    formData.append('player', player)
+
+    const fullData = await fetch('https://playclan.hu/shop/api', {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        return data
+    }).catch(err => {
+        console.log(err)
+        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+    })
+
+    return fullData
+}
+
+async function sendPC(token, player, playcoin) {
+    const formData = new FormData()
+    formData.append('type', 'update')
+    formData.append('data', 'sendpc')
+    formData.append('player', player)
+    formData.append('playcoin', playcoin)
+
+    const fullData = await fetch('https://playclan.hu/shop/api', {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        return data
+    }).catch(err => {
+        console.log(err)
+        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+    })
+
+    return fullData
+}
+
+function getPlaytimeHour(playtime) {
+    return parseInt(playtime / 3600)
+}
+
+function getPlaytimeMinute(playtime) {
+    return parseInt(playtime / 60 % 60)
+}
+
+async function loadShop(page) {
+    const data = await requestShopData(ConfigManager.getSelectedAccount().accessToken)
+    const friends = await requestShopFriends(ConfigManager.getSelectedAccount().accessToken)
+    const kinezetPermission = await requestHasPermission(ConfigManager.getSelectedAccount().accessToken)
+    const registerTime = new Date(data.data.request.create_date)
+    const year = registerTime.getFullYear().toString().length == 1 ? '0' + registerTime.getFullYear() : registerTime.getFullYear()
+    const month = registerTime.getMonth().toString().length == 1 ? '0' + (registerTime.getMonth() + 1) : registerTime.getMonth() + 1
+    const day = registerTime.getDate().toString().length == 1 ? '0' + registerTime.getDate() : registerTime.getDate()
+    const hours = registerTime.getHours().toString().length == 1 ? '0' + registerTime.getHours() : registerTime.getHours()
+    const minutes = registerTime.getMinutes().toString().length == 1 ? '0' + registerTime.getMinutes() : registerTime.getMinutes()
+    const seconds = registerTime.getSeconds().toString().length == 1 ? '0' + registerTime.getSeconds() : registerTime.getSeconds()
+    const register = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds
+    let shopHTML = `
+    <div class="shopContent">
+        <div class="shop">
+            <div class="shopDiv" style="width: 20rem">
+                <div class="shopHeader">
+                    <span>Bejelentkezve mint,<br>${data.data.request.name}</span>
+                    <img src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=true&vr=-25&hr=45&displayHair=true&user=${data.data.request.name}&aa=true&time=${Date.now()}">
+                    <svg fill="#e6e6e6" height="30px" width="30px" version="1.1" id="shopRefresh" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-48.96 -48.96 587.56 587.56" xml:space="preserve" transform="rotate(180)" stroke="#e6e6e6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.97929"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M460.656,132.911c-58.7-122.1-212.2-166.5-331.8-104.1c-9.4,5.2-13.5,16.6-8.3,27c5.2,9.4,16.6,13.5,27,8.3 c99.9-52,227.4-14.9,276.7,86.3c65.4,134.3-19,236.7-87.4,274.6c-93.1,51.7-211.2,17.4-267.6-70.7l69.3,14.5 c10.4,2.1,21.8-4.2,23.9-15.6c2.1-10.4-4.2-21.8-15.6-23.9l-122.8-25c-20.6-2-25,16.6-23.9,22.9l15.6,123.8 c1,10.4,9.4,17.7,19.8,17.7c12.8,0,20.8-12.5,19.8-23.9l-6-50.5c57.4,70.8,170.3,131.2,307.4,68.2 C414.856,432.511,548.256,314.811,460.656,132.911z"></path> </g> </g></svg>
+                </div>
+                <hr>
+                <h3>Fiók információk</h3>
+                <p>Játékidőd: ${getPlaytimeHour(data.data.request.jatekido)} óra ${getPlaytimeMinute(data.data.request.jatekido)} perc</p>
+                <p>Regisztrációd dátuma: ${register}</p>
+                <p>PlayCoin: ${data.data.request.playcoin}</p>
+            </div>
+            <div class="shopDiv" style="width: 20rem">
+                <span class="shopMenu${page == 'profil' ? ' active' : ''}">Profil</span>
+                <span class="shopMenu${page == 'beallitasok' ? ' active' : ''}">Beállítások</span>
+                <span class="shopMenu${page == 'kinezet' ? ' active' : ''}">Kinézet</span>
+                <span class="shopMenu${page == 'playcoin' ? ' active' : ''}">PlayCoin utalás</span>
+            </div>
+        </div>
+        <div class="shop left">
+            <div class="shopDiv" id="shop_profil" ${page == 'profil' ? '' : 'style="display: none"'}>
+                <h2>Profil</h2>`
+                let onlineFriends = 0
+                for (let i = 0; i < friends.data.request.friends; i++) {
+                    if (friends.data.request[i].online == 1) {
+                        onlineFriends++
+                    }
+                }
+                if (onlineFriends > 0) {
+                    shopHTML += `<hr>
+                    <h3>Elérhető barátok</h3>
+                    <div class="shopPlayerList">`
+                }
+                for (let i = 0; i < friends.data.request.friends; i++) {
+                    if (friends.data.request[i].online == 1) {
+                        shopHTML += `<div class="shopPlayer">
+                            <img src="https://playclan.hu/shop/player_skin?nev=${friends.data.request[i].name}&time=${Date.now()}">
+                            <div>
+                                <h4>${friends.data.request[i].name}</h4>
+                                <p>Jelenleg <span style="color: #8dbf42">online</span></p>
+                                <p>Szerver: ${friends.data.request[i].server}</p>
+                                <p>Játékidő: ${getPlaytimeHour(friends.data.request[i].playtime)} óra ${getPlaytimeMinute(friends.data.request[i].playtime)} perc</p>
+                            </div>
+                        </div>`
+                    }
+                }
+                if (onlineFriends > 0) {
+                    shopHTML += `</div>`
+                }
+                shopHTML += `
+                <hr>
+                <div class="shopUploadRow">
+                    <div class="shopUploadColumn">
+                        <h3>Skin feltöltés</h3>
+                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját kinézetet!</p>
+                        <button id="skinSelector">Fájl kiválasztása</button>
+                        <button id="skinUpload">Feltöltés</button>
+                    </div>
+                    <div class="shopUploadColumn">
+                        <img src="https://playclan.hu/shop/player_skin?nev=${data.data.request.name}&format=skin3d&time=${Date.now()}" width="100px" height="200px">
+                    </div>
+                </div>
+            </div>
+            <div class="shopDiv" id="shop_beallitasok" ${page == 'beallitasok' ? '' : 'style="display: none"'}>
+                <h2>Beállítások</h2>
+                <hr>
+                <h3>IP Levédés</h3>
+                <p>Védd le a fiókod IP címed, hogy csak te tudj felmenni a szerverre a fiókoddal!</p>
+                <div class="row">
+                    <button class="shopButton" id="ipProtectionCurrent">Levédés a jelenlegi IP címmel</button>
+                    <button class="shopButton" id="ipProtectionOther">Levédés más IP címmel</button>
+                    <button class="shopButton" id="ipProtectionDelete">Levédés eltávolítása</button>
+                </div>
+                <div class="row" id="ipProtectionOtherRow" style="display: none">
+                    <input type="text" class="shopInput" id="ipProtectionInput" placeholder="IP cím" maxlength="15" minlength="7">
+                    <button class="shopButton" id="ipProtectionOtherSubmit">Levédés</button>
+                </div>
+            </div>
+            <div class="shopDiv" id="shop_kinezet" ${page == 'kinezet' ? '' : 'style="display: none"'}>
+                <h2>Kinézet</h2>
+                <hr>`
+                if (kinezetPermission.data.request) {
+                    shopHTML += `<div class="row">
+                    <div class="column shopDiv flexBasis">
+                        <h3>Rangod neve</h3>
+                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját rang nevet!</p>
+                        <input class="shopInput" type="text" id="kinezetRangText" placeholder="Rangod neve" value="${data.data.request.rang == null ? '' : data.data.request.rang}">
+                        <div class="row">
+                            <button class="shopButton" id="kinezetRangSubmit">Rang neved frissítése</button>
+                            <button class="shopButton" id="kinezetRangReset">Rang neved törlése</button>
+                        </div>
+                    </div>
+                    <div class="column shopDiv flexBasis">
+                        <h3>Prefix és Suffix</h3>
+                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját prefixet és suffixot!</p>
+                        <div id="render" class="ui container">
+                            <div id="preview" class="ui">
+                                <p id="kinezetPrefixSuffixOutput" class="render text-center" style="font-family: 'Minecraft'; font-weight: normal; font-style: normal; line-height: 1.5;"></p>
+                            </div>
+                        </div>
+                        <div class="row noGap">
+                            <input class="shopInput right" type="text" id="kinezetPrefixText" placeholder="Prefix" value="${data.data.request.prefix == null ? '' : data.data.request.prefix}">
+                            <span class="shopInput center" style="padding: 8px">${data.data.request.name}</span>
+                            <input class="shopInput" type="text" id="kinezetSuffixText" placeholder="Suffix" value="${data.data.request.suffix == null ? '' : data.data.request.suffix}">
+                        </div>
+                        <div class="row">
+                            <button class="shopButton" id="kinezetPrefixSubmit">Prefix és Suffix frissítése</button>
+                            <button class="shopButton" id="kinezetPrefixReset">Prefix és Suffix törlése</button>
+                        </div>
+                    </div>
+                    <div class="column shopDiv flexBasis">
+                        <h3>Üdvözlő üzeneted</h3>
+                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját üdvözlő üzeneted!</p>
+                        <div id="render" class="ui container">
+                            <div id="preview" class="ui">
+                                <p id="kinezetUdvozloUzenetOutput" class="render text-center" style="font-family: 'Minecraft'; font-weight: normal; font-style: normal; line-height: 1.5;"></p>
+                            </div>
+                        </div>
+                        <div class="row noGap">
+                            <input class="shopInput right" type="text" id="kinezetUdvozloUzenetElejeText" placeholder="Üdvözlő üzeneted eleje" value="${data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>'))}">
+                            <span class="shopInput center" style="padding: 8px">${data.data.request.name}</span>
+                            <input class="shopInput" type="text" id="kinezetUdvozloUzenetVegeText" placeholder="Üdvözlő üzeneted vége" value="${data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
+                        </div>
+                        <div class="row">
+                            <button class="shopButton" id="kinezetUdvozloUzenetSubmit">Üdvözlő üzeneted frissítése</button>
+                            <button class="shopButton" id="kinezetUdvozloUzenetReset">Üdvözlő üzeneted törlése</button>
+                        </div>
+                    </div>
+                    <div class="column shopDiv flexBasis">
+                        <h3>Kilépő üzeneted</h3>
+                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját kilépő üzeneted!</p>
+                        <div id="render" class="ui container">
+                            <div id="preview" class="ui">
+                                <p id="kinezetKilepoUzenetOutput" class="render text-center" style="font-family: 'Minecraft'; font-weight: normal; font-style: normal; line-height: 1.5;"></p>
+                            </div>
+                        </div>
+                        <div class="row noGap">
+                            <input class="shopInput right" type="text" id="kinezetKilepoUzenetElejeText" placeholder="Kilépő üzeneted eleje" value="${data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>'))}">
+                            <span class="shopInput center" style="padding: 8px">${data.data.request.name}</span>
+                            <input class="shopInput" type="text" id="kinezetKilepoUzenetVegeText" placeholder="Kilépő üzeneted vége" value="${data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
+                        </div>
+                        <div class="row">
+                            <button class="shopButton" id="kinezetKilepoUzenetSubmit">Kilépő üzeneted frissítése</button>
+                            <button class="shopButton" id="kinezetKilepoUzenetReset">Kilépő üzeneted törlése</button>
+                        </div>
+                    </div>
+                    <div class="column shopDiv flexBasis">
+                        <h3>Üdvözlő hangod</h3>
+                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját üdvözlő hangod!</p>
+                        <div class="settingsSelectContainer">
+                            <div class="settingsSelectSelected" id="shopUdvozloHangSelectSelected">Üdvözlőhang választása</div>
+                            <div class="settingsSelectOptions" id="shopUdvozloHangSelectOptions" style="background-color: rgba(0, 0, 0, 0.61); backdrop-filter: blur(5px);" hidden>
+                            </div>
+                        </div>
+                        <button class="shopButton" id="kinezetUdvozloHangSubmit">Üdvözlő hangod frissítése</button>
+                    </div>
+                    <div class="column shopDiv flexBasis">
+                        <h3>Kilépő hangod</h3>
+                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját kilépő hangod!</p>
+                        <div class="settingsSelectContainer">
+                            <div class="settingsSelectSelected" id="shopKilepoHangSelectSelected">Kilépőhang választása</div>
+                            <div class="settingsSelectOptions" id="shopKilepoHangSelectOptions" style="background-color: rgba(0, 0, 0, 0.61); backdrop-filter: blur(5px);" hidden>
+                            </div>
+                        </div>
+                        <button class="shopButton" id="kinezetKilepoHangSubmit">Kilépő hangod frissítése</button>
+                    </div>
+                    <div class="column shopDiv flexBasis">
+                        <h3>Chat szín</h3>
+                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját chat színed!</p>
+                        <div id="render" class="ui container">
+                            <div id="preview" class="ui">
+                                <p id="kinezetChatSzinOutput" class="render text-center" style="font-family: 'Minecraft'; font-weight: normal; font-style: normal; line-height: 1.5;"></p>
+                            </div>
+                        </div>
+                        <div class="settingsSelectContainer">
+                            <div class="settingsSelectSelected" id="shopChatSzinSelectSelected">Chat szín választása</div>
+                            <div class="settingsSelectOptions" id="shopChatSzinSelectOptions" style="background-color: rgba(0, 0, 0, 0.61); backdrop-filter: blur(5px);" hidden>
+                            </div>
+                        </div>
+                        <button class="shopButton" id="kinezetChatSzinSubmit">Chat színed frissítése</button>
+                    </div>
+                </div>`
+                } else {
+                    shopHTML += `<h3>Nincs jogod kinézetet változtatni, ez a funkció elérhető megvásárlásra a <a class="shopUrl" href="https://playclan.hu/shop/kiegeszitok?id=global" target="_blank">Shop</a>-ban.</h3>`
+                }
+                
+            shopHTML += `</div>
+            <div class="shopDiv" id="shop_playcoin" ${page == 'playcoin' ? '' : 'style="display: none"'}>
+                <h2>PlayCoin utalás</h2>
+                <hr>
+                <p>A PlayCoin utalás vissza nem vonható, szóval jól figyelj, hogy jó személynek utalj!</p>
+                <div class="row">
+                    <input type="text" class="shopInput" id="playcoinPlayer" placeholder="Játékosnév" maxlength="16" minlength="3">
+                    <button class="shopButton" id="playcoinPlayerCheck">Játékosnév ellenőrzése</button>
+                </div>
+                <div class="row">
+                    <input type="number" class="shopInput" id="playcoinValue" placeholder="PlayCoin" value="200" min="200" max="${data.data.request.playcoin}">
+                    <button class="shopButton" id="playcoinSend" disabled>PlayCoin átutalása</button>
+                </div>
+            </div>
+        </div>
+        <h2 class="shopFooter" id="shopFooter">PlayClan Shop</h2>
+    </div>`
+
+    document.getElementById("shopContainer").innerHTML = shopHTML;
+
+    document.querySelectorAll(".shopMenu").forEach(element => {
+        element.onclick = () => {
+            document.querySelectorAll(".shopMenu").forEach(element => {
+                element.classList.remove("active")
+            })
+            element.classList.add("active")
+            if (element.innerHTML == "Profil") {
+                shopPage = "profil"
+                $("#shop_beallitasok").slideUp("slow")
+                $("#shop_kinezet").slideUp("slow")
+                $("#shop_playcoin").slideUp("slow")
+                $("#shop_profil").slideDown("slow")
+            } else if (element.innerHTML == "Beállítások") {
+                shopPage = "beallitasok"
+                $("#shop_profil").slideUp("slow")
+                $("#shop_kinezet").slideUp("slow")
+                $("#shop_playcoin").slideUp("slow")
+                $("#shop_beallitasok").slideDown("slow")
+            } else if (element.innerHTML == "Kinézet") {
+                shopPage = "kinezet"
+                $("#shop_profil").slideUp("slow")
+                $("#shop_beallitasok").slideUp("slow")
+                $("#shop_playcoin").slideUp("slow")
+                $("#shop_kinezet").slideDown("slow")
+            } else if (element.innerHTML == "PlayCoin utalás") {
+                shopPage = "playcoin"
+                $("#shop_profil").slideUp("slow")
+                $("#shop_beallitasok").slideUp("slow")
+                $("#shop_kinezet").slideUp("slow")
+                $("#shop_playcoin").slideDown("slow")
+            }
+        }
+    })
+
+    selectedSkinFile = null
+
+    document.getElementById('shopFooter').onclick = () => {
+        shell.openExternal("https://playclan.hu/shop/")
+    }
+
+    document.getElementById('skinSelector').onclick = () => {
+        let options = {
+            title: "Fájl kiválasztása",
+            properties: ['openFile']
+        }
+    
+        // Show the open (folder) dialog.
+        remote.dialog.showOpenDialog(remote.getCurrentWindow(), options)
+            .then((result) => {
+                // Bail early if user cancelled dialog.
+                if (result.canceled) { return }
+
+                selectedSkinFile = result.filePaths[0]
+    
+                // Get the selected path.
+                let path = require('path').basename(selectedSkinFile);
+    
+                // More processing...
+                document.getElementById("skinSelector").innerText = "Fájl kiválasztása (" + path + ")"
+            })
+    }
+
+    document.getElementById("skinUpload").onclick = () => {
+        if (selectedSkinFile != null) {
+            filePathToBlob(selectedSkinFile).then(blob => {
+                let formData = new FormData();
+                formData.append('image', blob, require('path').basename(selectedSkinFile));
+                fetch('https://playclan.hu/shop/skin_upload_api', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Authorization': `Bearer ${ConfigManager.getSelectedAccount().accessToken}`
+                    }
+                }).then(res =>  { 
+                    return res.text()
+                }).then(res => {
+                    if (res == "Success") {
+                        showLaunchFailure('Skin feltöltése sikeres!', 'Élvezd az új skinedet!')
+                        loadShop(shopPage)
+                    } else {
+                        console.log(res)
+                        showLaunchFailure('A fájl feltöltése sikertelen volt!', 'Kérlek válassz ki egy fájlt, a feltöltéshez!')
+                    }
+                })
+            })
+        } else {
+            showLaunchFailure('Nincs kiválasztva fájl!', 'Kérlek válassz ki egy fájlt, a feltöltéshez!')
+        }
+    }
+
+    document.getElementById("ipProtectionCurrent").onclick = async () => {
+        const ipFormData = new FormData()
+        ipFormData.append('type', 'request')
+        ipFormData.append('data', 'ip')
+
+        const ipResponse = await fetch('https://playclan.hu/shop/api', {
+            method: "POST",
+            body: ipFormData,
+            headers: {
+                'Authorization': `Bearer ${ConfigManager.getSelectedAccount().accessToken}`
+            }
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            return data
+        })
+
+        const ipUpdateFormData = new FormData()
+        ipUpdateFormData.append('type', 'update')
+        ipUpdateFormData.append('data', 'ip')
+        ipUpdateFormData.append('ip', ipResponse.response["token-ip"]);
+
+        const data = await fetch('https://playclan.hu/shop/api', {
+            method: "POST",
+            body: ipUpdateFormData,
+            headers: {
+                'Authorization': `Bearer ${ConfigManager.getSelectedAccount().accessToken}`
+            }
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            return data
+        })
+
+        if (data.data.update) {
+            showLaunchFailure('Sikeres IP levédés!', 'Mostmár felléphetsz a szerverre!')
+        } else {
+            showLaunchFailure('Sikertelen IP levédés!', 'Kérlek próbáld újra!')
+        }
+    }
+
+    document.getElementById("ipProtectionOther").onclick = async () => {
+        $("#ipProtectionOtherRow").slideToggle("slow")
+    }
+
+    document.getElementById("ipProtectionOtherSubmit").onclick = async () => {
+        const ipUpdateFormData = new FormData()
+        ipUpdateFormData.append('type', 'update')
+        ipUpdateFormData.append('data', 'ip')
+        ipUpdateFormData.append('ip', document.getElementById("ipProtectionInput").value);
+
+        const data = await fetch('https://playclan.hu/shop/api', {
+            method: "POST",
+            body: ipUpdateFormData,
+            headers: {
+                'Authorization': `Bearer ${ConfigManager.getSelectedAccount().accessToken}`
+            }
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            return data
+        })
+
+        if (data.data.update) {
+            showLaunchFailure('Sikeres IP levédés!', 'Mostmár felléphetsz a szerverre!')
+        } else {
+            showLaunchFailure('Sikertelen IP levédés!', 'Kérlek próbáld újra!')
+        }
+    }
+
+    document.getElementById("ipProtectionDelete").onclick = async () => {
+        const ipUpdateFormData = new FormData()
+        ipUpdateFormData.append('type', 'update')
+        ipUpdateFormData.append('data', 'ip')
+        ipUpdateFormData.append('ip', '');
+
+        const data = await fetch('https://playclan.hu/shop/api', {
+            method: "POST",
+            body: ipUpdateFormData,
+            headers: {
+                'Authorization': `Bearer ${ConfigManager.getSelectedAccount().accessToken}`
+            }
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            return data
+        })
+
+        if (data.data.update) {
+            showLaunchFailure('Sikeres IP levédés eltávolítás!', 'Mostmár felléphetsz a szerverre!')
+        } else {
+            showLaunchFailure('Sikertelen IP levédés eltávolítás!', 'Kérlek próbáld újra!')
+        }
+    }
+
+    for(let ele of document.getElementsByClassName('settingsSelectContainer')) {
+        const selectedDiv = ele.getElementsByClassName('settingsSelectSelected')[0]
+
+        selectedDiv.onclick = (e) => {
+            e.stopPropagation()
+            closeSettingsSelect(e.target)
+            e.target.nextElementSibling.toggleAttribute('hidden')
+            e.target.classList.toggle('select-arrow-active')
+        }
+    }
+
+    document.addEventListener('click', closeSettingsSelect)
+
+    if (kinezetPermission.data.request) {
+        const color = {
+            '1': 'blue',
+            '2': 'green',
+            '3': 'darkaqua',
+            '4': 'red',
+            '5': 'purple',
+            '6': 'orange',
+            '7': 'gray',
+            '8': 'darkgray',
+            '9': 'lightblue',
+            '0': 'black',
+            'a': 'lime',
+            'b': 'aqua',
+            'c': 'lightred',
+            'd': 'pink',
+            'e': 'yellow',
+            'f': 'white'
+        }
+
+        const kinezetPrefixText = $('#kinezetPrefixText')
+        const kinezetSuffixText = $('#kinezetSuffixText')
+        const kinezetUdvozloUzenetElejeText = $('#kinezetUdvozloUzenetElejeText')
+        const kinezetUdvozloUzenetVegeText = $('#kinezetUdvozloUzenetVegeText')
+        const kinezetKilepoUzenetElejeText = $('#kinezetKilepoUzenetElejeText')
+        const kinezetKilepoUzenetVegeText = $('#kinezetKilepoUzenetVegeText')
+        const shopChatSzinSelectSelected = $('#shopChatSzinSelectSelected')
+
+        const kinezetPrefixSuffixOutput = $('#kinezetPrefixSuffixOutput')
+        const kinezetUdvozloUzenetOutput = $('#kinezetUdvozloUzenetOutput')
+        const kinezetKilepoUzenetOutput = $('#kinezetKilepoUzenetOutput')
+        const kinezetChatSzinOutput = $('#kinezetChatSzinOutput')
+        let append
+
+        kinezetPrefixText.keyup(function() {
+            renderKinezetPrefixSuffixText()
+        });
+
+        kinezetSuffixText.keyup(function() {
+            renderKinezetPrefixSuffixText()
+        });
+
+        function renderKinezetPrefixSuffixText() {
+            append = ''
+            kinezetPrefixSuffixOutput.html(replacers($(kinezetPrefixText).val().trim()) + data.data.request.name + replacers($(kinezetSuffixText).val().trim()))
+        }
+
+        kinezetUdvozloUzenetElejeText.keyup(function() {
+            renderKinezetUdvozloUzenetText()
+        });
+
+        kinezetUdvozloUzenetVegeText.keyup(function() {
+            renderKinezetUdvozloUzenetText()
+        });
+
+        function renderKinezetUdvozloUzenetText() {
+            append = ''
+            kinezetUdvozloUzenetOutput.html(replacers($(kinezetUdvozloUzenetElejeText).val() + data.data.request.name + $(kinezetUdvozloUzenetVegeText).val()))
+        }
+
+        kinezetKilepoUzenetElejeText.keyup(function() {
+            renderKinezetKilepoUzenetText()
+        });
+
+        kinezetKilepoUzenetVegeText.keyup(function() {
+            renderKinezetKilepoUzenetText()
+        });
+
+        function renderKinezetKilepoUzenetText() {
+            append = ''
+            kinezetKilepoUzenetOutput.html(replacers($(kinezetKilepoUzenetElejeText).val() + data.data.request.name +$(kinezetKilepoUzenetVegeText).val()))
+        }
+
+        shopChatSzinSelectSelected.change(function() {
+            renderShopChatSzinSelectSelected()
+        });
+
+        function renderShopChatSzinSelectSelected() {
+            append = ''
+            if (getSelectedDropdown("shopChatSzinSelectOptions") == "off") {
+                kinezetChatSzinOutput.html(replacers(`§f${data.data.request.name}§7: ` + "§bEz egy teszt szöveg"))
+            } else {
+                kinezetChatSzinOutput.html(replacers(`§f${data.data.request.name}§7: ` + "§" + getSelectedDropdown("shopChatSzinSelectOptions") + "Ez egy teszt szöveg"))
+            }
+        }
+
+        function replacers(string) {
+            replaced = string
+                .replace(/&([a-f0-9])/gi, setColor)
+                .replace(/§([a-f0-9])/gi, setColor)
+                .replace(/&k/gi, setMagic)
+                .replace(/§k/gi, setMagic)
+                .replace(/&l/gi, '<strong>')
+                .replace(/§l/gi, '<strong>')
+                .replace(/&m/gi, '<s>')
+                .replace(/§m/gi, '<s>')
+                .replace(/&n/gi, '<u>')
+                .replace(/§n/gi, '<u>')
+                .replace(/&o/gi, '<em>')
+                .replace(/§o/gi, '<em>')
+                .replace(/§r/gi, resetFormat)
+                .replace(/&r/gi, resetFormat)
+                .replace(/<nevem>/gi, data.data.request.name)
+            return replaced
+        }
+
+        function setColor(match) {
+            const value = color[match.substr(1, match.length)]
+            addClose;
+            return '<span class="' + value + '">'
+        }
+
+        function setMagic(match) {
+            return '<span class="magic"></span>'
+        }
+
+        function getMagic() {
+            return Math.random().toString(16).substr(1,2).split('.').join("")
+        }
+
+        function runMagic() {
+            $('.magic').text(getMagic)
+                window.setTimeout(runMagic, 60)
+            }
+            runMagic()
+
+        function resetFormat(match) {
+            addClose
+            return '</strong></s></u></em><span class="white">'
+        }
+
+        function addClose() {
+            append = '</span>' + append
+        }
+
+        function setUdvozloHangOptions(arr, selected){
+            const cont = document.getElementById('shopUdvozloHangSelectOptions')
+            cont.innerHTML = ''
+            for(let opt of arr) {
+                const d = document.createElement('DIV')
+                d.innerHTML = opt.name
+                d.setAttribute('value', opt.fullName)
+                if(opt.fullName === selected) {
+                    d.setAttribute('selected', '')
+                    document.getElementById('shopUdvozloHangSelectSelected').innerHTML = opt.name
+                }
+                d.addEventListener('click', function(e) {
+                    this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+                    for(let sib of this.parentNode.children){
+                        sib.removeAttribute('selected')
+                    }
+                    this.setAttribute('selected', '')
+                    closeSettingsSelect()
+                })
+                cont.appendChild(d)
+            }
+        }
+        
+        function setKilepoHangOptions(arr, selected){
+            const cont = document.getElementById('shopKilepoHangSelectOptions')
+            cont.innerHTML = ''
+            for(let opt of arr) {
+                const d = document.createElement('DIV')
+                d.innerHTML = opt.name
+                d.setAttribute('value', opt.fullName)
+                if(opt.fullName === selected) {
+                    d.setAttribute('selected', '')
+                    document.getElementById('shopKilepoHangSelectSelected').innerHTML = opt.name
+                }
+                d.addEventListener('click', function(e) {
+                    this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+                    for(let sib of this.parentNode.children){
+                        sib.removeAttribute('selected')
+                    }
+                    this.setAttribute('selected', '')
+                    closeSettingsSelect()
+                })
+                cont.appendChild(d)
+            }
+        }
+        
+        function setChatSzinOptions(arr, selected){
+            const cont = document.getElementById('shopChatSzinSelectOptions')
+            cont.innerHTML = ''
+            for(let opt of arr) {
+                const d = document.createElement('DIV')
+                d.innerHTML = opt.name
+                d.setAttribute('value', opt.fullName)
+                if(opt.fullName === selected) {
+                    d.setAttribute('selected', '')
+                    document.getElementById('shopChatSzinSelectSelected').innerHTML = opt.name
+                }
+                d.addEventListener('click', function(e) {
+                    this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+                    for(let sib of this.parentNode.children){
+                        sib.removeAttribute('selected')
+                    }
+                    this.setAttribute('selected', '')
+                    closeSettingsSelect()
+                    renderShopChatSzinSelectSelected()
+                })
+                cont.appendChild(d)
+            }
+        }
+
+        setUdvozloHangOptions(
+            [
+                {fullName: 'off', name: 'Kikapcsolva'},
+                {fullName: 'block.wooden_door.open', name: 'Faajtó kinyitás'},
+                {fullName: 'block.wooden_trapdoor.open', name: 'Facsapóajtó kinyitás'},
+                {fullName: 'entity.experience_orb.pickup', name: 'XP begyűjtés'},
+                {fullName: 'entity.player.levelup', name: 'Szint felfejlődés'},
+                {fullName: 'entity.item.pickup', name: 'Tárgy felvétel'},
+            ],
+            data.data.request.udvozlo_hang
+        )
+
+        setKilepoHangOptions(
+            [
+                {fullName: 'off', name: 'Kikapcsolva'},
+                {fullName: 'block.wooden_door.open', name: 'Faajtó kinyitás'},
+                {fullName: 'block.wooden_trapdoor.open', name: 'Facsapóajtó kinyitás'},
+                {fullName: 'entity.experience_orb.pickup', name: 'XP begyűjtés'},
+                {fullName: 'entity.player.levelup', name: 'Szint felfejlődés'},
+                {fullName: 'entity.item.pickup', name: 'Tárgy felvétel'},
+            ],
+            data.data.request.kilepo_hang
+        )
+
+        setChatSzinOptions(
+            [
+                {fullName: '0', name: 'Fekete - §0'},
+                {fullName: '1', name: 'Sötétkék - §1'},
+                {fullName: '2', name: 'Sötétzöld - §2'},
+                {fullName: '3', name: 'Sötét aqua - §3'},
+                {fullName: '4', name: 'Sötétvörös - §4'},
+                {fullName: '5', name: 'Sötét lila - §5'},
+                {fullName: '6', name: 'Arany - §6'},
+                {fullName: '7', name: 'Szürke - §7'},
+                {fullName: '8', name: 'Sötét szürke - §8'},
+                {fullName: '9', name: 'Kék - §9'},
+                {fullName: 'a', name: 'Zöld - §a'},
+                {fullName: 'b', name: 'Aqua - §b'},
+                {fullName: 'c', name: 'Piros - §c'},
+                {fullName: 'd', name: 'Világos lila - §d'},
+                {fullName: 'e', name: 'Sárga - §e'},
+                {fullName: 'f', name: 'Fehér - §f'},
+            ],
+            data.data.request.chat_szin
+        )
+
+        renderKinezetPrefixSuffixText()
+        renderKinezetUdvozloUzenetText()
+        renderKinezetKilepoUzenetText()
+        renderShopChatSzinSelectSelected()
+
+        document.getElementById("kinezetRangSubmit").onclick = async () => {
+            const rang = document.getElementById("kinezetRangText").value.trim()
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'rang', 'rang', rang)
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetPrefixSubmit").onclick = async () => {
+            const prefix = document.getElementById("kinezetPrefixText").value.trim()
+            const suffix = document.getElementById("kinezetSuffixText").value.trim()
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'prefixsuffix', 'prefix', prefix, 'suffix', suffix)
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetUdvozloUzenetSubmit").onclick = async () => {
+            const udvozloUzenetEleje = document.getElementById("kinezetUdvozloUzenetElejeText").value.trim()
+            const udvozloUzenetVege = document.getElementById("kinezetUdvozloUzenetVegeText").value.trim()
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'udvozlouzenet', 'udvozlouzenet', udvozloUzenetEleje + "<nevem>" + udvozloUzenetVege)
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetKilepoUzenetSubmit").onclick = async () => {
+            const kilepoUzenetEleje = document.getElementById("kinezetKilepoUzenetElejeText").value.trim()
+            const kilepoUzenetVege = document.getElementById("kinezetKilepoUzenetVegeText").value.trim()
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'kilepouzenet', 'kilepouzenet', kilepoUzenetEleje + "<nevem>" + kilepoUzenetVege)
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetUdvozloHangSubmit").onclick = async () => {
+            const udvozloHang = getSelectedDropdown("shopUdvozloHangSelectOptions")
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'udvozlohang', 'udvozlohang', udvozloHang)
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetKilepoHangSubmit").onclick = async () => {
+            const kilepoHang = getSelectedDropdown("shopKilepoHangSelectOptions")
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'kilepohang', 'kilepohang', kilepoHang)
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetChatSzinSubmit").onclick = async () => {
+            const chatSzin = getSelectedDropdown("shopChatSzinSelectOptions")
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'chatszin', 'chatszin', chatSzin)
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetRangReset").onclick = async () => {
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'rang', 'rang', '')
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetPrefixReset").onclick = async () => {
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'prefixsuffix', 'prefix', '', 'suffix', '')
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetUdvozloUzenetReset").onclick = async () => {
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'udvozlouzenet', 'udvozlouzenet', '')
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+
+        document.getElementById("kinezetKilepoUzenetReset").onclick = async () => {
+            const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'kilepouzenet', 'kilepouzenet', '')
+            if (callback.data.update.callback == "success") {
+                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+            } else if (callback.data.update.callback == "limit") {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+            } else {
+                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+            }
+        }
+    }
+
+    document.getElementById("playcoinPlayer").onkeyup = (e) => {
+        const check = document.getElementById("playcoinPlayer")
+        check.classList.remove('error')
+        check.classList.remove('success')
+        document.getElementById("playcoinSend").disabled = true
+    }
+
+    document.getElementById("playcoinPlayerCheck").onclick = async () => {
+        const check = document.getElementById("playcoinPlayer")
+        if (check.value.length >= 3 && check.value.length <= 16) {
+            const callback = await checkExistingPlayer(ConfigManager.getSelectedAccount().accessToken, check.value)
+            if (callback.data.request == 1) {
+                check.classList.remove('error')
+                check.classList.add('success')
+                document.getElementById("playcoinSend").disabled = false
+            } else {
+                check.classList.add('error')
+                check.classList.remove('success')
+                document.getElementById("playcoinSend").disabled = true
+            }
+        }
+    }
+
+    document.getElementById("playcoinSend").onclick = async () => {
+        const check = document.getElementById("playcoinPlayer")
+        const player = document.getElementById("playcoinPlayer").value
+        const playcoin = document.getElementById("playcoinValue").value
+        const callback = await sendPC(ConfigManager.getSelectedAccount().accessToken, player, playcoin)
+        check.classList.remove('error')
+        check.classList.remove('success')
+        document.getElementById("playcoinSend").disabled = true
+        if (callback.data.update == true) {
+            showLaunchFailure('Sikeres PlayCoin utalás!', 'A másik játékos megkapta a PlayCoin-t!')
+            loadShop(shopPage)
+        } else if (callback.data.update == "ratelimit") {
+            showLaunchFailure('Sikertelen PlayCoin utalás!', 'Túl gyorsan próbáltál utalni, kérjek várj egy kicsit!')
+        } else {
+            showLaunchFailure('Sikertelen PlayCoin utalás!', 'Nincs elég PlayCoin egyenleged!')
+        }
+    }
+
+    document.getElementById('shopRefresh').onclick = async () => loadShop(shopPage)
+}
+
+function closeSettingsSelect(el){
+    for(let ele of document.getElementsByClassName('settingsSelectContainer')) {
+        const selectedDiv = ele.getElementsByClassName('settingsSelectSelected')[0]
+        const optionsDiv = ele.getElementsByClassName('settingsSelectOptions')[0]
+
+        if(!(selectedDiv === el)) {
+            selectedDiv.classList.remove('select-arrow-active')
+            optionsDiv.setAttribute('hidden', '')
+        }
+    }
+}
+
+function getSelectedDropdown(id) {
+    const dropdown = document.getElementById(id)
+    for (let opt of dropdown.children) {
+        if (opt.hasAttribute('selected')) {
+            return opt.getAttribute('value')
+        }
+    }
+}
+
+function filePathToBlob(filePath) {
+    return new Promise((resolve, reject) => {
+      require('fs').readFile(filePath, (err, data) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+  
+        const blob = new Blob([data], { type: 'application/octet-stream' });
+        resolve(blob);
+      });
+    });
+  }
+
+//Shop button
+document.getElementById('shopButton').onclick = async () => {
+    if (ConfigManager.getSelectedAccount().type == 'playclan') {
+        $('#landingContainer *').removeAttr('tabindex')
+        if (shopActive) {
+            updateSelectedAccount(ConfigManager.getSelectedAccount())
+            $('#landingContainer *').removeAttr('tabindex')
+            $('#shopContainer *').attr('tabindex', '-1')
+        } else {
+
+            shopPage = "profil"
+            loadShop(shopPage)
+
+            $('#landingContainer *').attr('tabindex', '-1')
+            $('#shopContainer, #shopContainer *').removeAttr('tabindex')
+        }
+
+        slideShop(!shopActive)
+        shopActive = !shopActive
+    } else {
+        showLaunchFailure('Bejelentkezési hiba!', 'Ehhez a funkció használatához a PlayClan fiókodba kell bejelentkezned!')
     }
 }
 

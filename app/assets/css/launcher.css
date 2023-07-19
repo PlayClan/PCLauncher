@@ -22,6 +22,11 @@
     src: url('../fonts/Ringbearer.ttf');
 }
 
+@font-face {
+    font-family: 'Minecraft';
+    src: url('../fonts/Minecraft-Regular.ttf');
+}
+
 /*******************************************************************************
  *                                                                             *
  * Element Styles                                                              *
@@ -2541,6 +2546,411 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
 }
 
+#shopContainer {
+    position: absolute;
+    bottom: 100%;
+    height: 100%;
+    width: 100%;
+    transition: bottom 2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shopContent {
+    display: flex;
+    align-items: start;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    padding: 30px;
+}
+
+.shopContent > p {
+    margin-top: 20px;
+}
+
+.shopContent h2, .shopContent h3 {
+    margin: 0.5rem 0 0.5rem 0;
+}
+
+.shopContent .shopFooter {
+    margin-top: 2rem;
+    position: absolute;
+    bottom: 1rem;
+}
+
+.shop {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+}
+
+.shop.left {
+    flex-grow: 1;
+}
+
+.shop.left > div {
+    display: flex;
+    justify-content: flex-start;
+    width: 96%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-height: 71.5vh;
+}
+
+.shopDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    padding: 10px;
+    margin: 10px;
+}
+
+.shopDiv::-webkit-scrollbar {
+    width: 2px;
+}
+.shopDiv::-webkit-scrollbar-track {
+    display: none;
+}
+.shopDiv::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.50);
+}
+
+.shopDiv hr {
+    width: 100%;
+}
+
+.shopHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+.shopHeader > img {
+    height: 50px;
+    width: 50px;
+}
+
+.shopMenu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.shopMenu:hover, .shopMenu:active {
+    border: 1.5px solid rgba(239, 239, 239, 0.57);
+    text-shadow: 0px 0px 20px #fff, 0px 0px 20px #fff;
+}
+
+.shopMenu.active {
+    border: 1.8px solid rgba(239, 239, 239, 0.57);
+}
+
+.shopFooter {
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.shopFooter:hover, .shopFooter:active {
+    text-shadow: 0px 0px 20px #fff, 0px 0px 20px #fff;
+}
+
+#shopRefresh {
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+#shopRefresh:hover, #shopRefresh:active {
+    filter: drop-shadow(0px 0px 20px #fff);
+}
+
+.shopPlayerList {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.shopPlayer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px;
+}
+
+.shopPlayer h4 {
+    margin: 0.3rem 0;
+}
+
+.shopPlayer > img {
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+}
+
+.shopPlayer > div {
+    display: flex;
+    flex-direction: column;
+}
+
+#skinSelector {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    transition: 0.25s ease;
+    margin: 10px 0;
+}
+#skinSelector:hover,
+#skinSelector:focus,
+#skinSelector[drag] {
+    background: rgba(54, 54, 54, 0.25);
+    text-shadow: 0px 0px 20px white;
+}
+
+#skinUpload {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    width: min-content;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    transition: 0.25s ease;
+    margin: 10px 0;
+    padding: 10px;
+}
+#skinUpload:hover,
+#skinUpload:focus {
+    background: rgba(54, 54, 54, 0.25);
+    text-shadow: 0px 0px 20px white;
+}
+
+.shopUploadRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.shopUploadColumn {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex-grow: 1;
+}
+
+@media screen and (min-width: 1440px) {
+    .flexBasis {
+        flex-basis: calc(100% / 3);
+    }
+}
+
+.noGap {
+    gap: 0px;
+}
+
+.line {
+    border-style: solid;
+    border-width: 1px 0px 0px 0px;
+}
+
+.shopButton {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    transition: 0.25s ease;
+    margin: 10px 0;
+    padding: 10px;
+}
+.shopButton:hover,
+.shopButton:focus {
+    background: rgba(54, 54, 54, 0.25);
+    text-shadow: 0px 0px 20px white;
+}
+
+.shopButton:disabled,
+.shopButton:hover:disabled,
+.shopButton:focus:disabled {
+    background: rgba(0, 0, 0, 0.25);
+    text-shadow: revert;
+    cursor: not-allowed;
+    color: gray;
+}
+
+.shopInput {
+    color: white;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    font-family: 'Avenir Book';
+    transition: 0.25s ease;
+    padding: 10px;
+    flex-grow: 1;
+}
+
+.shopInput:focus {
+    outline: none;
+}
+
+.shopInput.error {
+    border: 1px solid rgba(114, 0, 0, 0.57);
+}
+
+.shopInput.success {
+    border: 1px solid rgba(0, 114, 2, 0.57);
+}
+
+.left {
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.shopUrl {
+    font-weight: 400;
+    color: #a0a0a0;
+    text-decoration: none;
+    transition: 0.25s ease;
+}
+
+.shopUrl:hover,
+.shopUrl:focus {
+    background: rgba(54, 54, 54, 0.25);
+    text-shadow: 0px 0px 20px white;
+}
+
+.ui.container {
+    margin-bottom: 2em;
+}
+
+#preview {
+    background-color: rgba(10, 10, 10, 0.6);
+    border-radius: 3px;
+}
+
+#preview {
+    color: #fff;
+    font-size: 1.6em;
+    min-height: 2.8em;
+    padding: 0.1em 0.5em;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: calc(100vw - 100%);
+}
+
+#codes {
+    color: #ccc;
+    padding: 0.9em 1.2em;
+}
+
+.render .blue {
+    color: #00c;
+}
+
+.render .green {
+    color: #090;
+}
+
+.render .darkaqua {
+    color: #0aa;
+}
+
+.render .red {
+    color: #b00;
+}
+
+.render .purple {
+    color: #909;
+}
+
+.render .orange {
+    color: #d60;
+}
+
+.render .gray {
+    color: #999;
+}
+
+.render .darkgray {
+    color: #555;
+}
+
+.render .lightblue {
+    color: #66f;
+}
+
+.render .black {
+    color: #000;
+}
+
+.render .lime {
+    color: #0f0;
+}
+
+.render .aqua {
+    color: #0ff;
+}
+
+.render .lightred {
+    color: #f55;
+}
+
+.render .pink {
+    color: #c0f;
+}
+
+.render .yellow {
+    color: #ff0;
+}
+
+.render .white {
+    color: #fff;
+}
+
 /* News content container. */
 #newsContent {
     height: 82vh;
@@ -3384,6 +3794,84 @@ input:checked + .toggleSwitchSlider:before {
     font-weight: 900;
     letter-spacing: 2px;
     text-shadow: 0px 0px 0px #bebcbb;
+    font-size: 11px;
+    line-height: 30px;
+    display: flex;
+    transition: 0.25s ease;
+}
+
+/* shop button */
+.center_shop {
+    margin: 0 auto;
+    margin-top: 25px;
+    position: relative;
+    display: inline-block;
+}
+.center_shop > .bot_wrapper {
+    position: relative;
+    display: inline-block;
+}
+.center_shop > .bot_wrapper > #content {
+    position: relative;
+    display: inline-block;
+    top: 10px;
+    transition: top 2s ease 0s;
+}
+#shopButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    display: inline-block;
+}
+#shopButton:hover #shopButtonText,
+#shopButton:focus #shopButtonText {
+    text-shadow: 0px 0px 20px #fff, 0px 0px 20px #fff;
+}
+#shopButton:active {
+    color: #c7c7c7;
+    text-shadow: 0px 0px 20px #c7c7c7, 0px 0px 20px #c7c7c7;
+}
+
+#shopButton:hover #shopButtonSVG,
+#shopButton:focus #shopButtonSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #fff);
+}
+#shopButton:active #shopButtonSVG .arrowLine {
+    stroke: #c7c7c7;
+}
+#shopButton:active #shopButtonSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+}
+#shopButton:disabled #shopButtonSVG .arrowLine {
+    stroke: rgba(255, 255, 255, 0.75);
+}
+
+/* Icon which indicates there is new news. */
+#shopButtonAlert {
+    width: 5px;
+    height: 5px;
+    position: absolute;
+    border-radius: 50%;
+    background: red;
+    right: -1px;
+    top: 50%;
+}
+
+/* Arrow image which floats above the news button. */
+#shopButtonSVG {
+    height: 11px;
+    margin-left: -2px;
+    transition: 0.25s ease;
+}
+
+/* Span which contains the news button text. */
+#shopButtonText {
+    color: white;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0px 0px 20px black;
     font-size: 11px;
     line-height: 30px;
     display: flex;

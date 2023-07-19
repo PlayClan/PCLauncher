@@ -290,13 +290,14 @@ function createWindow() {
         width: 980,
         height: 552,
         minWidth: 780,
-        minHeight: 410,
+        minHeight: 500,
         icon: getPlatformIcon('SealCircle'),
         frame: false,
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            enableRemoteModule: true
         },
         backgroundColor: '#171614'
     })
