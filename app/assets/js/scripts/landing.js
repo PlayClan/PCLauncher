@@ -602,7 +602,7 @@ async function dlAsync(login = true) {
         setLaunchDetails('Játék elindítása...')
 
         // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
-        const SERVER_JOINED_REGEX = new RegExp(`Sikeresen bejelentkezés!`)
+        const SERVER_JOINED_REGEX = new RegExp(`Sikeres bejelentkez`)
 
         const onLoadComplete = () => {
             toggleLaunchArea(false)
