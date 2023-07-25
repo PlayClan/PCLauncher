@@ -4067,7 +4067,7 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Overlay description styles. */
 #overlayDesc {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
     -webkit-user-select: initial;
 }
@@ -4104,9 +4104,9 @@ input:checked + .toggleSwitchSlider:before {
 /* Overlay dismiss option styles. */
 #overlayDismiss {
     font-weight: bold;
-    font-size: 10px;
+    font-size: 12px;
     text-decoration: none;
-    padding-top: 2.5px;
+    padding-top: 10px;
     background: none;
     border: none;
     outline: none;

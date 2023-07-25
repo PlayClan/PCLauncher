@@ -646,6 +646,29 @@ async function dlAsync(login = true) {
                 loggerLaunchSuite.error('Game launch failed, LaunchWrapper was not downloaded properly.')
                 showLaunchFailure('Hiba az indítás során', 'A fő fájl, a LaunchWrapper letöltése nem sikerült megfelelően. Ezért játék nem indul el.<br><br>A probléma megoldásához ideiglenesen kapcsolja ki a víruskereső szoftvert, és indítsa újra a játékot.<br><br>Ha van ideje kérjük <a href="https://dc.playclan.hu/">jelentse be a hibát</a> és tudassa velünk, milyen víruskereső szoftvert használ. Felvesszük veled a kapcsolatot, és megpróbáljuk megoldani a problémát.')
             }
+            if (data.indexOf('Failed to load a library') > -1) {
+                loggerLaunchSuite.error('Game launch failed, failed to load a library.')
+                setOverlayContent(
+                    'Hiba az indítás során',
+                    'Nem sikerült betölteni egy fontos fájlt a Minecraft elindításához.<br>A javításhoz kérlek navigálj el ebbe a mappába:<br>"' + path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id) + '",<br>és töröld ki a "config" nevezetű mappát.<br><br>Ha a hiba a következő indításnál sem javul meg, akkor a<br>"' + path.join(ConfigManager.getCommonDirectory()) + '"<br>mappában a "libraries" mappát töröld ki.',
+                    'Config mappa megnyitása',
+                    'Libraries mappa megnyitása'
+                )
+                setOverlayHandler(() => {
+                    const p = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id, 'config')
+                    DropinModUtil.validateDir(p)
+                    shell.openPath(p)
+                    toggleOverlay(false, false)
+                })
+                setDismissHandler(() => {
+                    const p = path.join(ConfigManager.getCommonDirectory(), 'libraries')
+                    DropinModUtil.validateDir(p)
+                    shell.openPath(p)
+                    toggleOverlay(false, false)
+                })
+                toggleOverlay(true, true)
+                toggleLaunchArea(false)
+            }
         }
 
         try {
@@ -654,7 +677,7 @@ async function dlAsync(login = true) {
 
             // Bind listeners to stdout.
             proc.stdout.on('data', tempListener)
-            proc.stderr.on('data', gameErrorListener)
+            proc.stdout.on('data', gameErrorListener)
 
             setLaunchDetails('Kész. Jó játékot!')
 
