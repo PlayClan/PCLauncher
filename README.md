@@ -10,8 +10,8 @@
 
 [<p align="center"><img src="https://img.shields.io/github/downloads/PlayClan/PCLauncher/total.svg?style=for-the-badge&label=LET%C3%96LT%C3%89SEK" alt="letöltések">](https://github.com/PlayClan/PCLauncher/releases) <img src="https://img.shields.io/github/release/PlayClan/PCLauncher.svg?style=for-the-badge&label=STABIL%20VERZI%C3%93" alt="stabil verzió"> <img src="https://img.shields.io/github/release/PlayClan/PCLauncher/all.svg?style=for-the-badge&label=B%C3%89TA%20VERZI%C3%93" alt="béta verzió"></p>
 
-![Képernyőkép 1](https://i.imgur.com/jUe0wkh.png)
-![Képernyőkép 2](https://i.imgur.com/d2BFyhG.png)
+![Képernyőkép 1](https://i.imgur.com/K12eFc6.png)
+![Képernyőkép 2](https://i.imgur.com/rcJjXM4.png)
 
 ## Funkciók
 
@@ -22,13 +22,14 @@
   * PlayClan fiók bejelentkezés.
     * Automatikus bejelentkezés a szerverre.
     * Automatikus IP levédés amennyiben van beállítva a fiókodon.
+    * Shop megnyitása egy kattintással
 * 📂 Hatékony fájl kezelés.
   * Automatikusan megkapod a kliens frissítéseket, amikor kiadjuk azokat.
   * A fájlok ellenőrizve vannak indítás előtt. A hibás fájlokat újra letöltjük.
 * ☕ **Automatikus Java ellenőrzés.**
   * Ha nem kompatibilis Java verzió van telepítve, akkor automatikus letöltjük a megfelelő verziót *neked*.
   * Nem kell Java-t telepítened a kliens futtatásához.
-* 📰 A hírek csatorna natívan bele van építve a kliensbe.
+* 📰 A Kortdex hírek csatorna natívan bele van építve a kliensbe.
 * ⚙️ Intuitív beállítások kezelés, beleértve a Java beállítások módosítását.
 * Több Minecraft verzió.
   * Válassz másik Minecraft verziót pár kattintással.
@@ -47,17 +48,17 @@ A klienst letudod tölteni [innen](https://github.com/PlayClan/PCLauncher/releas
 
 | Platform | Fájl |
 | -------- | ---- |
-| Windows x64 | `PlayClan_Launcher-setup-VERZIÓ.exe` |
-| macOS x64 | `PlayClan_Launcher-setup-VERZIÓ-x64.dmg` |
-| macOS arm64 | `PlayClan_Launcher-setup-VERZIÓ-arm64.dmg` |
-| Linux x64 | `PlayClan_Launcher-setup-VERZIÓ.AppImage` |
+| Windows x64 | `PlayClan-Launcher-setup-VERZIÓ.exe` |
+| macOS x64 | `PlayClan-Launcher-setup-VERZIÓ-x64.dmg` |
+| macOS arm64 | `PlayClan-Launcher-setup-VERZIÓ-arm64.dmg` |
+| Linux x64 | `PlayClan-Launcher-setup-VERZIÓ.AppImage` |
 
 ## Konzol
 
 Ahhoz, hogy megnyisd a konzolt, a következő billentyű kombinációt kell lenyomnod:
 
 ```console
-CTRL + SHIFT + I
+Ctrl + Shift + i
 ```
 
 Győződj meg róla, hogy a Console oldalon vagy. Ne másolj be semmit a konzolba, ha mástól kaptál valamilyen kódot, csak akkor ha 100%-ban biztos vagy abban, hogy mit csinál a kód. **Ismeretlen kódok bemásolásával a fiókodat teszed kockára.**
@@ -180,8 +181,8 @@ A Microsoft Authentication beállításához lásd: https://github.com/PlayClan/
 
 ## Források
 
-* [Eredeti Launcher][fork]
-* [Eredeti Launcher Wiki][wiki]
+* [Helios Launcher][fork]
+* [Helios Launcher Wiki][wiki]
 * [Nebula (Distribution.json fájl készítése)][nebula]
 
 Ha bármiben elkadtál, csatlakozz Discord szerverünkre, ahol segíthetünk.
