@@ -1105,9 +1105,9 @@ async function loadShop(page) {
                             </div>
                         </div>
                         <div class="row noGap">
-                            <input class="shopInput right" type="text" id="kinezetUdvozloUzenetElejeText" placeholder="Üdvözlő üzeneted eleje" value="${data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>'))}">
+                            <input class="shopInput right" type="text" id="kinezetUdvozloUzenetElejeText" placeholder="Üdvözlő üzeneted eleje" value="${data.data.request.udvozlo_uzenet == null ? '' : data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>'))}">
                             <span class="shopInput center" style="padding: 8px">${data.data.request.name}</span>
-                            <input class="shopInput" type="text" id="kinezetUdvozloUzenetVegeText" placeholder="Üdvözlő üzeneted vége" value="${data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
+                            <input class="shopInput" type="text" id="kinezetUdvozloUzenetVegeText" placeholder="Üdvözlő üzeneted vége" value="${data.data.request.udvozlo_uzenet == null ? '' : data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
                         </div>
                         <div class="row">
                             <button class="shopButton" id="kinezetUdvozloUzenetSubmit">Üdvözlő üzeneted frissítése</button>
@@ -1123,9 +1123,9 @@ async function loadShop(page) {
                             </div>
                         </div>
                         <div class="row noGap">
-                            <input class="shopInput right" type="text" id="kinezetKilepoUzenetElejeText" placeholder="Kilépő üzeneted eleje" value="${data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>'))}">
+                            <input class="shopInput right" type="text" id="kinezetKilepoUzenetElejeText" placeholder="Kilépő üzeneted eleje" value="${data.data.request.kilepo_uzenet == null ? '' : data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>'))}">
                             <span class="shopInput center" style="padding: 8px">${data.data.request.name}</span>
-                            <input class="shopInput" type="text" id="kinezetKilepoUzenetVegeText" placeholder="Kilépő üzeneted vége" value="${data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
+                            <input class="shopInput" type="text" id="kinezetKilepoUzenetVegeText" placeholder="Kilépő üzeneted vége" value="${data.data.request.kilepo_uzenet == null ? '' : data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
                         </div>
                         <div class="row">
                             <button class="shopButton" id="kinezetKilepoUzenetSubmit">Kilépő üzeneted frissítése</button>
@@ -1470,7 +1470,7 @@ async function loadShop(page) {
 
         function renderShopChatSzinSelectSelected() {
             append = ''
-            if (getSelectedDropdown("shopChatSzinSelectOptions") == "off") {
+            if (getSelectedDropdown("shopChatSzinSelectOptions") == "off" || getSelectedDropdown("shopChatSzinSelectOptions") == undefined) {
                 kinezetChatSzinOutput.html(replacers(`§f${data.data.request.name}§7: ` + "§bEz egy teszt szöveg"))
             } else {
                 kinezetChatSzinOutput.html(replacers(`§f${data.data.request.name}§7: ` + "§" + getSelectedDropdown("shopChatSzinSelectOptions") + "Ez egy teszt szöveg"))
