@@ -38,7 +38,12 @@ mac:
 
 # Linux Configuration
 linux: 
-  target: 'AppImage'
+  target:
+    - target: 'AppImage'
+      arch:
+        - 'x64'
+        - 'arm64'
+  artifactName: '${productName}-${version}-${arch}.${ext}'
   maintainer: 'PlayClan'
   vendor: 'PlayClan'
   synopsis: 'PlayClan Launcher'

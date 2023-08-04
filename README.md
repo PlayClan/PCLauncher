@@ -51,7 +51,8 @@ A klienst letudod tölteni [innen](https://github.com/PlayClan/PCLauncher/releas
 | Windows x64 | `PlayClan-Launcher-setup-VERZIÓ.exe` |
 | macOS x64 | `PlayClan-Launcher-setup-VERZIÓ-x64.dmg` |
 | macOS arm64 | `PlayClan-Launcher-setup-VERZIÓ-arm64.dmg` |
-| Linux x64 | `PlayClan-Launcher-setup-VERZIÓ.AppImage` |
+| Linux x64 | `PlayClan-Launcher-VERZIÓ-x86_64.AppImage` |
+| Linux arm64 | `PlayClan-Launcher-VERZIÓ-arm64.AppImage` |
 
 ## Konzol
 
