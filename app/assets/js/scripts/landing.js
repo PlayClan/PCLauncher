@@ -1235,7 +1235,8 @@ async function loadShop(page) {
     document.getElementById('skinSelector').onclick = () => {
         let options = {
             title: "Fájl kiválasztása",
-            properties: ['openFile']
+            properties: ['openFile'],
+            defaultPath: remote.app.getPath('documents'),
         }
     
         // Show the open (folder) dialog.
