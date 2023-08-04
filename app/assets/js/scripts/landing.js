@@ -45,6 +45,7 @@ const server_selection_button = document.getElementById('server_selection_button
 const user_text               = document.getElementById('user_text')
 const avatarOverlay           = document.getElementById('avatarOverlay')
 const settingsMediaButton     = document.getElementById('settingsMediaButton')
+const shopButton              = document.getElementById('shopButton')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
@@ -62,12 +63,14 @@ function toggleLaunchArea(loading){
         user_text.disabled = true
         avatarOverlay.disabled = true
         settingsMediaButton.disabled = true
+        shopButton.disabled = true
     } else {
         launch_details.style.display = 'none'
         launch_content.style.display = 'inline-flex'
         user_text.disabled = false
         avatarOverlay.disabled = false
         settingsMediaButton.disabled = false
+        shopButton.disabled = false
     }
 }
 
