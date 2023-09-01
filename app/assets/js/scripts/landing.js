@@ -689,12 +689,18 @@ async function dlAsync(login = true) {
             hasRPC = true
             if (ConfigManager.getAllowLauncherHide()) {
                 ipcRenderer.send('hide-window')
+                toggleLaunchArea(false)
+            } else {
+                setTimeout(() => {
+                    toggleLaunchArea(false)
+                }, 3000);
             }
             proc.on('close', (code, signal) => {
                 loggerLaunchSuite.info('Shutting down Discord Rich Presence..')
                 DiscordWrapper.shutdownRPC()
                 hasRPC = false
                 proc = null
+                toggleLaunchArea(false)
                 if (ConfigManager.getAllowLauncherHide()) {
                     ipcRenderer.send('show-window')
                 }
