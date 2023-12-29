@@ -15,6 +15,7 @@ const { RestResponseStatus } = require('helios-core/common')
 const { MojangRestAPI, mojangErrorDisplayable, MojangErrorCode } = require('helios-core/mojang')
 const { MicrosoftAuth, microsoftErrorDisplayable, MicrosoftErrorCode } = require('helios-core/microsoft')
 const { AZURE_CLIENT_ID }    = require('./ipcconstants')
+const { v5: uuidv5 }         = require('uuid');
 
 const log = LoggerUtil.getLogger('AuthManager')
 
@@ -210,6 +211,18 @@ exports.removePlayClanAccount = async function(uuid){
     }
 }
 
+function generateOfflinePlayerUUID(playerName) {
+    // Namespace UUID for version 5 (v5) UUIDs can be any valid UUID;
+    // here using URL namespace as a placeholder.
+    const NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
+
+    // Concatenating the specific player identifier string.
+    const name = "OfflinePlayer:" + playerName;
+
+    // Generating and returning the UUID.
+    return uuidv5(name, NAMESPACE);
+}
+
 exports.addPlayClanAccount = async function(authCode) {
 
     const formData = new FormData()
@@ -229,7 +242,7 @@ exports.addPlayClanAccount = async function(authCode) {
     })
 
     const ret = ConfigManager.addPlayClanAuthAccount(
-        fullAuth.data.request.create_date + "",
+        generateOfflinePlayerUUID(fullAuth.data.request.name),
         authCode,
         fullAuth.data.request.name,
         fullAuth.data.request.playcoin,
@@ -367,8 +380,9 @@ async function validateSelectedPlayClanAccount(){
     });
 
     if (responseData.response.status == 1) {
+        console.log(responseData.data.request.name)
         ConfigManager.updatePlayClanAuthAccount(
-            current.uuid,
+            generateOfflinePlayerUUID(responseData.data.request.name),
             responseData.data.request.playcoin,
             responseData.data.request.jatekido,
             responseData.response["token-expiry"]

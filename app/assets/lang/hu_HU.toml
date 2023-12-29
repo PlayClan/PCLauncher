@@ -47,7 +47,6 @@ serverHeader = "Elérhető verziók"
 accountHeader = "Fiók kiválasztása"
 cancel = "Mégse"
 select = "Kiválasztás"
-dismiss = "Elvetés"
 
 [ejs.settings.navbar]
 header = "Beállítások"
@@ -381,3 +380,6 @@ noUpdate = "Frissítések keresése"
 
 [js.dropinmodutil]
 off = "Kikapcsolva"
+
+[js.overlay]
+dismiss = "Elvetés"

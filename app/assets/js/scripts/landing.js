@@ -484,7 +484,7 @@ let hasRPC = false
 // Change this if your server uses something different.
 const GAME_JOINED_REGEX = /\[.+\]: Sound engine started/
 const DISCONNECTED_REGEX = /\[.+\]: Disconnected from server/
-const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+)$/
+const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+|Loading Minecraft .+ with Fabric Loader .+)$/
 const MIN_LINGER = 5000
 
 async function dlAsync(login = true) {
@@ -593,13 +593,13 @@ async function dlAsync(login = true) {
         serv.rawServer.id
     )
 
-    const forgeData = await distributionIndexProcessor.loadForgeVersionJson(serv)
+    const modLoaderData = await distributionIndexProcessor.loadModLoaderVersionJson(serv)
     const versionData = await mojangIndexProcessor.getVersionJson()
 
     if(login) {
         const authUser = ConfigManager.getSelectedAccount()
         loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
-        let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
+        let pb = new ProcessBuilder(serv, versionData, modLoaderData, authUser, remote.app.getVersion())
         setLaunchDetails(Lang.queryJS('landing.launching'))
 
         // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
