@@ -8,7 +8,7 @@ const { Client } = require('discord-rpc-patch')
 let client
 let activity
 
-exports.initRPC = function(genSettings, servSettings, initialDetails = 'Várakozás a kliensre...'){
+exports.initRPC = function(genSettings, servSettings, initialDetails = Lang.queryJS('discord.waiting')){
     client = new Client({ transport: 'ipc' })
     activity = {
         details: initialDetails,
@@ -21,11 +21,11 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Várakoz
         instance: false,
         buttons: [
             {
-                label: 'Discord',
+                label: Lang.queryJS('discord.discord'),
                 url: 'https://discord.gg/uahcEgvKgX',
             },
             {
-                label: 'Weboldal',
+                label: Lang.queryJS('discord.website'),
                 url: "https://playclan.hu",
             },
         ]

@@ -124,7 +124,7 @@ document.getElementById('launch_button').addEventListener('click', async e => {
                 await asyncSystemScan(server.effectiveJavaOptions)
             } else {
     
-                setLaunchDetails(Lang.queryJS('landing.launch.pleaseWait'))
+                setLaunchDetails(Lang.queryJS('landing.pleaseWait'))
                 toggleLaunchArea(true)
                 setLaunchPercentage(0, 100)
     
@@ -140,7 +140,7 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         }
     } catch(err) {
         loggerLanding.error('Unhandled error in during launch process.', err)
-        showLaunchFailure('Elindítási hiba', 'Lásd a konzolt (CTRL + Shift + i) további hibákért.')
+        showLaunchFailure(Lang.queryJS('landing.errorStartupTitle'), Lang.queryJS('landing.errorConsole'))
     }
 })
 
@@ -175,7 +175,7 @@ user_text.onclick = async e => {
 
 // Bind selected account
 function updateSelectedAccount(authUser){
-    let username = 'Nincs fiók kiválasztva'
+    let username = Lang.queryJS('landing.noAccount')
     if(authUser != null){
         if(authUser.displayName != null){
             username = authUser.displayName
@@ -204,14 +204,14 @@ function updateSelectedServer(serv){
     }
     ConfigManager.setSelectedServer(serv != null ? serv.rawServer.id : null)
     ConfigManager.save()
-    server_selection_button.innerHTML = '\u2022 ' + (serv != null ? serv.rawServer.name + (serv.rawServer.mainServer ? "" : " <span class='warning'>(!)</span>") : 'Nincs szerver kiválasztva')
+    server_selection_button.innerHTML = '\u2022 ' + (serv != null ? serv.rawServer.name + (serv.rawServer.mainServer ? "" : " <span class='warning'>(!)</span>") : Lang.queryJS('landing.noServer'))
     if(getCurrentView() === VIEWS.settings){
         animateSettingsTabRefresh()
     }
     setLaunchEnabled(serv != null)
 }
 // Real text is set in uibinder.js on distributionIndexDone.
-server_selection_button.innerHTML = '\u2022 Betöltés...'
+server_selection_button.innerHTML = '\u2022 ' + Lang.queryJS('landing.loading')
 server_selection_button.onclick = async e => {
     e.target.blur()
     await toggleServerSelection(true)
@@ -282,14 +282,14 @@ const refreshServerStatus = async (fade = false) => {
     loggerLanding.info('Refreshing Server Status')
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
 
-    let pLabel = 'SZERVER'
-    let pVal = 'OFFLINE'
+    let pLabel = Lang.queryJS('landing.server')
+    let pVal = Lang.queryJS('landing.offline')
 
     try {
 
         const servStat = await getServerStatus(47, serv.hostname, serv.port)
         console.log(servStat)
-        pLabel = 'JÁTÉKOSOK'
+        pLabel = Lang.queryJS('landing.players')
         pVal = servStat.players.online + '/' + servStat.players.max
 
     } catch (err) {
@@ -343,7 +343,7 @@ function showLaunchFailure(title, desc){
  */
 async function asyncSystemScan(effectiveJavaOptions, launchAfter = true){
 
-    setLaunchDetails('Rendszerinformációk ellenőrzése...')
+    setLaunchDetails(Lang.queryJS('landing.checkingJava'))
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
@@ -356,30 +356,30 @@ async function asyncSystemScan(effectiveJavaOptions, launchAfter = true){
         // If the result is null, no valid Java installation was found.
         // Show this information to the user.
         setOverlayContent(
-            'Nem található kompatibilis<br>Java telepítés',
-            `A PlayClan-hoz való csatlakozáshoz 64 bites Java ${effectiveJavaOptions.suggestedMajor} telepítésre van szüksége. Szeretné, hogy telepítsük?`,
-            'Java telepítése',
-            'Manuális telepítés'
+            Lang.queryJS('landing.javaNotFoundTitle'),
+            Lang.queryJS('landing.javaNotFoundContent1') + ' ' + effectiveJavaOptions.suggestedMajor + ' ' + Lang.queryJS('landing.javaNotFoundContent2'),
+            Lang.queryJS('landing.javaNotFoundButton'),
+            Lang.queryJS('landing.javaNotFoundButtonAlt')
         )
         setOverlayHandler(() => {
-            setLaunchDetails('Java letöltése...')
+            setLaunchDetails(Lang.queryJS('landing.downloadJava'))
             toggleOverlay(false)
             
             try {
                 downloadJava(effectiveJavaOptions, launchAfter)
             } catch(err) {
                 loggerLanding.error('Unhandled error in Java Download', err)
-                showLaunchFailure('Hiba a Java letöltése közben', 'Lásd a konzolt (CTRL + Shift + i) további hibákért.')
+                showLaunchFailure(Lang.queryJS('landing.errorJavaTitle'), Lang.queryJS('landing.errorConsole'))
             }
         })
         setDismissHandler(() => {
             $('#overlayContent').fadeOut(250, () => {
                 //$('#overlayDismiss').toggle(false)
                 setOverlayContent(
-                    'Az indításhoz<br>Java szükséges',
-                    `Egy érvényes x64-es Java ${effectiveJavaOptions.suggestedMajor} telepítése az indításához szükséges.<br><br>Kérjük, tekintse meg a <a href="https://github.com/PlayClan/PCLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Java kezelési útmutató</a>-t a Java manuális telepítéséhez.`,
-                    'Megértettem',
-                    'Vissza'
+                    Lang.queryJS('landing.javaManualTitle'),
+                    Lang.queryJS('landing.javaManualContent1') + ' ' + effectiveJavaOptions.suggestedMajor +  ' ' + Lang.queryJS('landing.javaManualContent2'),
+                    Lang.queryJS('landing.javaManualButton'),
+                    Lang.queryJS('landing.javaManualButtonAlt')
                 )
                 setOverlayHandler(() => {
                     toggleLaunchArea(false)
@@ -448,7 +448,7 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
     remote.getCurrentWindow().setProgressBar(2)
 
     // Wait for extration to complete.
-    const eLStr = 'Java kicsomagolása'
+    const eLStr = Lang.queryJS('landing.extractingJava')
     let dotStr = ''
     setLaunchDetails(eLStr)
     const extractListener = setInterval(() => {
@@ -470,7 +470,7 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
     ConfigManager.save()
 
     clearInterval(extractListener)
-    setLaunchDetails('Java telepítve!')
+    setLaunchDetails(Lang.queryJS('landing.javaComplete'))
 
     // TODO Callback hell
     // Refactor the launch functions
@@ -496,7 +496,7 @@ async function dlAsync(login = true) {
 
     const loggerLaunchSuite = LoggerUtil.getLogger('LaunchSuite')
 
-    setLaunchDetails('Szerver információk betöltése...')
+    setLaunchDetails(Lang.queryJS('landing.loadingInfo'))
 
     let distro
 
@@ -505,7 +505,7 @@ async function dlAsync(login = true) {
         onDistroRefresh(distro)
     } catch(err) {
         loggerLaunchSuite.error('Unable to refresh distribution index.', err)
-        showLaunchFailure('Végzetes hiba', 'Nem sikerült betölteni a terjesztési index másolatát. Lásd a konzolt (CTRL + Shift + i) további hibákért.')
+        showLaunchFailure(Lang.queryJS('landing.fatal'), Lang.queryJS('landing.errorConsole'))
         return
     }
 
@@ -521,7 +521,7 @@ async function dlAsync(login = true) {
         }
     }
 
-    setLaunchDetails('Kérem várjon...')
+    setLaunchDetails(Lang.queryJS('landing.verifying'))
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
@@ -537,17 +537,17 @@ async function dlAsync(login = true) {
 
     fullRepairModule.childProcess.on('error', (err) => {
         loggerLaunchSuite.error('Error during launch', err)
-        showLaunchFailure('Hiba az indítás során', err.message || 'Lásd a konzolt (CTRL + Shift + i) további hibákért.')
+        showLaunchFailure(Lang.queryJS('landing.errorLaunch'), err.message || Lang.queryJS('landing.errorConsole'))
     })
     fullRepairModule.childProcess.on('close', (code, _signal) => {
         if(code !== 0){
             loggerLaunchSuite.error(`Full Repair Module exited with code ${code}, assuming error.`)
-            showLaunchFailure('Hiba az indítás során', 'Lásd a konzolt (CTRL + Shift + i) további hibákért.')
+            showLaunchFailure(Lang.queryJS('landing.errorLaunch'), Lang.queryJS('landing.errorConsole'))
         }
     })
 
     loggerLaunchSuite.info('Validating files.')
-    setLaunchDetails('Fájlok ellenőrzése...')
+    setLaunchDetails(Lang.queryJS('landing.validating'))
     let invalidFileCount = 0
     try {
         invalidFileCount = await fullRepairModule.verifyFiles(percent => {
@@ -556,14 +556,14 @@ async function dlAsync(login = true) {
         setLaunchPercentage(100)
     } catch (err) {
         loggerLaunchSuite.error('Error during file validation.')
-        showLaunchFailure('Hiba a fájlok ellenőrzése során', err.displayable || 'Lásd a konzolt (CTRL + Shift + i) további hibákért.')
+        showLaunchFailure(Lang.queryJS('landing.errorValidate'), err.displayable || Lang.queryJS('landing.errorConsole'))
         return
     }
     
 
     if(invalidFileCount > 0) {
         loggerLaunchSuite.info('Downloading files.')
-        setLaunchDetails('Fájlok letöltése...')
+        setLaunchDetails(Lang.queryJS('landing.downloading'))
         setLaunchPercentage(0)
         try {
             await fullRepairModule.download(percent => {
@@ -572,7 +572,7 @@ async function dlAsync(login = true) {
             setDownloadPercentage(100)
         } catch(err) {
             loggerLaunchSuite.error('Error during file download.')
-            showLaunchFailure('Hiba a fájlok letöltése közben', err.displayable || 'Lásd a konzolt (CTRL + Shift + i) további hibákért.')
+            showLaunchFailure(Lang.queryJS('landing.errorDownload'), err.displayable || Lang.queryJS('landing.errorConsole'))
             return
         }
     } else {
@@ -584,7 +584,7 @@ async function dlAsync(login = true) {
 
     fullRepairModule.destroyReceiver()
 
-    setLaunchDetails('Indítás...')
+    setLaunchDetails(Lang.queryJS('landing.finalizing'))
 
     const mojangIndexProcessor = new MojangIndexProcessor(
         ConfigManager.getCommonDirectory(),
@@ -602,7 +602,7 @@ async function dlAsync(login = true) {
         const authUser = ConfigManager.getSelectedAccount()
         loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
         let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
-        setLaunchDetails('Játék elindítása...')
+        setLaunchDetails(Lang.queryJS('landing.launching'))
 
         // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
         const SERVER_JOINED_REGEX = new RegExp(`Sikeres bejelentkez`)
@@ -610,7 +610,7 @@ async function dlAsync(login = true) {
         const onLoadComplete = () => {
             toggleLaunchArea(false)
             if(hasRPC){
-                DiscordWrapper.updateDetails('Játék betöltése...') 
+                DiscordWrapper.updateDetails(Lang.queryJS('discord.loading')) 
                 proc.stdout.on('data', gameStateChange)
             }
             proc.stdout.removeListener('data', tempListener)
@@ -637,9 +637,9 @@ async function dlAsync(login = true) {
         const gameStateChange = function(data){
             data = data.trim()
             if(SERVER_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Felfedezi a szervert!')
+                DiscordWrapper.updateDetails(Lang.queryJS('discord.playing'))
             } else if(GAME_JOINED_REGEX.test(data) || DISCONNECTED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Főképernyőn...')
+                DiscordWrapper.updateDetails(Lang.queryJS('discord.inMainMenu'))
             }
         }
 
@@ -647,15 +647,15 @@ async function dlAsync(login = true) {
             data = data.trim()
             if(data.indexOf('Could not find or load main class net.minecraft.launchwrapper.Launch') > -1){
                 loggerLaunchSuite.error('Game launch failed, LaunchWrapper was not downloaded properly.')
-                showLaunchFailure('Hiba az indítás során', 'A fő fájl, a LaunchWrapper letöltése nem sikerült megfelelően. Ezért játék nem indul el.<br><br>A probléma megoldásához ideiglenesen kapcsolja ki a víruskereső szoftvert, és indítsa újra a játékot.<br><br>Ha van ideje kérjük <a href="https://dc.playclan.hu/">jelentse be a hibát</a> és tudassa velünk, milyen víruskereső szoftvert használ. Felvesszük veled a kapcsolatot, és megpróbáljuk megoldani a problémát.')
+                showLaunchFailure(Lang.queryJS('landing.errorLaunch'), Lang.queryJS('landing.errorLaunchWrapper'))
             }
             if (data.indexOf('Failed to load a library') > -1) {
                 loggerLaunchSuite.error('Game launch failed, failed to load a library.')
                 setOverlayContent(
-                    'Hiba az indítás során',
-                    'Nem sikerült betölteni egy fontos fájlt a Minecraft elindításához.<br>A javításhoz kérlek navigálj el ebbe a mappába:<br>"' + path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id) + '",<br>és töröld ki a "config" nevezetű mappát.<br><br>Ha a hiba a következő indításnál sem javul meg, akkor a<br>"' + path.join(ConfigManager.getCommonDirectory()) + '"<br>mappában a "libraries" mappát töröld ki.',
-                    'Config mappa megnyitása',
-                    'Libraries mappa megnyitása'
+                    Lang.queryJS('landing.errorLaunch'),
+                    Lang.queryJS('landing.errorLaunchLibrary1') + path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id) + Lang.queryJS('landing.errorLaunchLibrary2') + path.join(ConfigManager.getCommonDirectory()) + Lang.queryJS('landing.errorLaunchLibrary3'),
+                    Lang.queryJS('landing.errorLaunchLibraryButton'),
+                    Lang.queryJS('landing.errorLaunchLibraryButtonAlt')
                 )
                 setOverlayHandler(() => {
                     const p = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id, 'config')
@@ -682,7 +682,7 @@ async function dlAsync(login = true) {
             proc.stdout.on('data', tempListener)
             proc.stdout.on('data', gameErrorListener)
 
-            setLaunchDetails('Kész. Jó játékot!')
+            setLaunchDetails(Lang.queryJS('landing.launched'))
 
             // Init Discord Hook
             DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
@@ -709,7 +709,7 @@ async function dlAsync(login = true) {
         } catch(err) {
 
             loggerLaunchSuite.error('Error during launch', err)
-            showLaunchFailure('Hiba az indítás során', 'Lásd a konzolt (CTRL + Shift + i) további hibákért.')
+            showLaunchFailure(Lang.queryJS('landing.errorLaunch'), Lang.queryJS('landing.errorConsole'))
 
         }
     }
@@ -809,7 +809,7 @@ function slideShop(down){
         //landingContainer.style.background = 'rgba(29, 29, 29, 0.55)'
         landingContainer.style.background = 'rgba(0, 0, 0, 0.50)'
         $('#shopButtonText').fadeOut(500, function() {
-            $('#shopButtonText').text('SHOP BEZÁRÁSA').fadeIn(500)
+            $('#shopButtonText').text(Lang.queryJS('shop.close')).fadeIn(500)
         })
     } else {
         landingContainer.style.background = null
@@ -821,7 +821,7 @@ function slideShop(down){
         lCLRight.style.top = '0px'
         shopBtn.style.top = '10px'
         $('#shopButtonText').fadeOut(500, function() {
-            $('#shopButtonText').text('SHOP MEGNYITÁSA').fadeIn(500)
+            $('#shopButtonText').text(Lang.queryJS('shop.open')).fadeIn(500)
         })
     }
 }
@@ -843,7 +843,7 @@ async function requestShopData(token) {
         return data
     }).catch(err => {
         console.log(err)
-        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+        showLaunchFailure(Lang.queryJS('shop.errorData'), Lang.queryJS('shop.errorConsole'))
     })
 
     return fullData
@@ -866,7 +866,7 @@ async function requestShopFriends(token) {
         return data
     }).catch(err => {
         console.log(err)
-        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+        showLaunchFailure(Lang.queryJS('shop.errorData'), Lang.queryJS('shop.errorConsole'))
     })
 
     return fullData
@@ -890,7 +890,7 @@ async function requestHasPermission(token) {
         return data
     }).catch(err => {
         console.log(err)
-        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+        showLaunchFailure(Lang.queryJS('shop.errorData'), Lang.queryJS('shop.errorConsole'))
     })
 
     return fullData
@@ -917,7 +917,7 @@ async function updateSpecificSetting(token, data, data1, value1, data2, value2) 
         return data
     }).catch(err => {
         console.log(err)
-        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+        showLaunchFailure(Lang.queryJS('shop.errorData'), Lang.queryJS('shop.errorConsole'))
     })
 
     return fullData
@@ -941,7 +941,7 @@ async function checkExistingPlayer(token, player) {
         return data
     }).catch(err => {
         console.log(err)
-        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+        showLaunchFailure(Lang.queryJS('shop.errorData'), Lang.queryJS('shop.errorConsole'))
     })
 
     return fullData
@@ -966,7 +966,7 @@ async function sendPC(token, player, playcoin) {
         return data
     }).catch(err => {
         console.log(err)
-        showLaunchFailure('Hiba az adatok betöltése során', 'Lásd a konzolt (CTRL + Shift + I) további hibákért.')
+        showLaunchFailure(Lang.queryJS('shop.errorData'), Lang.queryJS('shop.errorConsole'))
     })
 
     return fullData
@@ -997,26 +997,26 @@ async function loadShop(page) {
         <div class="shop">
             <div class="shopDiv" style="width: 20rem">
                 <div class="shopHeader">
-                    <span>Bejelentkezve mint,<br>${data.data.request.name}</span>
+                    <span>${Lang.queryJS('shop.loggedInAs')}<br>${data.data.request.name}</span>
                     <img src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=true&vr=-25&hr=45&displayHair=true&user=${data.data.request.name}&aa=true&time=${Date.now()}">
                     <svg fill="#e6e6e6" height="30px" width="30px" version="1.1" id="shopRefresh" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-48.96 -48.96 587.56 587.56" xml:space="preserve" transform="rotate(180)" stroke="#e6e6e6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.97929"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M460.656,132.911c-58.7-122.1-212.2-166.5-331.8-104.1c-9.4,5.2-13.5,16.6-8.3,27c5.2,9.4,16.6,13.5,27,8.3 c99.9-52,227.4-14.9,276.7,86.3c65.4,134.3-19,236.7-87.4,274.6c-93.1,51.7-211.2,17.4-267.6-70.7l69.3,14.5 c10.4,2.1,21.8-4.2,23.9-15.6c2.1-10.4-4.2-21.8-15.6-23.9l-122.8-25c-20.6-2-25,16.6-23.9,22.9l15.6,123.8 c1,10.4,9.4,17.7,19.8,17.7c12.8,0,20.8-12.5,19.8-23.9l-6-50.5c57.4,70.8,170.3,131.2,307.4,68.2 C414.856,432.511,548.256,314.811,460.656,132.911z"></path> </g> </g></svg>
                 </div>
                 <hr>
-                <h3>Fiók információk</h3>
-                <p>Játékidőd: ${getPlaytimeHour(data.data.request.jatekido)} óra ${getPlaytimeMinute(data.data.request.jatekido)} perc</p>
-                <p>Regisztrációd dátuma: ${register}</p>
-                <p>PlayCoin: ${data.data.request.playcoin}</p>
+                <h3>${Lang.queryJS('shop.accountInfo')}</h3>
+                <p>${Lang.queryJS('shop.playtime')}: ${getPlaytimeHour(data.data.request.jatekido)} ${Lang.queryJS('shop.hour')} ${getPlaytimeMinute(data.data.request.jatekido)} ${Lang.queryJS('shop.minute')}</p>
+                <p>${Lang.queryJS('shop.registration')}: ${register}</p>
+                <p>${Lang.queryJS('shop.balance')}: ${data.data.request.playcoin} PlayCoin</p>
             </div>
             <div class="shopDiv" style="width: 20rem">
-                <span class="shopMenu${page == 'profil' ? ' active' : ''}">Profil</span>
-                <span class="shopMenu${page == 'beallitasok' ? ' active' : ''}">Beállítások</span>
-                <span class="shopMenu${page == 'kinezet' ? ' active' : ''}">Kinézet</span>
-                <span class="shopMenu${page == 'playcoin' ? ' active' : ''}">PlayCoin utalás</span>
+                <span class="shopMenu${page == 'profil' ? ' active' : ''}">${Lang.queryJS('shop.profile')}</span>
+                <span class="shopMenu${page == 'beallitasok' ? ' active' : ''}">${Lang.queryJS('shop.settings')}</span>
+                <span class="shopMenu${page == 'kinezet' ? ' active' : ''}">${Lang.queryJS('shop.appearance')}</span>
+                <span class="shopMenu${page == 'playcoin' ? ' active' : ''}">${Lang.queryJS('shop.send')}</span>
             </div>
         </div>
         <div class="shop left">
             <div class="shopDiv" id="shop_profil" ${page == 'profil' ? '' : 'style="display: none"'}>
-                <h2>Profil</h2>`
+                <h2>${Lang.queryJS('shop.profile')}</h2>`
                 let onlineFriends = 0
                 for (let i = 0; i < friends.data.request.friends; i++) {
                     if (friends.data.request[i].online == 1) {
@@ -1025,7 +1025,7 @@ async function loadShop(page) {
                 }
                 if (onlineFriends > 0) {
                     shopHTML += `<hr>
-                    <h3>Elérhető barátok</h3>
+                    <h3>${Lang.queryJS('shop.profileFriends')}</h3>
                     <div class="shopPlayerList">`
                 }
                 for (let i = 0; i < friends.data.request.friends; i++) {
@@ -1034,9 +1034,9 @@ async function loadShop(page) {
                             <img src="https://playclan.hu/shop/player_skin?nev=${friends.data.request[i].name}&time=${Date.now()}">
                             <div>
                                 <h4>${friends.data.request[i].name}</h4>
-                                <p>Jelenleg <span style="color: #8dbf42">online</span></p>
-                                <p>Szerver: ${friends.data.request[i].server}</p>
-                                <p>Játékidő: ${getPlaytimeHour(friends.data.request[i].playtime)} óra ${getPlaytimeMinute(friends.data.request[i].playtime)} perc</p>
+                                <p>${Lang.queryJS('shop.profileOnline')}</p>
+                                <p>${Lang.queryJS('shop.profileServer')}: ${friends.data.request[i].server}</p>
+                                <p>${Lang.queryJS('shop.profilePlaytime')}: ${getPlaytimeHour(friends.data.request[i].playtime)} ${Lang.queryJS('shop.hour')} ${getPlaytimeMinute(friends.data.request[i].playtime)} ${Lang.queryJS('shop.minute')}</p>
                             </div>
                         </div>`
                     }
@@ -1048,10 +1048,10 @@ async function loadShop(page) {
                 <hr>
                 <div class="shopUploadRow">
                     <div class="shopUploadColumn">
-                        <h3>Skin feltöltés</h3>
-                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját kinézetet!</p>
-                        <button id="skinSelector">Fájl kiválasztása</button>
-                        <button id="skinUpload">Feltöltés</button>
+                        <h3>${Lang.queryJS('shop.skinHeader')}</h3>
+                        <p>${Lang.queryJS('shop.skinDesc')}</p>
+                        <button id="skinSelector">${Lang.queryJS('shop.skinSelect')}</button>
+                        <button id="skinUpload">${Lang.queryJS('shop.skinUpload')}</button>
                     </div>
                     <div class="shopUploadColumn">
                         <img src="https://playclan.hu/shop/player_skin?nev=${data.data.request.name}&format=skin3d&time=${Date.now()}" width="100px" height="200px">
@@ -1059,144 +1059,144 @@ async function loadShop(page) {
                 </div>
             </div>
             <div class="shopDiv" id="shop_beallitasok" ${page == 'beallitasok' ? '' : 'style="display: none"'}>
-                <h2>Beállítások</h2>
+                <h2>${Lang.queryJS('shop.settings')}</h2>
                 <hr>
-                <h3>IP Levédés</h3>
-                <p>Védd le a fiókod IP címed, hogy csak te tudj felmenni a szerverre a fiókoddal!</p>
+                <h3>${Lang.queryJS('shop.ipProtHeader')}</h3>
+                <p>${Lang.queryJS('shop.ipProtDesc')}</p>
                 <div class="row">
-                    <button class="shopButton" id="ipProtectionCurrent">Levédés a jelenlegi IP címmel</button>
-                    <button class="shopButton" id="ipProtectionOther">Levédés más IP címmel</button>
-                    <button class="shopButton" id="ipProtectionDelete">Levédés eltávolítása</button>
+                    <button class="shopButton" id="ipProtectionCurrent">${Lang.queryJS('shop.ipProtCurrent')}</button>
+                    <button class="shopButton" id="ipProtectionOther">${Lang.queryJS('shop.ipProtOther')}</button>
+                    <button class="shopButton" id="ipProtectionDelete">${Lang.queryJS('shop.ipProtDelete')}</button>
                 </div>
                 <div class="row" id="ipProtectionOtherRow" style="display: none">
-                    <input type="text" class="shopInput" id="ipProtectionInput" placeholder="IP cím" maxlength="15" minlength="7">
-                    <button class="shopButton" id="ipProtectionOtherSubmit">Levédés</button>
+                    <input type="text" class="shopInput" id="ipProtectionInput" placeholder="${Lang.queryJS('shop.ipAddress')}" maxlength="15" minlength="7">
+                    <button class="shopButton" id="ipProtectionOtherSubmit">${Lang.queryJS('shop.ipSave')}</button>
                 </div>
             </div>
             <div class="shopDiv" id="shop_kinezet" ${page == 'kinezet' ? '' : 'style="display: none"'}>
-                <h2>Kinézet</h2>
+                <h2>${Lang.queryJS('shop.appearance')}</h2>
                 <hr>`
                 if (kinezetPermission.data.request) {
                     shopHTML += `<div class="row">
                     <div class="column shopDiv flexBasis">
-                        <h3>Rangod neve</h3>
-                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját rang nevet!</p>
-                        <input class="shopInput" type="text" id="kinezetRangText" placeholder="Rangod neve" value="${data.data.request.rang == null ? '' : data.data.request.rang}">
+                        <h3>${Lang.queryJS('shop.aRankHeader')}</h3>
+                        <p>${Lang.queryJS('shop.aRankDesc')}</p>
+                        <input class="shopInput" type="text" id="kinezetRangText" placeholder="${Lang.queryJS('shop.aRankHeader')}" value="${data.data.request.rang == null ? '' : data.data.request.rang}">
                         <div class="row">
-                            <button class="shopButton" id="kinezetRangSubmit">Rang neved frissítése</button>
-                            <button class="shopButton" id="kinezetRangReset">Rang neved törlése</button>
+                            <button class="shopButton" id="kinezetRangSubmit">${Lang.queryJS('shop.aRankHeader')} ${Lang.queryJS('shop.aUpdate')}</button>
+                            <button class="shopButton" id="kinezetRangReset">${Lang.queryJS('shop.aRankHeader')} ${Lang.queryJS('shop.aRemove')}</button>
                         </div>
                     </div>
                     <div class="column shopDiv flexBasis">
-                        <h3>Prefix és Suffix</h3>
-                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját prefixet és suffixot!</p>
+                        <h3>${Lang.queryJS('shop.aPrefixSuffixHeader')}</h3>
+                        <p>${Lang.queryJS('shop.aPrefixSuffixDesc')}</p>
                         <div id="render" class="ui container">
                             <div id="preview" class="ui">
                                 <p id="kinezetPrefixSuffixOutput" class="render text-center" style="font-family: 'Minecraft'; font-weight: normal; font-style: normal; line-height: 1.5;"></p>
                             </div>
                         </div>
                         <div class="row noGap">
-                            <input class="shopInput right" type="text" id="kinezetPrefixText" placeholder="Prefix" value="${data.data.request.prefix == null ? '' : data.data.request.prefix}">
+                            <input class="shopInput right" type="text" id="kinezetPrefixText" placeholder="${Lang.queryJS('shop.aPrefix')}" value="${data.data.request.prefix == null ? '' : data.data.request.prefix}">
                             <span class="shopInput center" style="padding: 8px">${data.data.request.name}</span>
-                            <input class="shopInput" type="text" id="kinezetSuffixText" placeholder="Suffix" value="${data.data.request.suffix == null ? '' : data.data.request.suffix}">
+                            <input class="shopInput" type="text" id="kinezetSuffixText" placeholder="${Lang.queryJS('shop.aSuffix')}" value="${data.data.request.suffix == null ? '' : data.data.request.suffix}">
                         </div>
                         <div class="row">
-                            <button class="shopButton" id="kinezetPrefixSubmit">Prefix és Suffix frissítése</button>
-                            <button class="shopButton" id="kinezetPrefixReset">Prefix és Suffix törlése</button>
+                            <button class="shopButton" id="kinezetPrefixSubmit">${Lang.queryJS('shop.aPrefixSuffixHeader')} ${Lang.queryJS('shop.aUpdate')}</button>
+                            <button class="shopButton" id="kinezetPrefixReset">${Lang.queryJS('shop.aPrefixSuffixHeader')} ${Lang.queryJS('shop.aRemove')}</button>
                         </div>
                     </div>
                     <div class="column shopDiv flexBasis">
-                        <h3>Üdvözlő üzeneted</h3>
-                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját üdvözlő üzeneted!</p>
+                        <h3>${Lang.queryJS('shop.aWelcomeMessageHeader')}</h3>
+                        <p>${Lang.queryJS('shop.aWelcomeMessageDesc')}</p>
                         <div id="render" class="ui container">
                             <div id="preview" class="ui">
                                 <p id="kinezetUdvozloUzenetOutput" class="render text-center" style="font-family: 'Minecraft'; font-weight: normal; font-style: normal; line-height: 1.5;"></p>
                             </div>
                         </div>
                         <div class="row noGap">
-                            <input class="shopInput right" type="text" id="kinezetUdvozloUzenetElejeText" placeholder="Üdvözlő üzeneted eleje" value="${data.data.request.udvozlo_uzenet == null ? '' : data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>'))}">
+                            <input class="shopInput right" type="text" id="kinezetUdvozloUzenetElejeText" placeholder="${Lang.queryJS('shop.aWelcomeMessageStart')}" value="${data.data.request.udvozlo_uzenet == null ? '' : data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.udvozlo_uzenet.substring(0, data.data.request.udvozlo_uzenet.indexOf('<nevem>'))}">
                             <span class="shopInput center" style="padding: 8px">${data.data.request.name}</span>
-                            <input class="shopInput" type="text" id="kinezetUdvozloUzenetVegeText" placeholder="Üdvözlő üzeneted vége" value="${data.data.request.udvozlo_uzenet == null ? '' : data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
+                            <input class="shopInput" type="text" id="kinezetUdvozloUzenetVegeText" placeholder="${Lang.queryJS('shop.aWelcomeMessageEnd')}" value="${data.data.request.udvozlo_uzenet == null ? '' : data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.udvozlo_uzenet.substring(data.data.request.udvozlo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
                         </div>
                         <div class="row">
-                            <button class="shopButton" id="kinezetUdvozloUzenetSubmit">Üdvözlő üzeneted frissítése</button>
-                            <button class="shopButton" id="kinezetUdvozloUzenetReset">Üdvözlő üzeneted törlése</button>
+                            <button class="shopButton" id="kinezetUdvozloUzenetSubmit">${Lang.queryJS('shop.aWelcomeMessageHeader')} ${Lang.queryJS('shop.aUpdate')}</button>
+                            <button class="shopButton" id="kinezetUdvozloUzenetReset">${Lang.queryJS('shop.aWelcomeMessageHeader')} ${Lang.queryJS('shop.aRemove')}</button>
                         </div>
                     </div>
                     <div class="column shopDiv flexBasis">
-                        <h3>Kilépő üzeneted</h3>
-                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját kilépő üzeneted!</p>
+                        <h3>${Lang.queryJS('shop.aLeaveMessageHeader')}</h3>
+                        <p>${Lang.queryJS('shop.aLeaveMessageDesc')}</p>
                         <div id="render" class="ui container">
                             <div id="preview" class="ui">
                                 <p id="kinezetKilepoUzenetOutput" class="render text-center" style="font-family: 'Minecraft'; font-weight: normal; font-style: normal; line-height: 1.5;"></p>
                             </div>
                         </div>
                         <div class="row noGap">
-                            <input class="shopInput right" type="text" id="kinezetKilepoUzenetElejeText" placeholder="Kilépő üzeneted eleje" value="${data.data.request.kilepo_uzenet == null ? '' : data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>'))}">
+                            <input class="shopInput right" type="text" id="kinezetKilepoUzenetElejeText" placeholder="${Lang.queryJS('shop.aLeaveMessageStart')}" value="${data.data.request.kilepo_uzenet == null ? '' : data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>')) == null ? '' : data.data.request.kilepo_uzenet.substring(0, data.data.request.kilepo_uzenet.indexOf('<nevem>'))}">
                             <span class="shopInput center" style="padding: 8px">${data.data.request.name}</span>
-                            <input class="shopInput" type="text" id="kinezetKilepoUzenetVegeText" placeholder="Kilépő üzeneted vége" value="${data.data.request.kilepo_uzenet == null ? '' : data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
+                            <input class="shopInput" type="text" id="kinezetKilepoUzenetVegeText" placeholder="${Lang.queryJS('shop.aLeaveMessageEnd')}" value="${data.data.request.kilepo_uzenet == null ? '' : data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length) == null ? '' : data.data.request.kilepo_uzenet.substring(data.data.request.kilepo_uzenet.indexOf('<nevem>') + '<nevem>'.length)}">
                         </div>
                         <div class="row">
-                            <button class="shopButton" id="kinezetKilepoUzenetSubmit">Kilépő üzeneted frissítése</button>
-                            <button class="shopButton" id="kinezetKilepoUzenetReset">Kilépő üzeneted törlése</button>
+                            <button class="shopButton" id="kinezetKilepoUzenetSubmit">${Lang.queryJS('shop.aLeaveMessageHeader')} ${Lang.queryJS('shop.aUpdate')}</button>
+                            <button class="shopButton" id="kinezetKilepoUzenetReset">${Lang.queryJS('shop.aLeaveMessageHeader')} ${Lang.queryJS('shop.aRemove')}</button>
                         </div>
                     </div>
                     <div class="column shopDiv flexBasis">
-                        <h3>Üdvözlő hangod</h3>
-                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját üdvözlő hangod!</p>
+                        <h3>${Lang.queryJS('shop.aWelcomeSoundHeader')}</h3>
+                        <p>${Lang.queryJS('shop.aWelcomeSoundDesc')}</p>
                         <div class="settingsSelectContainer">
-                            <div class="settingsSelectSelected" id="shopUdvozloHangSelectSelected">Üdvözlőhang választása</div>
+                            <div class="settingsSelectSelected" id="shopUdvozloHangSelectSelected">${Lang.queryJS('shop.aWelcomeSoundSelect')}</div>
                             <div class="settingsSelectOptions" id="shopUdvozloHangSelectOptions" style="background-color: rgba(0, 0, 0, 0.61); backdrop-filter: blur(5px);" hidden>
                             </div>
                         </div>
-                        <button class="shopButton" id="kinezetUdvozloHangSubmit">Üdvözlő hangod frissítése</button>
+                        <button class="shopButton" id="kinezetUdvozloHangSubmit">${Lang.queryJS('shop.aWelcomeSoundHeader')} ${Lang.queryJS('shop.aUpdate')}</button>
                     </div>
                     <div class="column shopDiv flexBasis">
-                        <h3>Kilépő hangod</h3>
-                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját kilépő hangod!</p>
+                        <h3>${Lang.queryJS('shop.aLeaveSoundHeader')}</h3>
+                        <p>${Lang.queryJS('shop.aLeaveSoundDesc')}</p>
                         <div class="settingsSelectContainer">
-                            <div class="settingsSelectSelected" id="shopKilepoHangSelectSelected">Kilépőhang választása</div>
+                            <div class="settingsSelectSelected" id="shopKilepoHangSelectSelected">${Lang.queryJS('shop.aLeaveSoundSelect')}</div>
                             <div class="settingsSelectOptions" id="shopKilepoHangSelectOptions" style="background-color: rgba(0, 0, 0, 0.61); backdrop-filter: blur(5px);" hidden>
                             </div>
                         </div>
-                        <button class="shopButton" id="kinezetKilepoHangSubmit">Kilépő hangod frissítése</button>
+                        <button class="shopButton" id="kinezetKilepoHangSubmit">${Lang.queryJS('shop.aLeaveSoundHeader')} ${Lang.queryJS('shop.aUpdate')}</button>
                     </div>
                     <div class="column shopDiv flexBasis">
-                        <h3>Chat szín</h3>
-                        <p>Tűnj ki a tömegből, és állítsd be magadnak saját chat színed!</p>
+                        <h3>${Lang.queryJS('shop.aChatHeader')}</h3>
+                        <p>${Lang.queryJS('shop.aChatDesc')}</p>
                         <div id="render" class="ui container">
                             <div id="preview" class="ui">
                                 <p id="kinezetChatSzinOutput" class="render text-center" style="font-family: 'Minecraft'; font-weight: normal; font-style: normal; line-height: 1.5;"></p>
                             </div>
                         </div>
                         <div class="settingsSelectContainer">
-                            <div class="settingsSelectSelected" id="shopChatSzinSelectSelected">Chat szín választása</div>
+                            <div class="settingsSelectSelected" id="shopChatSzinSelectSelected">${Lang.queryJS('shop.aChatSelect')}</div>
                             <div class="settingsSelectOptions" id="shopChatSzinSelectOptions" style="background-color: rgba(0, 0, 0, 0.61); backdrop-filter: blur(5px);" hidden>
                             </div>
                         </div>
-                        <button class="shopButton" id="kinezetChatSzinSubmit">Chat színed frissítése</button>
+                        <button class="shopButton" id="kinezetChatSzinSubmit">${Lang.queryJS('shop.aChatHeader')} ${Lang.queryJS('shop.aUpdate')}</button>
                     </div>
                 </div>`
                 } else {
-                    shopHTML += `<h3>Nincs jogod kinézetet változtatni, ez a funkció elérhető megvásárlásra a <a class="shopUrl" href="https://playclan.hu/shop/kiegeszitok?id=global" target="_blank">Shop</a>-ban.</h3>`
+                    shopHTML += `<h3>${Lang.queryJS('shop.noPermission')}</h3>`
                 }
                 
             shopHTML += `</div>
             <div class="shopDiv" id="shop_playcoin" ${page == 'playcoin' ? '' : 'style="display: none"'}>
-                <h2>PlayCoin utalás</h2>
+                <h2>${Lang.queryJS('shop.send')}</h2>
                 <hr>
-                <p>A PlayCoin utalás vissza nem vonható, szóval jól figyelj, hogy jó személynek utalj!</p>
+                <p>${Lang.queryJS('shop.sendDesc')}</p>
                 <div class="row">
-                    <input type="text" class="shopInput" id="playcoinPlayer" placeholder="Játékosnév" maxlength="16" minlength="3">
-                    <button class="shopButton" id="playcoinPlayerCheck">Játékosnév ellenőrzése</button>
+                    <input type="text" class="shopInput" id="playcoinPlayer" placeholder="${Lang.queryJS('shop.playername')}" maxlength="16" minlength="3">
+                    <button class="shopButton" id="playcoinPlayerCheck">${Lang.queryJS('shop.sendCheck')}</button>
                 </div>
                 <div class="row">
-                    <input type="number" class="shopInput" id="playcoinValue" placeholder="PlayCoin" value="200" min="200" max="${data.data.request.playcoin}">
-                    <button class="shopButton" id="playcoinSend" disabled>PlayCoin átutalása</button>
+                    <input type="number" class="shopInput" id="playcoinValue" placeholder="${Lang.queryJS('shop.playcoin')}" value="200" min="200" max="${data.data.request.playcoin}">
+                    <button class="shopButton" id="playcoinSend" disabled>${Lang.queryJS('shop.sendPC')}</button>
                 </div>
             </div>
         </div>
-        <h2 class="shopFooter" id="shopFooter">PlayClan Shop</h2>
+        <h2 class="shopFooter" id="shopFooter">${Lang.queryJS('shop.footer')}</h2>
     </div>`
 
     document.getElementById("shopContainer").innerHTML = shopHTML;
@@ -1207,25 +1207,25 @@ async function loadShop(page) {
                 element.classList.remove("active")
             })
             element.classList.add("active")
-            if (element.innerHTML == "Profil") {
+            if (element.innerHTML == Lang.queryJS('shop.profile')) {
                 shopPage = "profil"
                 $("#shop_beallitasok").slideUp("slow")
                 $("#shop_kinezet").slideUp("slow")
                 $("#shop_playcoin").slideUp("slow")
                 $("#shop_profil").slideDown("slow")
-            } else if (element.innerHTML == "Beállítások") {
+            } else if (element.innerHTML == Lang.queryJS('shop.settings')) {
                 shopPage = "beallitasok"
                 $("#shop_profil").slideUp("slow")
                 $("#shop_kinezet").slideUp("slow")
                 $("#shop_playcoin").slideUp("slow")
                 $("#shop_beallitasok").slideDown("slow")
-            } else if (element.innerHTML == "Kinézet") {
+            } else if (element.innerHTML == Lang.queryJS('shop.appearance')) {
                 shopPage = "kinezet"
                 $("#shop_profil").slideUp("slow")
                 $("#shop_beallitasok").slideUp("slow")
                 $("#shop_playcoin").slideUp("slow")
                 $("#shop_kinezet").slideDown("slow")
-            } else if (element.innerHTML == "PlayCoin utalás") {
+            } else if (element.innerHTML == Lang.queryJS('shop.send')) {
                 shopPage = "playcoin"
                 $("#shop_profil").slideUp("slow")
                 $("#shop_beallitasok").slideUp("slow")
@@ -1243,7 +1243,7 @@ async function loadShop(page) {
 
     document.getElementById('skinSelector').onclick = () => {
         let options = {
-            title: "Fájl kiválasztása",
+            title: Lang.queryJS('shop.skinSelect'),
             properties: ['openFile'],
             defaultPath: remote.app.getPath('documents'),
         }
@@ -1260,7 +1260,7 @@ async function loadShop(page) {
                 let path = require('path').basename(selectedSkinFile);
     
                 // More processing...
-                document.getElementById("skinSelector").innerText = "Fájl kiválasztása (" + path + ")"
+                document.getElementById("skinSelector").innerText = Lang.queryJS('shop.skinSelect') + " (" + path + ")"
             })
     }
 
@@ -1279,16 +1279,16 @@ async function loadShop(page) {
                     return res.text()
                 }).then(res => {
                     if (res == "Success") {
-                        showLaunchFailure('Skin feltöltése sikeres!', 'Élvezd az új skinedet!')
+                        showLaunchFailure(Lang.queryJS('shop.uploadSkinHeader'), Lang.queryJS('shop.uploadSkinDesc'))
                         loadShop(shopPage)
                     } else {
                         console.log(res)
-                        showLaunchFailure('A fájl feltöltése sikertelen volt!', 'Kérlek válassz ki egy fájlt, a feltöltéshez!')
+                        showLaunchFailure(Lang.queryJS('shop.uploadSkinErrorHeader'), Lang.queryJS('shop.uploadSkinErrorDesc'))
                     }
                 })
             })
         } else {
-            showLaunchFailure('Nincs kiválasztva fájl!', 'Kérlek válassz ki egy fájlt, a feltöltéshez!')
+            showLaunchFailure(Lang.queryJS('shop.uploadSkinErrorHeader'), Lang.queryJS('shop.uploadSkinErrorDesc'))
         }
     }
 
@@ -1327,9 +1327,9 @@ async function loadShop(page) {
         })
 
         if (data.data.update) {
-            showLaunchFailure('Sikeres IP levédés!', 'Mostmár felléphetsz a szerverre!')
+            showLaunchFailure(Lang.queryJS('shop.ipProtSuccessHeader'), Lang.queryJS('shop.ipProtSuccessDesc'))
         } else {
-            showLaunchFailure('Sikertelen IP levédés!', 'Kérlek próbáld újra!')
+            showLaunchFailure(Lang.queryJS('shop.ipProtErrorHeader'), Lang.queryJS('shop.ipProtErrorDesc'))
         }
     }
 
@@ -1356,9 +1356,9 @@ async function loadShop(page) {
         })
 
         if (data.data.update) {
-            showLaunchFailure('Sikeres IP levédés!', 'Mostmár felléphetsz a szerverre!')
+            showLaunchFailure(Lang.queryJS('shop.ipProtSuccessHeader'), Lang.queryJS('shop.ipProtSuccessDesc'))
         } else {
-            showLaunchFailure('Sikertelen IP levédés!', 'Kérlek próbáld újra!')
+            showLaunchFailure(Lang.queryJS('shop.ipProtErrorHeader'), Lang.queryJS('shop.ipProtErrorDesc'))
         }
     }
 
@@ -1381,9 +1381,9 @@ async function loadShop(page) {
         })
 
         if (data.data.update) {
-            showLaunchFailure('Sikeres IP levédés eltávolítás!', 'Mostmár felléphetsz a szerverre!')
+            showLaunchFailure(Lang.queryJS('shop.ipProtSuccessDeleteHeader'), Lang.queryJS('shop.ipProtSuccessDesc'))
         } else {
-            showLaunchFailure('Sikertelen IP levédés eltávolítás!', 'Kérlek próbáld újra!')
+            showLaunchFailure(Lang.queryJS('shop.ipProtErrorDeleteHeader'), Lang.queryJS('shop.ipProtErrorDesc'))
         }
     }
 
@@ -1480,9 +1480,9 @@ async function loadShop(page) {
         function renderShopChatSzinSelectSelected() {
             append = ''
             if (getSelectedDropdown("shopChatSzinSelectOptions") == "off" || getSelectedDropdown("shopChatSzinSelectOptions") == undefined) {
-                kinezetChatSzinOutput.html(replacers(`§f${data.data.request.name}§7: ` + "§bEz egy teszt szöveg"))
+                kinezetChatSzinOutput.html(replacers(`§f${data.data.request.name}§7: ` + "§b" + Lang.queryJS('shop.aChatTest')))
             } else {
-                kinezetChatSzinOutput.html(replacers(`§f${data.data.request.name}§7: ` + "§" + getSelectedDropdown("shopChatSzinSelectOptions") + "Ez egy teszt szöveg"))
+                kinezetChatSzinOutput.html(replacers(`§f${data.data.request.name}§7: ` + "§" + getSelectedDropdown("shopChatSzinSelectOptions") + Lang.queryJS('shop.aChatTest')))
             }
         }
 
@@ -1607,46 +1607,46 @@ async function loadShop(page) {
 
         setUdvozloHangOptions(
             [
-                {fullName: 'off', name: 'Kikapcsolva'},
-                {fullName: 'block.wooden_door.open', name: 'Faajtó kinyitás'},
-                {fullName: 'block.wooden_trapdoor.open', name: 'Facsapóajtó kinyitás'},
-                {fullName: 'entity.experience_orb.pickup', name: 'XP begyűjtés'},
-                {fullName: 'entity.player.levelup', name: 'Szint felfejlődés'},
-                {fullName: 'entity.item.pickup', name: 'Tárgy felvétel'},
+                {fullName: 'off', name: Lang.queryJS('shop.aSoundOff')},
+                {fullName: 'block.wooden_door.open', name: Lang.queryJS('shop.aSoundDoor')},
+                {fullName: 'block.wooden_trapdoor.open', name: Lang.queryJS('shop.aSoundTrapdoor')},
+                {fullName: 'entity.experience_orb.pickup', name: Lang.queryJS('shop.aSoundXp')},
+                {fullName: 'entity.player.levelup', name: Lang.queryJS('shop.aSoundLevelup')},
+                {fullName: 'entity.item.pickup', name: Lang.queryJS('shop.aSoundItem')},
             ],
             data.data.request.udvozlo_hang
         )
 
         setKilepoHangOptions(
             [
-                {fullName: 'off', name: 'Kikapcsolva'},
-                {fullName: 'block.wooden_door.open', name: 'Faajtó kinyitás'},
-                {fullName: 'block.wooden_trapdoor.open', name: 'Facsapóajtó kinyitás'},
-                {fullName: 'entity.experience_orb.pickup', name: 'XP begyűjtés'},
-                {fullName: 'entity.player.levelup', name: 'Szint felfejlődés'},
-                {fullName: 'entity.item.pickup', name: 'Tárgy felvétel'},
+                {fullName: 'off', name: Lang.queryJS('shop.aSoundOff')},
+                {fullName: 'block.wooden_door.open', name: Lang.queryJS('shop.aSoundDoor')},
+                {fullName: 'block.wooden_trapdoor.open', name: Lang.queryJS('shop.aSoundTrapdoor')},
+                {fullName: 'entity.experience_orb.pickup', name: Lang.queryJS('shop.aSoundXp')},
+                {fullName: 'entity.player.levelup', name: Lang.queryJS('shop.aSoundLevelup')},
+                {fullName: 'entity.item.pickup', name: Lang.queryJS('shop.aSoundItem')},
             ],
             data.data.request.kilepo_hang
         )
 
         setChatSzinOptions(
             [
-                {fullName: '0', name: 'Fekete - §0'},
-                {fullName: '1', name: 'Sötétkék - §1'},
-                {fullName: '2', name: 'Sötétzöld - §2'},
-                {fullName: '3', name: 'Sötét aqua - §3'},
-                {fullName: '4', name: 'Sötétvörös - §4'},
-                {fullName: '5', name: 'Sötét lila - §5'},
-                {fullName: '6', name: 'Arany - §6'},
-                {fullName: '7', name: 'Szürke - §7'},
-                {fullName: '8', name: 'Sötét szürke - §8'},
-                {fullName: '9', name: 'Kék - §9'},
-                {fullName: 'a', name: 'Zöld - §a'},
-                {fullName: 'b', name: 'Aqua - §b'},
-                {fullName: 'c', name: 'Piros - §c'},
-                {fullName: 'd', name: 'Világos lila - §d'},
-                {fullName: 'e', name: 'Sárga - §e'},
-                {fullName: 'f', name: 'Fehér - §f'},
+                {fullName: '0', name: Lang.queryJS('shop.aBlack')},
+                {fullName: '1', name: Lang.queryJS('shop.aDarkBlue')},
+                {fullName: '2', name: Lang.queryJS('shop.aDarkGreen')},
+                {fullName: '3', name: Lang.queryJS('shop.aDarkAqua')},
+                {fullName: '4', name: Lang.queryJS('shop.aDarkRed')},
+                {fullName: '5', name: Lang.queryJS('shop.aDarkPurple')},
+                {fullName: '6', name: Lang.queryJS('shop.aGold')},
+                {fullName: '7', name: Lang.queryJS('shop.aGray')},
+                {fullName: '8', name: Lang.queryJS('shop.aDarkGray')},
+                {fullName: '9', name: Lang.queryJS('shop.aBlue')},
+                {fullName: 'a', name: Lang.queryJS('shop.aGreen')},
+                {fullName: 'b', name: Lang.queryJS('shop.aAqua')},
+                {fullName: 'c', name: Lang.queryJS('shop.aRed')},
+                {fullName: 'd', name: Lang.queryJS('shop.aLightPurple')},
+                {fullName: 'e', name: Lang.queryJS('shop.aYellow')},
+                {fullName: 'f', name: Lang.queryJS('shop.aWhite')},
             ],
             data.data.request.chat_szin
         )
@@ -1660,11 +1660,11 @@ async function loadShop(page) {
             const rang = document.getElementById("kinezetRangText").value.trim()
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'rang', 'rang', rang)
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
@@ -1673,11 +1673,11 @@ async function loadShop(page) {
             const suffix = document.getElementById("kinezetSuffixText").value.trim()
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'prefixsuffix', 'prefix', prefix, 'suffix', suffix)
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
@@ -1686,11 +1686,11 @@ async function loadShop(page) {
             const udvozloUzenetVege = document.getElementById("kinezetUdvozloUzenetVegeText").value.trim()
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'udvozlouzenet', 'udvozlouzenet', udvozloUzenetEleje + "<nevem>" + udvozloUzenetVege)
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
@@ -1699,11 +1699,11 @@ async function loadShop(page) {
             const kilepoUzenetVege = document.getElementById("kinezetKilepoUzenetVegeText").value.trim()
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'kilepouzenet', 'kilepouzenet', kilepoUzenetEleje + "<nevem>" + kilepoUzenetVege)
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
@@ -1711,11 +1711,11 @@ async function loadShop(page) {
             const udvozloHang = getSelectedDropdown("shopUdvozloHangSelectOptions")
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'udvozlohang', 'udvozlohang', udvozloHang)
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
@@ -1723,11 +1723,11 @@ async function loadShop(page) {
             const kilepoHang = getSelectedDropdown("shopKilepoHangSelectOptions")
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'kilepohang', 'kilepohang', kilepoHang)
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
@@ -1735,55 +1735,55 @@ async function loadShop(page) {
             const chatSzin = getSelectedDropdown("shopChatSzinSelectOptions")
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'chatszin', 'chatszin', chatSzin)
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
         document.getElementById("kinezetRangReset").onclick = async () => {
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'rang', 'rang', '')
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
         document.getElementById("kinezetPrefixReset").onclick = async () => {
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'prefixsuffix', 'prefix', '', 'suffix', '')
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
         document.getElementById("kinezetUdvozloUzenetReset").onclick = async () => {
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'udvozlouzenet', 'udvozlouzenet', '')
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
 
         document.getElementById("kinezetKilepoUzenetReset").onclick = async () => {
             const callback = await updateSpecificSetting(ConfigManager.getSelectedAccount().accessToken, 'kilepouzenet', 'kilepouzenet', '')
             if (callback.data.update.callback == "success") {
-                showLaunchFailure('Sikeres kinézet frissítés!', 'Lépj át egy másik szerverre, hogy lásd a változást!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceSuccess'), Lang.queryJS('shop.updateAppearanceSuccessDesc'))
             } else if (callback.data.update.callback == "limit") {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Meghaladtad a karakterkorlátot!<br>Maximális karakterek: ' + callback.data.update.limit)
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc') + ' ' + callback.data.update.limit)
             } else {
-                showLaunchFailure('Sikertelen kinézet frissítés!', 'Valami hiba történt a kinézet beállítása közben!')
+                showLaunchFailure(Lang.queryJS('shop.updateAppearanceError'), Lang.queryJS('shop.updateAppearanceErrorCharDesc'))
             }
         }
     }
@@ -1820,12 +1820,12 @@ async function loadShop(page) {
         check.classList.remove('success')
         document.getElementById("playcoinSend").disabled = true
         if (callback.data.update == true) {
-            showLaunchFailure('Sikeres PlayCoin utalás!', 'A másik játékos megkapta a PlayCoin-t!')
+            showLaunchFailure(Lang.queryJS('shop.sendPCSuccess'), Lang.queryJS('shop.sendPCSuccessDesc'))
             loadShop(shopPage)
         } else if (callback.data.update == "ratelimit") {
-            showLaunchFailure('Sikertelen PlayCoin utalás!', 'Túl gyorsan próbáltál utalni, kérjek várj egy kicsit!')
+            showLaunchFailure(Lang.queryJS('shop.sendPCError'), Lang.queryJS('shop.sendPCErrorRateLimit'))
         } else {
-            showLaunchFailure('Sikertelen PlayCoin utalás!', 'Nincs elég PlayCoin egyenleged!')
+            showLaunchFailure(Lang.queryJS('shop.sendPCError'), Lang.queryJS('shop.sendPCErrorDesc'))
         }
     }
 
@@ -1887,7 +1887,7 @@ document.getElementById('shopButton').onclick = async () => {
         slideShop(!shopActive)
         shopActive = !shopActive
     } else {
-        showLaunchFailure('Bejelentkezési hiba!', 'Ehhez a funkció használatához a PlayClan fiókodba kell bejelentkezned!')
+        showLaunchFailure(Lang.queryJS('shop.loginError'), Lang.queryJS('shop.loginErrorDesc'))
     }
 }
 
@@ -1924,7 +1924,7 @@ let newsLoadingListener = null
  */
 function setNewsLoading(val){
     if(val){
-        const nLStr = 'Hírek lekérdezése'
+        const nLStr = Lang.queryJS('news.loading')
         let dotStr = '..'
         nELoadSpan.innerHTML = nLStr + dotStr
         newsLoadingListener = setInterval(() => {
@@ -2176,7 +2176,7 @@ async function loadNews(){
 
                     // Resolve comments.
                     let comments = el.find('slash\\:comments').text() || '0'
-                    comments = comments + ' komment'
+                    comments = comments + ' ' + Lang.queryJS('news.comments')
 
                     // Fix relative links in content.
                     let content = el.find('content\\:encoded').text()

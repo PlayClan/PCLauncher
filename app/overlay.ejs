@@ -1,6 +1,6 @@
 <div id="overlayContainer" style="display: none;">
     <div id="serverSelectContent" style="display: none;">
-        <span id="serverSelectHeader">Elérhető verziók</span>
+        <span id="serverSelectHeader"><%= lang('overlay.serverHeader') %></span>
         <div id="serverSelectList">
             <div id="serverSelectListScrollable">
                 <!-- Server listings populated here. -->
@@ -9,21 +9,21 @@
         <div id="serverSelectActions">
             <!-- <button id="serverSelectConfirm" class="overlayKeybindEnter" type="submit">Kiválasztás</button> -->
             <div id="serverSelectCancelWrapper">
-                <button id="serverSelectCancel" class="overlayKeybindEsc">Mégse</button>
+                <button id="serverSelectCancel" class="overlayKeybindEsc"><%= lang('overlay.cancel') %></button>
             </div>
         </div>
     </div>
     <div id="accountSelectContent" style="display: none;">
-        <span id="accountSelectHeader">Fiók kiválasztása</span>
+        <span id="accountSelectHeader"><%= lang('overlay.accountHeader') %></span>
         <div id="accountSelectList">
             <div id="accountSelectListScrollable">
                 <!-- Accounts populated here. -->
             </div>
         </div>
         <div id="accountSelectActions">
-            <button id="accountSelectConfirm" class="overlayKeybindEnter" type="submit">Kiválasztás</button>
+            <button id="accountSelectConfirm" class="overlayKeybindEnter" type="submit"><%= lang('overlay.select') %></button>
             <div id="accountSelectCancelWrapper">
-                <button id="accountSelectCancel" class="overlayKeybindEsc">Mégse</button>
+                <button id="accountSelectCancel" class="overlayKeybindEsc"><%= lang('overlay.cancel') %></button>
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
         <div id="overlayActionContainer">
             <button id="overlayAcknowledge" class="overlayKeybindEnter">Conare Iterum</button>
             <div id="overlayDismissWrapper">
-                <button id="overlayDismiss" style="display: none;" class="overlayKeybindEsc">Mégse</button>
+                <button id="overlayDismiss" style="display: none;" class="overlayKeybindEsc"><%= lang('overlay.cancel') %></button>
             </div>
         </div>
     </div>

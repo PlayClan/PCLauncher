@@ -2,21 +2,21 @@
     <div id="settingsContainerLeft">
         <div id="settingsNavContainer">
             <div id="settingsNavHeader">
-                <span id="settingsNavHeaderText">Beállítások</span>
+                <span id="settingsNavHeaderText"><%= lang('settings.navbar.header') %></span>
             </div>
             <div id="settingsNavItemsContainer">
                 <div id="settingsNavItemsContent">
-                    <button class="settingsNavItem" rSc="settingsTabAccount" id="settingsNavAccount" selected>Fiók</button>
-                    <button class="settingsNavItem" rSc="settingsTabMinecraft">Minecraft</button>
-                    <button class="settingsNavItem" rSc="settingsTabMods">Modok</button>
-                    <button class="settingsNavItem" rSc="settingsTabJava">Java</button>
-                    <button class="settingsNavItem" rSc="settingsTabLauncher">Launcher</button>
+                    <button class="settingsNavItem" rSc="settingsTabAccount" id="settingsNavAccount" selected><%= lang('settings.navbar.account') %></button>
+                    <button class="settingsNavItem" rSc="settingsTabMinecraft"><%= lang('settings.navbar.minecraft') %></button>
+                    <button class="settingsNavItem" rSc="settingsTabMods"><%= lang('settings.navbar.mods') %></button>
+                    <button class="settingsNavItem" rSc="settingsTabJava"><%= lang('settings.navbar.java') %></button>
+                    <button class="settingsNavItem" rSc="settingsTabLauncher"><%= lang('settings.navbar.launcher') %></button>
                     <div class="settingsNavSpacer"></div>
-                    <button class="settingsNavItem" rSc="settingsTabAbout">Az alkalmazásról</button>
-                    <button class="settingsNavItem" rSc="settingsTabUpdate" id="settingsNavUpdate">Frissítések</button>
+                    <button class="settingsNavItem" rSc="settingsTabAbout"><%= lang('settings.navbar.about') %></button>
+                    <button class="settingsNavItem" rSc="settingsTabUpdate" id="settingsNavUpdate"><%= lang('settings.navbar.updates') %></button>
                     <div id="settingsNavContentBottom">
                         <div class="settingsNavDivider"></div>
-                        <button id="settingsNavDone">Kész</button>
+                        <button id="settingsNavDone"><%= lang('settings.navbar.done') %></button>
                     </div>
                 </div>
             </div>
@@ -25,8 +25,8 @@
     <div id="settingsContainerRight">
         <div id="settingsTabAccount" class="settingsTab">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Fiók beállítások</span>
-                <span class="settingsTabHeaderDesc">Új fiók hozzáadása vagy meglévők kezelése.</span>
+                <span class="settingsTabHeaderText"><%= lang('settings.account.header') %></span>
+                <span class="settingsTabHeaderDesc"><%= lang('settings.account.desc') %></span>
             </div>
             <div class="settingsAuthAccountTypeContainer">
                 <div class="settingsAuthAccountTypeHeader">
@@ -51,10 +51,10 @@
                                     stroke="none" fill="#b4bcb4" fill-rule="evenodd"></path>
                             </g>
                         </svg>
-                        <span>PlayClan</span>
+                        <span><%= lang('settings.account.playclan') %></span>
                     </div>
                     <div class="settingsAuthAccountTypeHeaderRight">
-                        <button class="settingsAddAuthAccount" id="settingsAddPlayClanAccount">+ PlayClan fiók hozzáadása</button>
+                        <button class="settingsAddAuthAccount" id="settingsAddPlayClanAccount"><%= lang('settings.account.playclanAdd') %></button>
                     </div>
                 </div>
                 
@@ -73,10 +73,10 @@
                             <path fill="#05a6f0" d="M1 12h10v10H1z" />
                             <path fill="#ffba08" d="M12 12h10v10H12z" />
                         </svg>
-                        <span>Microsoft</span>
+                        <span><%= lang('settings.account.microsoft') %></span>
                     </div>
                     <div class="settingsAuthAccountTypeHeaderRight">
-                        <button class="settingsAddAuthAccount" id="settingsAddMicrosoftAccount">+ Microsoft fiók hozzáadása</button>
+                        <button class="settingsAddAuthAccount" id="settingsAddMicrosoftAccount"><%= lang('settings.account.microsoftAdd') %></button>
                     </div>
                 </div>
                 
@@ -93,10 +93,10 @@
                             <path d="M2.598.022h7.07L9.665 7c-.003 1.334-1.113 2.46-2.402 2.654H0V2.542C.134 1.2 1.3.195 2.598.022z" fill="#db2331" />
                             <path d="M1.54 2.844c.314-.76 1.31-.46 1.954-.528.785-.083 1.503.272 2.1.758l.164-.9c.327.345.587.756.964 1.052.28.254.655-.342.86-.013.42.864.408 1.86.54 2.795l-.788-.373C6.9 4.17 5.126 3.052 3.656 3.685c-1.294.592-1.156 2.65.06 3.255 1.354.703 2.953.51 4.405.292-.07.42-.34.87-.834.816l-4.95.002c-.5.055-.886-.413-.838-.89l.04-4.315z" fill="#fff" />
                         </svg>
-                        <span>Mojang</span>
+                        <span><%= lang('settings.account.mojang') %></span>
                     </div>
                     <div class="settingsAuthAccountTypeHeaderRight">
-                        <button class="settingsAddAuthAccount" id="settingsAddMojangAccount">+ Mojang fiók hozzáadása</button>
+                        <button class="settingsAddAuthAccount" id="settingsAddMojangAccount"><%= lang('settings.account.mojangAdd') %></button>
                     </div>
                 </div>
                 
@@ -107,11 +107,11 @@
         </div>
         <div id="settingsTabMinecraft" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Minecraft beállítások</span>
-                <span class="settingsTabHeaderDesc">A játék indításával kapcsolatos beállítások.</span>
+                <span class="settingsTabHeaderText"><%= lang('settings.minecraft.header') %></span>
+                <span class="settingsTabHeaderDesc"><%= lang('settings.minecraft.desc') %></span>
             </div>
             <div id="settingsGameResolutionContainer">
-                <span class="settingsFieldTitle">Játék felbontása</span>
+                <span class="settingsFieldTitle"><%= lang('settings.minecraft.resolution') %></span>
                 <div id="settingsGameResolutionContent">
                     <input type="number" id="settingsGameWidth" min="0" cValue="GameWidth">
                     <div id="settingsGameResolutionCross">&#10006;</div>
@@ -131,7 +131,7 @@
             </div> -->
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Indításkor automatikusan csatlakozzon a szerverhez.</span>
+                    <span class="settingsFieldTitle"><%= lang('settings.minecraft.autoconnect') %></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -142,8 +142,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">A játék leválasztva a launcherről.</span>
-                    <span class="settingsFieldDesc">Ha a játék nincs leválasztva, a launcher bezárásával a játék is bezárul.</span>
+                    <span class="settingsFieldTitle"><%= lang('settings.minecraft.detach') %></span>
+                    <span class="settingsFieldDesc"><%= lang('settings.minecraft.detachDesc') %></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -155,8 +155,8 @@
         </div>
         <div id="settingsTabMods" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Mod beállítások</span>
-                <span class="settingsTabHeaderDesc">Modok engedélyezése vagy letiltása.</span>
+                <span class="settingsTabHeaderText"><%= lang('settings.mods.header') %></span>
+                <span class="settingsTabHeaderDesc"><%= lang('settings.mods.desc') %></span>
             </div>
             <div class="settingsSelServContainer">
                 <div class="settingsSelServContent">
@@ -164,37 +164,37 @@
                 </div>
                 <div class="settingsSwitchServerContainer">
                     <div class="settingsSwitchServerContent">
-                        <button class="settingsSwitchServerButton">Módosítás</button>
+                        <button class="settingsSwitchServerButton"><%= lang('settings.mods.change') %></button>
                     </div>
                 </div>
             </div>
             <div id="settingsModsContainer">
                 <div id="settingsReqModsContainer">
-                    <div class="settingsModsHeader">Kötelező modok</div>
+                    <div class="settingsModsHeader"><%= lang('settings.mods.required') %></div>
                     <div id="settingsReqModsContent">
 
                     </div>
                 </div>
                 <div id="settingsOptModsContainer">
-                    <div class="settingsModsHeader">Opcionális modok</div>
+                    <div class="settingsModsHeader"><%= lang('settings.mods.optional') %></div>
                     <div id="settingsOptModsContent">
                         
                     </div>
                 </div>
                 <div id="settingsDropinModsContainer">
-                    <div class="settingsModsHeader">Modok</div>
-                    <button id="settingsDropinFileSystemButton">+ Modok hozzáadása <span id="settingsDropinRefreshNote">(F5 az újratöltéshez)</span></button>
+                    <div class="settingsModsHeader"><%= lang('settings.mods.mods') %></div>
+                    <button id="settingsDropinFileSystemButton"><%= lang('settings.mods.add') %> <span id="settingsDropinRefreshNote"><%= lang('settings.mods.refresh') %></span></button>
                     <div id="settingsDropinModsContent">
                         
                     </div>
                 </div>
                 <div id="settingsShadersContainer">
-                    <div class="settingsModsHeader">Shadercsomagok</div>
-                    <div id="settingsShaderpackDesc">Shadercsomagok engedélyezése vagy letiltása. Kérjük, vegye figyelembe, hogy a shaderek csak erős gépek esetén működnek zökkenőmentesen. Itt egyedi csomagokat adhat hozzá.</div>
+                    <div class="settingsModsHeader"><%= lang('settings.mods.shaders') %></div>
+                    <div id="settingsShaderpackDesc"><%= lang('settings.mods.shadersDesc') %></div>
                     <div id="settingsShaderpackWrapper">
                         <button id="settingsShaderpackButton"> + </button>
                         <div class="settingsSelectContainer">
-                            <div class="settingsSelectSelected" id="settingsShadersSelected">Shadercsomag választása</div>
+                            <div class="settingsSelectSelected" id="settingsShadersSelected"><%= lang('settings.mods.shadersSelect') %></div>
                             <div class="settingsSelectOptions" id="settingsShadersOptions" hidden>
 
                             </div>
@@ -205,8 +205,8 @@
         </div>
         <div id="settingsTabJava" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Java beállítások</span>
-                <span class="settingsTabHeaderDesc">Java konfiguráció kezelése (haladó).</span>
+                <span class="settingsTabHeaderText"><%= lang('settings.java.header') %></span>
+                <span class="settingsTabHeaderDesc"><%= lang('settings.java.desc') %></span>
             </div>
             <div class="settingsSelServContainer">
                 <div class="settingsSelServContent">
@@ -214,16 +214,16 @@
                 </div>
                 <div class="settingsSwitchServerContainer">
                     <div class="settingsSwitchServerContent">
-                        <button class="settingsSwitchServerButton">Módosítás</button>
+                        <button class="settingsSwitchServerButton"><%= lang('settings.java.change') %></button>
                     </div>
                 </div>
             </div>
             <div id="settingsMemoryContainer">
-                <div id="settingsMemoryTitle">Memória</div>
+                <div id="settingsMemoryTitle"><%= lang('settings.java.memory') %></div>
                 <div id="settingsMemoryContent">
                     <div id="settingsMemoryContentLeft">
                         <div class="settingsMemoryContentItem">
-                            <span class="settingsMemoryHeader">Maximum RAM</span>
+                            <span class="settingsMemoryHeader"><%= lang('settings.java.memoryMax') %></span>
                             <div class="settingsMemoryActionContainer">
                                 <div id="settingsMaxRAMRange" class="rangeSlider" cValue="MaxRAM" serverDependent min="3" max="8" value="3" step="0.5">
                                     <div class="rangeSliderBar"></div>
@@ -233,7 +233,7 @@
                             </div>
                         </div>
                         <div class="settingsMemoryContentItem">
-                            <span class="settingsMemoryHeader">Minimum RAM</span>
+                            <span class="settingsMemoryHeader"><%= lang('settings.java.memoryMin') %></span>
                             <div class="settingsMemoryActionContainer">
                                 <div id="settingsMinRAMRange" class="rangeSlider" cValue="MinRAM" serverDependent min="3" max="8" value="3" step="0.5">
                                     <div class="rangeSliderBar"></div>
@@ -242,16 +242,16 @@
                                 <span id="settingsMinRAMLabel" class="settingsMemoryLabel">3G</span>
                             </div>
                         </div>
-                        <div id="settingsMemoryDesc">Az ajánlott minimális RAM 3 gigabájt. A minimális és maximális értékek azonos értékre állítása csökkentheti az akadásokat.</div>
+                        <div id="settingsMemoryDesc"><%= lang('settings.java.memoryDesc') %></div>
                     </div>
                     <div id="settingsMemoryContentRight">
                         <div id="settingsMemoryStatus">
                             <div class="settingsMemoryStatusContainer">
-                                <span class="settingsMemoryStatusTitle">Összes</span>
+                                <span class="settingsMemoryStatusTitle"><%= lang('settings.java.memoryTotal') %></span>
                                 <span id="settingsMemoryTotal" class="settingsMemoryStatusValue">16G</span>
                             </div>
                             <div class="settingsMemoryStatusContainer">
-                                <span class="settingsMemoryStatusTitle">Elérhető</span>
+                                <span class="settingsMemoryStatusTitle"><%= lang('settings.java.memoryAvailable') %></span>
                                 <span id="settingsMemoryAvail" class="settingsMemoryStatusValue">7.3G</span>
                             </div>
                         </div>
@@ -259,7 +259,7 @@
                 </div>
             </div>
             <div class="settingsFileSelContainer">
-                <div class="settingsFileSelTitle">Java futtatókörnyezet</div>
+                <div class="settingsFileSelTitle"><%= lang('settings.java.executable') %></div>
                 <div class="settingsFileSelContent">
                     <div id="settingsJavaExecDetails">Kiválasztva: Java 8 Update 172 (x64)</div>
                     <div class="settingsFileSelActions">
@@ -278,13 +278,13 @@
                             </svg>
                         </div>
                         <input class="settingsFileSelVal" id="settingsJavaExecVal" type="text" value="null" cValue="JavaExecutable" serverDependent disabled>
-                        <button class="settingsFileSelButton" id="settingsJavaExecSel" dialogTitle="Select Java Executable" dialogDirectory="false">Fájl kiválasztása</button>
+                        <button class="settingsFileSelButton" id="settingsJavaExecSel" dialogTitle="Select Java Executable" dialogDirectory="false"><%= lang('settings.java.select') %></button>
                     </div>
                 </div>
-                <div class="settingsFileSelDesc">A Java futtatható fájl érvényesítése a játék indítása előtt megtörténik. <strong id="settingsJavaReqDesc">Java 8 x64 szükséges.</strong><br>Az elérési útnak ezzel kell végződnie: <strong>bin<%= process.platform === 'win32' ? '\\javaw.exe' : '/java' %></strong>.</div>
+                <div class="settingsFileSelDesc"><%= lang('settings.java.execDesc') %> <strong id="settingsJavaReqDesc">Java 8 x64 szükséges.</strong><br><%= lang('settings.java.execPath') %> <strong>bin<%= process.platform === 'win32' ? '\\javaw.exe' : '/java' %></strong>.</div>
             </div>
             <div id="settingsJVMOptsContainer">
-                <div id="settingsJVMOptsTitle">További JVM beállítások</div>
+                <div id="settingsJVMOptsTitle"><%= lang('settings.java.other') %></div>
                 <div id="settingsJVMOptsContent">
                     <div class="settingsFileSelIcon">
                         <svg class="settingsFileSelSVG" x="0px" y="0px" viewBox="0 0 305.001 305.001">
@@ -302,18 +302,18 @@
                     </div>
                     <input id="settingsJVMOptsVal" cValue="JVMOptions" serverDependent type="text">
                 </div>
-                <div id="settingsJVMOptsDesc">A JVM számára megadható lehetőségek. <em>-Xms</em> és <em>-Xmx</em>-t már nem kell megadni.<br><a href="https://docs.oracle.com/javase/8/docs/technotes/tools/<%= process.platform === 'win32' ? 'windows' : 'unix' %>/java.html" id="settingsJvmOptsLink">A Java 8 elérhető opciói</a>.</div>
+                <div id="settingsJVMOptsDesc"><%- lang('settings.java.otherDesc') %><br><a href="https://docs.oracle.com/javase/8/docs/technotes/tools/<%= process.platform === 'win32' ? 'windows' : 'unix' %>/java.html" id="settingsJvmOptsLink">A Java 8 elérhető opciói</a>.</div>
             </div>
         </div>
         <div id="settingsTabLauncher" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Launcher beállításai</span>
-                <span class="settingsTabHeaderDesc">Magával az launcher-el kapcsolatos lehetőségek.</span>
+                <span class="settingsTabHeaderText"><%= lang('settings.launcher.header') %></span>
+                <span class="settingsTabHeaderDesc"><%= lang('settings.launcher.desc') %></span>
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Béta frissítések engedélyezése.</span>
-                    <span class="settingsFieldDesc">A béta verziók olyan új funkciókat tartalmaznak, amelyeket esetleg még nem teszteltek vagy integráltak teljesen.<br>Ez mindig igaz, ha béta verziót használ.</span>
+                    <span class="settingsFieldTitle"><%= lang('settings.launcher.beta') %></span>
+                    <span class="settingsFieldDesc"><%- lang('settings.launcher.betaDesc') %></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -324,8 +324,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Discord Rich Presence engedélyezése.</span>
-                    <span class="settingsFieldDesc">A Discord Rich Presence engedélyezésével a Discord profilodon megoszthatod, hogy éppen mivel játszol.</span>
+                    <span class="settingsFieldTitle"><%= lang('settings.launcher.discord') %></span>
+                    <span class="settingsFieldDesc"><%= lang('settings.launcher.discordDesc') %></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -336,8 +336,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Launcher automatikus eltüntetése.</span>
-                    <span class="settingsFieldDesc">A Launcher eltüntetésének engedélyezésével arra az időszakra eltűnik, amíg fut a Minecraft.</span>
+                    <span class="settingsFieldTitle"><%= lang('settings.launcher.hide') %></span>
+                    <span class="settingsFieldDesc"><%= lang('settings.launcher.hideDesc') %></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -348,8 +348,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Automatikus IP levédés engedélyezése.</span>
-                    <span class="settingsFieldDesc">Az automatikus IP levédés engedélyezésével, a fiókod automatikusan le lesz védve az IP címedre, amikor elindítod a Minecraft-ot. <small>(Ez a funkció csak akkor működik, ha a PlayClan fiókoddal indítod el a Minecraft-ot.)</small></span>
+                    <span class="settingsFieldTitle"><%= lang('settings.launcher.ipProtection') %></span>
+                    <span class="settingsFieldDesc"><%- lang('settings.launcher.ipProtectionDesc') %></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -360,7 +360,7 @@
             </div>
             <div class="settingsFileSelContainer">
                 <div class="settingsFileSelContent">
-                    <div class="settingsFieldTitle" id="settingsDataDirTitle">Adatok mappa</div>
+                    <div class="settingsFieldTitle" id="settingsDataDirTitle"><%= lang('settings.launcher.folder') %></div>
                     <div class="settingsFileSelActions">
                         <div class="settingsFileSelIcon">
                             <svg class="settingsFileSelSVG">
@@ -372,22 +372,22 @@
                             </svg>
                         </div>
                         <input class="settingsFileSelVal" type="text" value="null" cValue="DataDirectory" disabled>
-                        <button class="settingsFileSelButton" dialogTitle="Select Data Directory" dialogDirectory="true">Mappa kiválasztása</button>
+                        <button class="settingsFileSelButton" dialogTitle="Select Data Directory" dialogDirectory="true"><%= lang('settings.launcher.folderChoose') %></button>
                     </div>
                 </div>
-                <div class="settingsFileSelDesc">Minden játékfájl és helyi Java telepítés ebben a mappában tárolódik.<br>A képernyőképek és a világmentések a megfelelő szerverkonfiguráció mappájában tárolódnak.</div>
+                <div class="settingsFileSelDesc"><%- lang('settings.launcher.folderDesc') %></div>
             </div>
         </div>
         <div id="settingsTabAbout" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Az alkalmazásról</span>
-                <span class="settingsTabHeaderDesc">Az aktuális verzióra vonatkozó információk és változtatásnapló megtekintése.</span>
+                <span class="settingsTabHeaderText"><%= lang('settings.about.header') %></span>
+                <span class="settingsTabHeaderDesc"><%= lang('settings.about.desc') %></span>
             </div>
             <div id="settingsAboutCurrentContainer">
                 <div id="settingsAboutCurrentContent">
                     <div id="settingsAboutCurrentHeadline">
                         <img id="settingsAboutLogo" src="./assets/images/SealCircle.png">
-                        <span id="settingsAboutTitle">PlayClan Launcher</span>
+                        <span id="settingsAboutTitle"><%= lang('settings.about.title') %></span>
                     </div>
                     <div id="settingsAboutCurrentVersion">
                         <div id="settingsAboutCurrentVersionCheck">&#10003;</div>
@@ -401,37 +401,37 @@
                     </div>
                 </div>
                 <div id="settingsAboutButtons">
-                    <a href="https://github.com/PlayClan/PCLauncher" id="settingsAboutSourceButton" class="settingsAboutButton">Forráskód (GitHub)</a>
+                    <a href="https://github.com/PlayClan/PCLauncher" id="settingsAboutSourceButton" class="settingsAboutButton"><%= lang('settings.about.source') %></a>
                     <!-- The following must be included in third-party usage. -->
-                    <a href="https://github.com/dscalzi/HeliosLauncher" id="settingsAboutSourceButton" class="settingsAboutButton">Eredeti forrás</a>
-                    <a href="https://dc.playclan.hu" id="settingsAboutSupportButton" class="settingsAboutButton">Segítség kérése</a>
-                    <a href="#" id="settingsAboutDevToolsButton" class="settingsAboutButton">DevTools Konzol</a>
+                    <a href="https://github.com/dscalzi/HeliosLauncher" id="settingsAboutSourceButton" class="settingsAboutButton"><%= lang('settings.about.originalSource') %></a>
+                    <a href="https://dc.playclan.hu" id="settingsAboutSupportButton" class="settingsAboutButton"><%= lang('settings.about.help') %></a>
+                    <a href="#" id="settingsAboutDevToolsButton" class="settingsAboutButton"><%= lang('settings.about.devtools') %></a>
                 </div>
             </div>
             <div class="settingsChangelogContainer">
                 <div class="settingsChangelogContent">
                     <div class="settingsChangelogHeadline">
-                        <div class="settingsChangelogLabel">Változtatásnapló</div>
-                        <div class="settingsChangelogTitle">Változtatások</div>
+                        <div class="settingsChangelogLabel"><%= lang('settings.about.changelog') %></div>
+                        <div class="settingsChangelogTitle"><%= lang('settings.about.changes') %></div>
                     </div>
                     <div class="settingsChangelogText">
-                        Nincsenek változtatások
+                        <%= lang('settings.about.noChanges') %>
                     </div>
                 </div>
                 <div class="settingsChangelogActions">
-                    <a class="settingsChangelogButton settingsAboutButton" href="#">Változtatások megtekintése GitHub-on</a>
+                    <a class="settingsChangelogButton settingsAboutButton" href="#"><%= lang('settings.about.changesGithub') %></a>
                 </div>
             </div>
         </div>
         <div id="settingsTabUpdate" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Launcher frissítések</span>
-                <span class="settingsTabHeaderDesc">Töltse le, telepítse és tekintse át a launcher frissítéseit.</span>
+                <span class="settingsTabHeaderText"><%= lang('settings.updates.header') %></span>
+                <span class="settingsTabHeaderDesc"><%= lang('settings.updates.desc') %></span>
             </div>
             <div id="settingsUpdateStatusContainer">
                 <div id="settingsUpdateStatusContent">
                     <div id="settingsUpdateStatusHeadline">
-                        <span id="settingsUpdateTitle">A legújabb verziót használja!</span>
+                        <span id="settingsUpdateTitle"><%= lang('settings.updates.uptodate') %></span>
                     </div>
                     <div id="settingsUpdateVersion">
                         <div id="settingsUpdateVersionCheck">&#10003;</div>
@@ -444,18 +444,18 @@
                         </div>
                     </div>
                     <div id="settingsUpdateActionContainer">
-                        <button id="settingsUpdateActionButton">Frissítések keresése</button>
+                        <button id="settingsUpdateActionButton"><%= lang('settings.updates.search') %></button>
                     </div>
                 </div>
             </div>
             <div class="settingsChangelogContainer">
                 <div class="settingsChangelogContent">
                     <div class="settingsChangelogHeadline">
-                        <div class="settingsChangelogLabel">Mi az újság</div>
-                        <div class="settingsChangelogTitle">Frissítési változtatásnapló</div>
+                        <div class="settingsChangelogLabel"><%= lang('settings.updates.whatsnew') %></div>
+                        <div class="settingsChangelogTitle"><%= lang('settings.updates.changes') %></div>
                     </div>
                     <div class="settingsChangelogText">
-                        Nincsenek változtatások
+                        <%= lang('settings.updates.noChanges') %>
                     </div>
                 </div>
             </div>

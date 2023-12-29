@@ -9,7 +9,6 @@ const { Type }      = require('helios-distribution-types')
 const AuthManager   = require('./assets/js/authmanager')
 const ConfigManager = require('./assets/js/configmanager')
 const { DistroAPI } = require('./assets/js/distromanager')
-const Lang          = require('./assets/js/langloader')
 
 let rscShouldLoad = false
 let fatalStartupError = false
@@ -122,9 +121,9 @@ function showFatalStartupError(){
         $('#loadingContainer').fadeOut(250, () => {
             document.getElementById('overlayContainer').style.background = 'none'
             setOverlayContent(
-                'Végzetes hiba: Nem sikerült betölteni az terjesztési indexet',
-                'Nem sikerült kapcsolatot létesíteni a szervereinkkel a terjesztési index letöltéséhez. Nem volt elérhető betölthető helyi példány.<br><br>A terjesztési index egy alapvető fájl, amely a legfrissebb szerverinformációkat tartalmazza. A launcher nem tud elindulni nélküle. Győződjön meg arról, hogy csatlakozik az internethez, és indítsa újra az alkalmazást.',
-                'Bezárás'
+                Lang.queryJS('uibinder.fatalStartupHeader'),
+                Lang.queryJS('uibinder.fatalStartupContent'),
+                Lang.queryJS('general.close')
             )
             setOverlayHandler(() => {
                 const window = remote.getCurrentWindow()
@@ -340,10 +339,12 @@ async function validateSelectedAccount(){
             ConfigManager.save()
             const accLen = Object.keys(ConfigManager.getAuthAccounts()).length
             setOverlayContent(
-                'Nem sikerült a bejelentkezési adatok frissítése',
-                `Nem tudtuk frissíteni a bejelentkezést <strong>${selectedAcc.displayName}</strong> fiókjának. Kérlek ${accLen > 0 ? 'válassz másik fiókot vagy ' : ''}jelentkezz be újra.`,
-                'Bejelentkezés',
-                'Másik fiók választása'
+                Lang.queryJS('uibinder.loginErrorHeader'),
+                accLen > 0
+                    ? Lang.queryJS('uibinder.loginErrorContent', { 'account': selectedAcc.displayName })
+                    : Lang.queryJS('uibinder.loginErrorContentAnotherAccount', { 'account': selectedAcc.displayName }),
+                Lang.queryJS('general.login'),
+                Lang.queryJS('general.anotherAccount')
             )
             setOverlayHandler(() => {
 

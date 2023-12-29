@@ -388,9 +388,9 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
 
             // Unexpected error.
             setOverlayContent(
-                'Valami hiba történt',
-                'A Microsoft hitelesítés sikertelen. Kérlek próbáld újra.',
-                'Ok'
+                Lang.queryJS('settings.errorHeader'),
+                Lang.queryJS('settings.errorMicrosoftLogin'),
+                Lang.queryJS('settings.ok')
             )
             setOverlayHandler(() => {
                 toggleOverlay(false)
@@ -406,8 +406,8 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
             switchView(getCurrentView(), viewOnClose, 500, 500, () => {
                 // TODO Dont know what these errors are. Just show them I guess.
                 // This is probably if you messed up the app registration with Azure.      
-                let error = "Hozzáférés megtagadva" // Error might be 'access_denied' ?
-                let errorDesc = "Nem sikerült bejelentkezni a Microsoft fiókodba, mivel megszakítottad a bejelentkezést! Kérlek próbáld újra!"
+                let error = Lang.queryJS('settings.accessDenied') // Error might be 'access_denied' ?
+                let errorDesc = Lang.queryJS('settings.accessDeniedDesc')
                 console.log('Error getting authCode, is Azure application registered correctly?')
                 console.log(error)
                 console.log(errorDesc)
@@ -415,7 +415,7 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
                 setOverlayContent(
                     error,
                     errorDesc,
-                    'Ok'
+                    Lang.queryJS('settings.ok')
                 )
                 setOverlayHandler(() => {
                     toggleOverlay(false)
@@ -444,8 +444,8 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
                         // Uh oh.
                         msftLoginLogger.error('Unhandled error during login.', displayableError)
                         actualDisplayableError = {
-                            title: 'Ismeretlen hiba a bejelentkezés során',
-                            desc: 'Ismeretlen hiba lépett fel. A részletekért lásd a konzolt.'
+                            title: Lang.queryJS('login.errorTitle'),
+                            desc: Lang.queryJS('login.errorDesc')
                         }
                     }
 
@@ -477,9 +477,9 @@ ipcRenderer.on(PC_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
 
             // Unexpected error.
             setOverlayContent(
-                'Valami hiba történt',
-                'A PlayClan hitelesítés sikertelen. Kérlek próbáld újra.',
-                'Ok'
+                Lang.queryJS('settings.errorHeader'),
+                Lang.queryJS('settings.errorPlayClanLogin'),
+                Lang.queryJS('settings.ok')
             )
             setOverlayHandler(() => {
                 toggleOverlay(false)
@@ -509,8 +509,8 @@ ipcRenderer.on(PC_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
                     // Uh oh.
                     pcLoginLogger.error('Unhandled error during login.', displayableError)
                     actualDisplayableError = {
-                        title: 'Ismeretlen hiba a bejelentkezés során',
-                        desc: 'Ismeretlen hiba lépett fel. A részletekért lásd a konzolt.'
+                        title: Lang.queryJS('login.errorTitle'),
+                        desc: Lang.queryJS('login.errorDesc')
                     }
                 }
 
@@ -539,11 +539,11 @@ function bindAuthAccountSelect(){
             for(let i=0; i<selectBtns.length; i++){
                 if(selectBtns[i].hasAttribute('selected')){
                     selectBtns[i].removeAttribute('selected')
-                    selectBtns[i].innerHTML = 'Fiók kiválasztása'
+                    selectBtns[i].innerHTML = Lang.queryJS('settings.selectAccount')
                 }
             }
             val.setAttribute('selected', '')
-            val.innerHTML = 'Kiválasztott fiók &#10004;'
+            val.innerHTML = Lang.queryJS('settings.selectedAccount')
             setSelectedAccount(val.closest('.settingsAuthAccount').getAttribute('uuid'))
         }
     })
@@ -561,10 +561,10 @@ function bindAuthAccountLogOut(){
             if(Object.keys(ConfigManager.getAuthAccounts()).length === 1){
                 isLastAccount = true
                 setOverlayContent(
-                    'Figyelem!<br>Ez az utolsó fiókod!',
-                    'A launcher használatához legalább egy fiókba be kell jelentkeznie. Ezután újra be kell jelentkeznie.<br><br>Biztosan ki szeretne jelentkezni?',
-                    'Biztos vagyok benne',
-                    'Mégsem'
+                    Lang.queryJS('settings.logOutLastAccountHeader'),
+                    Lang.queryJS('settings.logOutLastAccount'),
+                    Lang.queryJS('settings.logOutLastAccountConfirm'),
+                    Lang.queryJS('settings.cancel')
                 )
                 setOverlayHandler(() => {
                     processLogOut(val, isLastAccount)
@@ -663,9 +663,9 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
 
             // Unexpected error.
             setOverlayContent(
-                'Valami hiba történt',
-                'A Microsoft kijelentkezés nem sikerült. Kérlek próbáld újra.',
-                'Ok'
+                Lang.queryJS('settings.errorHeader'),
+                Lang.queryJS('settings.errorMicrosoftLogout'),
+                Lang.queryJS('settings.ok')
             )
             setOverlayHandler(() => {
                 toggleOverlay(false)
@@ -719,12 +719,12 @@ function refreshAuthAccountSelected(uuid){
         const selBtn = val.getElementsByClassName('settingsAuthAccountSelect')[0]
         if(uuid === val.getAttribute('uuid')){
             selBtn.setAttribute('selected', '')
-            selBtn.innerHTML = 'Kiválasztott fiók &#10004;'
+            selBtn.innerHTML = Lang.queryJS('settings.selectedAccount')
         } else {
             if(selBtn.hasAttribute('selected')){
                 selBtn.removeAttribute('selected')
             }
-            selBtn.innerHTML = 'Fiók kiválasztása'
+            selBtn.innerHTML = Lang.queryJS('settings.selectAccount')
         }
     })
 }
@@ -738,7 +738,7 @@ function convertSecondsToTime(seconds) {
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
   
-    return `${hours} óra ${minutes} perc`
+    return `${hours} ${Lang.queryJS('shop.hour')} ${minutes} ${Lang.queryJS('shop.minute')}`
   }
 
 /**
@@ -769,18 +769,18 @@ function populateAuthAccounts(){
                 <div class="settingsAuthAccountRight">
                     <div class="settingsAuthAccountDetails">
                         <div class="settingsAuthAccountDetailPane">
-                            <div class="settingsAuthAccountDetailTitle">Játékosnév</div>
+                            <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.playername')}</div>
                             <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
                         </div>
                         <div class="settingsAuthAccountDetailPane">
-                            <div class="settingsAuthAccountDetailTitle">Bejelentkezés érvényes</div>
+                            <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.expiry')}</div>
                             <div class="settingsAuthAccountDetailValue">${acc.accessExpires}</div>
                         </div>
                     </div>
                     <div class="settingsAuthAccountActions">
-                        <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>Kiválasztott fiók &#10004;' : '>Fiók kiválasztása'}</button>
+                        <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>' + Lang.queryJS('settings.selectedAccount') : '>' + Lang.queryJS('settings.selectAccount')}</button>
                         <div class="settingsAuthAccountWrapper">
-                            <button class="settingsAuthAccountLogOut">Kijelentkezés</button>
+                            <button class="settingsAuthAccountLogOut">${Lang.queryJS('settings.logout')}</button>
                         </div>
                     </div>
                 </div>
@@ -793,18 +793,18 @@ function populateAuthAccounts(){
                 <div class="settingsAuthAccountRight">
                     <div class="settingsAuthAccountDetails">
                         <div class="settingsAuthAccountDetailPane">
-                            <div class="settingsAuthAccountDetailTitle">Játékosnév</div>
+                            <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.playername')}</div>
                             <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
                         </div>
                         <div class="settingsAuthAccountDetailPane">
-                            <div class="settingsAuthAccountDetailTitle">UUID</div>
+                            <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.uuid')}</div>
                             <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
                         </div>
                     </div>
                     <div class="settingsAuthAccountActions">
-                        <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>Kiválasztott fiók &#10004;' : '>Fiók kiválasztása'}</button>
+                        <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>' + Lang.queryJS('settings.selectedAccount') : '>' + Lang.queryJS('settings.selectAccount')}</button>
                         <div class="settingsAuthAccountWrapper">
-                            <button class="settingsAuthAccountLogOut">Kijelentkezés</button>
+                            <button class="settingsAuthAccountLogOut">${Lang.queryJS('settings.logout')}</button>
                         </div>
                     </div>
                 </div>
@@ -1022,7 +1022,7 @@ async function resolveDropinModsForUI(){
                             <div class="settingsModDetails">
                                 <span class="settingsModName">${dropin.name}</span>
                                 <div class="settingsDropinRemoveWrapper">
-                                    <button class="settingsDropinRemoveButton" remmod="${dropin.fullName}">Eltávolítás</button>
+                                    <button class="settingsDropinRemoveButton" remmod="${dropin.fullName}">${Lang.queryJS('settings.remove')}</button>
                                 </div>
                             </div>
                         </div>
@@ -1050,9 +1050,9 @@ function bindDropinModsRemoveButton(){
                 document.getElementById(fullName).remove()
             } else {
                 setOverlayContent(
-                    `Nem sikerült törölni a modot:<br>${fullName}`,
-                    'Győződjön meg arról, hogy a fájl nincs használatban, és próbálja újra.',
-                    'Ok'
+                    `${Lang.queryJS('settings.deleteModHeader')}${fullName}`,
+                    Lang.queryJS('settings.deleteMod'),
+                    Lang.queryJS('settings.ok')
                 )
                 setOverlayHandler(null)
                 toggleOverlay(true)
@@ -1105,9 +1105,9 @@ function saveDropinModConfiguration(){
                 DropinModUtil.toggleDropinMod(CACHE_SETTINGS_MODS_DIR, dropin.fullName, dropinUIEnabled).catch(err => {
                     if(!isOverlayVisible()){
                         setOverlayContent(
-                            'Nem sikerült a váltás<br>Egy vagy több modnál',
+                            Lang.queryJS('settings.errorModHeader'),
                             err.message,
-                            'Ok'
+                            Lang.queryJS('settings.ok')
                         )
                         setOverlayHandler(null)
                         toggleOverlay(true)
@@ -1242,7 +1242,7 @@ async function loadSelectedServerOnModsTab(){
                             <path class="cls-1" d="M100.93,65.54C89,62,68.18,55.65,63.54,52.13c2.7-5.23,18.8-19.2,28-27.55C81.36,31.74,63.74,43.87,58.09,45.3c-2.41-5.37-3.61-26.52-4.37-39-.77,12.46-2,33.64-4.36,39-5.7-1.46-23.3-13.57-33.49-20.72,9.26,8.37,25.39,22.36,28,27.55C39.21,55.68,18.47,62,6.52,65.55c12.32-2,33.63-6.06,39.34-4.9-.16,5.87-8.41,26.16-13.11,37.69,6.1-10.89,16.52-30.16,21-33.9,4.5,3.79,14.93,23.09,21,34C70,86.84,61.73,66.48,61.59,60.65,67.36,59.49,88.64,63.52,100.93,65.54Z"/>
                             <circle class="cls-2" cx="53.73" cy="53.9" r="38"/>
                         </svg>
-                        <span class="serverListingStarTooltip">Legújabb verzió</span>
+                        <span class="serverListingStarTooltip">${Lang.queryJS('settings.latestVersion')}</span>
                     </div>` : ''}
                 </div>
             </div>
@@ -1493,19 +1493,19 @@ async function populateJavaExecDetails(execPath){
     const details = await validateSelectedJvm(ensureJavaDirIsRoot(execPath), server.effectiveJavaOptions.supported)
 
     if(details != null) {
-        settingsJavaExecDetails.innerHTML = `Kiválasztva: Java ${details.semverStr} (${details.vendor})`
+        settingsJavaExecDetails.innerHTML = `${Lang.queryJS('settings.javaSelected')} ${details.semverStr} (${details.vendor})`
     } else {
-        settingsJavaExecDetails.innerHTML = 'Érvénytelen Java elérés'
+        settingsJavaExecDetails.innerHTML = Lang.queryJS('settings.javaNotFound')
     }
 }
 
 function populateJavaReqDesc(server) {
-    settingsJavaReqDesc.innerHTML = `Szükséges: Java ${server.effectiveJavaOptions.suggestedMajor} x64.`
+    settingsJavaReqDesc.innerHTML = `${Lang.queryJS('settings.javaRequired')} ${server.effectiveJavaOptions.suggestedMajor} x64.`
 }
 
 function populateJvmOptsLink(server) {
     const major = server.effectiveJavaOptions.suggestedMajor
-    settingsJvmOptsLink.innerHTML = `Elérhető lehetőségek a Java ${major} (HotSpot VM) számára`
+    settingsJvmOptsLink.innerHTML = `${Lang.queryJS('settings.javaAvailable')} ${major} (HotSpot VM)`
     if(major >= 12) {
         settingsJvmOptsLink.href = `https://docs.oracle.com/en/java/javase/${major}/docs/specs/man/java.html#extra-options-for-java`
     }
@@ -1582,11 +1582,11 @@ function isPrerelease(version){
 function populateVersionInformation(version, valueElement, titleElement, checkElement){
     valueElement.innerHTML = version
     if(isPrerelease(version)){
-        titleElement.innerHTML = 'Béta verzió'
+        titleElement.innerHTML = Lang.queryJS('settings.betaRelease')
         titleElement.style.color = '#ff886d'
         checkElement.style.background = '#ff886d'
     } else {
-        titleElement.innerHTML = 'Stabil verzió'
+        titleElement.innerHTML = Lang.queryJS('settings.stableRelease')
         titleElement.style.color = null
         checkElement.style.background = null
     }
@@ -1625,7 +1625,7 @@ function populateReleaseNotes(){
         },
         timeout: 2500
     }).catch(err => {
-        settingsAboutChangelogText.innerHTML = 'Nem sikerült betölteni a változtatásokat.'
+        settingsAboutChangelogText.innerHTML = Lang.queryJS('settings.changelogError')
     })
 }
 
@@ -1673,27 +1673,27 @@ function settingsUpdateButtonStatus(text, disabled = false, handler = null){
  */
 function populateSettingsUpdateInformation(data){
     if(data != null){
-        settingsUpdateTitle.innerHTML = `Új ${isPrerelease(data.version) ? 'béta' : 'stabil'} verzió elérhető!`
+        settingsUpdateTitle.innerHTML = `${Lang.queryJS('settings.new')} ${isPrerelease(data.version) ? Lang.queryJS('settings.beta') : Lang.queryJS('settings.stable')} ${Lang.queryJS('settings.updateAvailable')}!}`
         settingsUpdateChangelogCont.style.display = null
         settingsUpdateChangelogTitle.innerHTML = data.releaseName
         settingsUpdateChangelogText.innerHTML = data.releaseNotes
         populateVersionInformation(data.version, settingsUpdateVersionValue, settingsUpdateVersionTitle, settingsUpdateVersionCheck)
         
         if(process.platform === 'darwin'){
-            settingsUpdateButtonStatus('Töltsd le a GitHubról <span style="font-size: 10px;color: gray;text-shadow: none !important;">Zárja be a launcher-t, és futtassa a dmg-t a frissítéshez.</span>', false, () => {
+            settingsUpdateButtonStatus(Lang.queryJS('updateDarwin'), false, () => {
                 shell.openExternal(data.darwindownload)
             })
         } else {
-            settingsUpdateButtonStatus('Letöltés...', true)
+            settingsUpdateButtonStatus(Lang.queryJS('settings.download'), true)
         }
     } else {
-        settingsUpdateTitle.innerHTML = 'A legújabb verziót használja!'
+        settingsUpdateTitle.innerHTML = Lang.queryJS('settings.noUpdate')
         settingsUpdateChangelogCont.style.display = 'none'
         populateVersionInformation(remote.app.getVersion(), settingsUpdateVersionValue, settingsUpdateVersionTitle, settingsUpdateVersionCheck)
-        settingsUpdateButtonStatus('Frissítések keresése', false, () => {
+        settingsUpdateButtonStatus(Lang.queryJS('settings.searchForUpdate'), false, () => {
             if(!isDev){
                 ipcRenderer.send('autoUpdateAction', 'checkForUpdate')
-                settingsUpdateButtonStatus('Frissítések keresése...', true)
+                settingsUpdateButtonStatus(Lang.queryJS('settings.searchForUpdate') + '...', true)
             }
         })
     }

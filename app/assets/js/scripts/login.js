@@ -221,8 +221,8 @@ loginButton.addEventListener('click', () => {
             // Uh oh.
             msftLoginLogger.error('Unhandled error during login.', displayableError)
             actualDisplayableError = {
-                title: 'Ismeretlen hiba a bejelentkezés során',
-                desc: 'Ismeretlen hiba lépett fel. A részletekért lásd a konzolt.'
+                title: Lang.queryJS('login.errorTitle'),
+                desc: Lang.queryJS('login.errorDesc')
             }
         }
 

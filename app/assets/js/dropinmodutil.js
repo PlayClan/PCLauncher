@@ -157,7 +157,7 @@ exports.scanForShaderpacks = function(instanceDir){
     const shaderDir = path.join(instanceDir, SHADER_DIR)
     const packsDiscovered = [{
         fullName: 'OFF',
-        name: 'Kikapcsolva'
+        name: Lang.queryJS('dropinmodutil.off')
     }]
     if(fs.existsSync(shaderDir)){
         let modCandidates = fs.readdirSync(shaderDir)

@@ -10,6 +10,7 @@ const {ipcRenderer, shell, webFrame} = require('electron')
 const remote                         = require('@electron/remote')
 const isDev                          = require('./assets/js/isdev')
 const { LoggerUtil }                 = require('helios-core')
+const Lang                           = require('./assets/js/langloader')
 
 const loggerUICore             = LoggerUtil.getLogger('UICore')
 const loggerAutoUpdater        = LoggerUtil.getLogger('AutoUpdater')
@@ -26,9 +27,9 @@ window.eval = global.eval = function () {
 
 // Display warning when devtools window is opened.
 remote.getCurrentWebContents().on('devtools-opened', () => {
-    console.log('%cA konzol sötét és tele van rossz dolgokkal :O', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 60px; font-weight: bold')
-    console.log('%cHa azt mondták neked, hogy illessz be valamit, akkor éppen átvernek.', 'font-size: 16px')
-    console.log('%cHacsak nem tudod pontosan, hogy mit csinálsz, zárd be ezt az ablakot.', 'font-size: 16px')
+    console.log('%c' + Lang.queryJS('uicore.console1'), 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 60px; font-weight: bold')
+    console.log('%c' + Lang.queryJS('uicore.console2'), 'font-size: 16px')
+    console.log('%c' + Lang.queryJS('uicore.console3'), 'font-size: 16px')
 })
 
 // Disable zoom, needed for darwin.
@@ -42,7 +43,7 @@ if(!isDev){
         switch(arg){
             case 'checking-for-update':
                 loggerAutoUpdater.info('Checking for update..')
-                settingsUpdateButtonStatus('Frissítések keresése...', true)
+                settingsUpdateButtonStatus(Lang.queryJS('uicore.searchForUpdates'), true)
                 break
             case 'update-available':
                 loggerAutoUpdater.info('New update available', info.version)
@@ -56,7 +57,7 @@ if(!isDev){
                 break
             case 'update-downloaded':
                 loggerAutoUpdater.info('Update ' + info.version + ' ready to be installed.')
-                settingsUpdateButtonStatus('Telepítés most', false, () => {
+                settingsUpdateButtonStatus(Lang.queryJS('uicore.installNow'), false, () => {
                     if(!isDev){
                         ipcRenderer.send('autoUpdateAction', 'installUpdateNow')
                     }
@@ -65,7 +66,7 @@ if(!isDev){
                 break
             case 'update-not-available':
                 loggerAutoUpdater.info('No new update found.')
-                settingsUpdateButtonStatus('Frissítések keresése')
+                settingsUpdateButtonStatus(Lang.queryJS('uicore.noUpdate'))
                 break
             case 'ready':
                 updateCheckListener = setInterval(() => {

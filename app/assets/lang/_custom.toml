@@ -1,0 +1,17 @@
+# Custom Language File for Launcher Customizer
+
+[ejs.app]
+title = "PlayClan Launcher"
+
+[ejs.landing]
+websiteURL = "https://playclan.hu"
+mediaInstagramURL = "https://www.instagram.com/playclanofficial/"
+mediaYouTubeURL = "https://www.youtube.com/@PlayClan1"
+mediaDiscordURL = "https://dc.playclan.hu"
+
+[ejs.login]
+affiliate = "PlayClan Launcher is not affiliated with Mojang AB."
+
+[ejs.settings]
+sourceGithubLink = "https://github.com/PlayClan/PCLauncher"
+supportLink = "https://github.com/PlayClan/PCLauncher/issues"
