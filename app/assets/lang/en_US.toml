@@ -182,7 +182,7 @@ javaComplete = "Java installed!"
 loadingInfo = "Loading information..."
 fatalErrorTitle = "Fatal error"
 verifying = "Please wait..."
-validation = "Validating files..."
+validating = "Validating files..."
 downloading = "Downloading files..."
 errorValidate = "Error while validating files"
 errorDownload = "Error while downloading files"
@@ -383,3 +383,4 @@ off = "Turned OFF"
 
 [js.overlay]
 dismiss = "Dismiss"
+latestVersion = "Latest version"

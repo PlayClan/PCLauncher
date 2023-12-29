@@ -383,3 +383,4 @@ off = "Kikapcsolva"
 
 [js.overlay]
 dismiss = "Elvetés"
+latestVersion = "Legújabb verzió"
