@@ -189,7 +189,6 @@ document.getElementById('serverSelectConfirm').addEventListener('click', async (
         toggleOverlay(false)
     }
 })
-*/
 document.getElementById('accountSelectConfirm').addEventListener('click', async () => {
     const listings = document.getElementsByClassName('accountListing')
     for(let i=0; i<listings.length; i++){
@@ -217,6 +216,7 @@ document.getElementById('accountSelectConfirm').addEventListener('click', async 
         validateSelectedAccount()
     }
 })
+*/
 
 // Bind server select cancel button.
 document.getElementById('serverSelectCancel').addEventListener('click', () => {
@@ -254,7 +254,7 @@ function setServerListingHandlers(){
 function setAccountListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('accountListing'))
     listings.map((val) => {
-        val.onclick = e => {
+        val.onclick = async e => {
             if(val.hasAttribute('selected')){
                 return
             }
@@ -266,6 +266,15 @@ function setAccountListingHandlers(){
             }
             val.setAttribute('selected', '')
             document.activeElement.blur()
+
+            const authAcc = ConfigManager.setSelectedAccount(val.getAttribute('uuid'))
+            ConfigManager.save()
+            updateSelectedAccount(authAcc)
+            if(getCurrentView() === VIEWS.settings) {
+                await prepareSettings()
+            }
+            toggleOverlay(false)
+            validateSelectedAccount()
         }
     })
 }
