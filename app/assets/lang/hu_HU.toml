@@ -47,6 +47,7 @@ serverHeader = "Elérhető verziók"
 accountHeader = "Fiók kiválasztása"
 cancel = "Mégse"
 select = "Kiválasztás"
+dismiss = "Elvetés"
 
 [ejs.settings.navbar]
 header = "Beállítások"

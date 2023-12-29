@@ -47,6 +47,7 @@ serverHeader = "Available versions"
 accountHeader = "Select account"
 cancel = "Cancel"
 select = "Select"
+dismiss = "Dismiss"
 
 [ejs.settings.navbar]
 header = "Settings"
