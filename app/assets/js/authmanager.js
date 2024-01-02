@@ -33,7 +33,6 @@ const log = LoggerUtil.getLogger('AuthManager')
 exports.addMojangAccount = async function(username, password) {
     try {
         const response = await MojangRestAPI.authenticate(username, password, ConfigManager.getClientToken())
-        console.log(response)
         if(response.responseStatus === RestResponseStatus.SUCCESS) {
 
             const session = response.data
@@ -380,7 +379,6 @@ async function validateSelectedPlayClanAccount(){
     });
 
     if (responseData.response.status == 1) {
-        console.log(responseData.data.request.name)
         ConfigManager.updatePlayClanAuthAccount(
             generateOfflinePlayerUUID(responseData.data.request.name),
             responseData.data.request.playcoin,
