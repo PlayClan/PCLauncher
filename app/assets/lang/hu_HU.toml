@@ -1,5 +1,6 @@
 [ejs.app]
 loading = "Betöltés folyamatban..."
+language = "Magyar (HU)"
 
 [ejs.landing]
 shopButton = "PlayClan Shop"
@@ -120,6 +121,9 @@ ipProtectionDesc = "Az automatikus IP levédés engedélyezésével, a fiókod a
 folder = "Adatok mappa"
 folderChoose = "Mappa kiválasztása"
 folderDesc = "Minden játékfájl és helyi Java telepítés ebben a mappában tárolódik.<br>A képernyőképek és a világmentések a megfelelő szerverkonfiguráció mappájában tárolódnak."
+language = "Alkalamzás nyelve"
+languageDesc = "A launcher nyelvének beállítása."
+languageSelect = "Nyelv kiválasztása"
 
 [ejs.settings.about]
 header = "Az alkalmazásról"
@@ -388,3 +392,7 @@ latestVersion = "Legújabb verzió"
 updateButton = "Frissítés és bezárás"
 updateTitle = "Frissítés telepítése"
 updateDetail = "Az alkalmazás bezárása után egy frissítés települni fog, kérlek várj 1 percet az alkalmazás újbóli elindindítása előtt!"
+stayButton = "Mégse"
+closeButton = "Újraindítás"
+restartTitle = "Alkalmazás újraindítása"
+restartDetail = "A nyelvi beállítások frissítéséhez az alkalmazást újra kell indítanod."

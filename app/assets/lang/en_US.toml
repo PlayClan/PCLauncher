@@ -1,5 +1,6 @@
 [ejs.app]
 loading = "Loading in progress..."
+language = "English (US)"
 
 [ejs.landing]
 shopButton = "PlayClan Shop"
@@ -120,6 +121,9 @@ ipProtectionDesc = "Your account will be automatically protected to your IP addr
 folder = "Data folder"
 folderChoose = "Choose folder"
 folderDesc = "All game files and local Java installations are stored in this folder.<br>Screenshots and world saves are stored in the appropriate server configuration folder."
+language = "Application language"
+languageDesc = "The language of the launcher."
+languageSelect = "Select language"
 
 [ejs.settings.about]
 header = "About"
@@ -388,3 +392,7 @@ latestVersion = "Latest version"
 updateButton = "Update and close"
 updateTitle = "Install update"
 updateDetail = "After closing the application, an update will be installed, please wait 1 minute before restarting the application!"
+stayButton = "Cancel"
+closeButton = "Restart app"
+restartTitle = "Restart application"
+restartDetail = "You need to restart the application to apply the language changes!"

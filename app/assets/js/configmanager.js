@@ -75,7 +75,7 @@ const DEFAULT_CONFIG = {
             resWidth: 1280,
             resHeight: 720,
             fullscreen: false,
-            autoConnect: true,
+            autoConnect: false,
             launchDetached: true
         },
         launcher: {
@@ -83,6 +83,7 @@ const DEFAULT_CONFIG = {
             allowDiscord: true,
             allowLauncherHide: true,
             allowIPProtection: true,
+            language: 'hu_HU',
             dataDirectory: dataPath
         }
     },
@@ -833,4 +834,12 @@ exports.getAllowIPProtection = function(def = false){
 
 exports.setAllowIPProtection = function(allowIPProtection){
     config.settings.launcher.allowIPProtection = allowIPProtection
+}
+
+exports.getLanguage = function(def = false){
+    return !def ? config.settings.launcher.language : DEFAULT_CONFIG.settings.launcher.language
+}
+
+exports.setLanguage = function(language){
+    config.settings.launcher.language = language
 }

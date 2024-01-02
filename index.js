@@ -2,7 +2,7 @@ const remoteMain = require('@electron/remote/main')
 remoteMain.initialize()
 
 // Requirements
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, shell, dialog } = require('electron')
 const autoUpdater                       = require('electron-updater').autoUpdater
 const ejse                              = require('ejs-electron')
 const fs                                = require('fs')
@@ -12,7 +12,6 @@ const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, PC_OPCODE, PC_REPLY_TYPE, PC_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
 const LangLoader                        = require('./app/assets/js/langloader')
-const { dialog }                        = require('electron')
 
 // Setup Lang
 LangLoader.setupLanguage()
@@ -366,6 +365,22 @@ ipcMain.on('show-window', () => {
     } else {
         win.setSkipTaskbar(false)
     }
+})
+
+ipcMain.on('restart_app', () => {
+    dialog.showMessageBox({
+        type: 'question',
+        buttons: [LangLoader.queryJS('exit.stayButton'), LangLoader.queryJS('exit.closeButton')],
+        cancelId: 1,
+        defaultId: 0,
+        title: LangLoader.queryJS('exit.restartTitle'),
+        detail: LangLoader.queryJS('exit.restartDetail'),
+    }).then(({ response, checkboxChecked }) => {
+        if (response) {
+            app.relaunch()
+            app.exit()
+        }
+    })
 })
 
 function createMenu() {

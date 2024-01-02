@@ -123,6 +123,7 @@ function initSettingsValidators(){
  * Load configuration values onto the UI. This is an automated process.
  */
 async function initSettingsValues(){
+    setLanguageOptions(Lang.supportedLanguages, ConfigManager.getLanguage())
     const sEls = document.getElementById('settingsContainer').querySelectorAll('[cValue]')
 
     for(const v of sEls) {
@@ -330,6 +331,7 @@ function settingsSaveDisabled(v){
 function fullSettingsSave() {
     saveSettingsValues()
     saveModConfiguration()
+    saveLanguageSettings()
     ConfigManager.save()
     saveDropinModConfiguration()
     saveShaderpackSettings()
@@ -1216,6 +1218,45 @@ function bindShaderpackButton() {
         DropinModUtil.addShaderpacks(e.dataTransfer.files, CACHE_SETTINGS_INSTANCE_DIR)
         saveShaderpackSettings()
         await resolveShaderpacksForUI()
+    }
+}
+
+function setLanguageOptions(arr, selected){
+    const cont = document.getElementById('settingsLanguageOptions')
+    cont.innerHTML = ''
+    for(let opt of arr) {
+        const d = document.createElement('DIV')
+        d.innerHTML = opt.fullName
+        d.setAttribute('value', opt.code)
+        if(opt.code === selected) {
+            d.setAttribute('selected', '')
+            document.getElementById('settingsLanguageSelected').innerHTML = opt.fullName
+        }
+        d.addEventListener('click', function(e) {
+            this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+            for(let sib of this.parentNode.children){
+                sib.removeAttribute('selected')
+            }
+            this.setAttribute('selected', '')
+            closeSettingsSelect()
+        })
+        cont.appendChild(d)
+    }
+}
+
+function saveLanguageSettings(){
+    let sel = 'hu_HU'
+    for(let opt of document.getElementById('settingsLanguageOptions').childNodes){
+        if(opt.hasAttribute('selected')){
+            sel = opt.getAttribute('value')
+        }
+    }
+
+    if (ConfigManager.getLanguage() !== sel) {
+        Lang.selectLanguage(sel)
+        ConfigManager.setLanguage(sel)
+        
+        ipcRenderer.send('restart_app');
     }
 }
 

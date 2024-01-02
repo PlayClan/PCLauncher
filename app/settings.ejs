@@ -358,6 +358,20 @@
                     </label>
                 </div>
             </div>
+            <div class="settingsFieldContainer">
+                <div class="settingsFieldLeft">
+                    <span class="settingsFieldTitle"><%= lang('settings.launcher.language') %></span>
+                    <span class="settingsFieldDesc"><%- lang('settings.launcher.languageDesc') %></span>
+                </div>
+                <div id="settingsShaderpackWrapper">
+                    <div class="settingsSelectContainer">
+                        <div class="settingsSelectSelected" id="settingsLanguageSelected"><%= lang('app.language') %></div>
+                        <div class="settingsSelectOptions" id="settingsLanguageOptions" hidden>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="settingsFileSelContainer">
                 <div class="settingsFileSelContent">
                     <div class="settingsFieldTitle" id="settingsDataDirTitle"><%= lang('settings.launcher.folder') %></div>

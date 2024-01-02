@@ -1895,7 +1895,7 @@ input:checked + .toggleSwitchSlider:before {
     border-radius: 3px;
     border-width: 1px;
     font-size: 14px;
-    padding: 6px 16px;
+    padding: 6px 24px;
 }
 
 /* Style the arrow inside the select element. */
