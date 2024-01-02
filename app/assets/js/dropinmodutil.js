@@ -2,6 +2,7 @@ const fs        = require('fs-extra')
 const path      = require('path')
 const { ipcRenderer, shell } = require('electron')
 const { SHELL_OPCODE } = require('./ipcconstants')
+const { mcVersionAtLeast } = require('helios-core/common')
 
 // Group #1: File Name (without .disabled, if any)
 // Group #2: File Extension (jar, zip, or litemod)
@@ -13,7 +14,8 @@ const SHADER_REGEX = /^(.+)\.zip$/
 const SHADER_OPTION = /shaderPack=(.+)/
 const SHADER_TOGGLE = /enableShaders=(.+)/
 const SHADER_DIR = 'shaderpacks'
-const SHADER_CONFIG = 'oculus.properties'
+const SHADER_CONFIG_FORGE = 'oculus.properties'
+const SHADER_CONFIG_FABRIC = 'iris.properties'
 
 /**
  * Validate that the given directory exists. If not, it is
@@ -182,11 +184,16 @@ exports.scanForShaderpacks = function(instanceDir){
  * 
  * @returns {string} The file name of the enabled shaderpack.
  */
-exports.getEnabledShaderpack = function(instanceDir){
+exports.getEnabledShaderpack = function(instanceDir, usingFabricLoader){
     instanceDir = path.join(instanceDir, "config/")
     exports.validateDir(instanceDir)
 
-    const optionsShaders = path.join(instanceDir, SHADER_CONFIG)
+    let optionsShaders;
+    if (usingFabricLoader) {
+        optionsShaders = path.join(instanceDir, SHADER_CONFIG_FABRIC)
+    } else {
+        optionsShaders = path.join(instanceDir, SHADER_CONFIG_FORGE)
+    }
     if(fs.existsSync(optionsShaders)){
         const buf = fs.readFileSync(optionsShaders, {encoding: 'utf-8'})
         const match = SHADER_OPTION.exec(buf)
@@ -210,11 +217,16 @@ exports.getEnabledShaderpack = function(instanceDir){
  * @param {string} instanceDir The path to the server instance directory.
  * @param {string} pack the file name of the shaderpack.
  */
-exports.setEnabledShaderpack = function(instanceDir, pack){
+exports.setEnabledShaderpack = function(instanceDir, pack, usingFabricLoader){
     instanceDir = path.join(instanceDir, "config/")
     exports.validateDir(instanceDir)
 
-    const optionsShaders = path.join(instanceDir, SHADER_CONFIG)
+    let optionsShaders;
+    if (usingFabricLoader) {
+        optionsShaders = path.join(instanceDir, SHADER_CONFIG_FABRIC)
+    } else {
+        optionsShaders = path.join(instanceDir, SHADER_CONFIG_FORGE)
+    }
     let buf
     if(fs.existsSync(optionsShaders)){
         buf = fs.readFileSync(optionsShaders, {encoding: 'utf-8'})

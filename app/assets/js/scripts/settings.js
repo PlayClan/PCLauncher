@@ -1142,6 +1142,7 @@ async function reloadDropinMods(){
 let CACHE_SETTINGS_INSTANCE_DIR
 let CACHE_SHADERPACKS
 let CACHE_SELECTED_SHADERPACK
+let CACHE_USING_FABRIC_LOADER
 
 /**
  * Load shaderpack information.
@@ -1150,7 +1151,8 @@ async function resolveShaderpacksForUI(){
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
     CACHE_SETTINGS_INSTANCE_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id)
     CACHE_SHADERPACKS = DropinModUtil.scanForShaderpacks(CACHE_SETTINGS_INSTANCE_DIR)
-    CACHE_SELECTED_SHADERPACK = DropinModUtil.getEnabledShaderpack(CACHE_SETTINGS_INSTANCE_DIR)
+    CACHE_USING_FABRIC_LOADER = serv.modules.some(mdl => mdl.rawModule.type === Type.Fabric)
+    CACHE_SELECTED_SHADERPACK = DropinModUtil.getEnabledShaderpack(CACHE_SETTINGS_INSTANCE_DIR, CACHE_USING_FABRIC_LOADER)
 
     setShadersOptions(CACHE_SHADERPACKS, CACHE_SELECTED_SHADERPACK)
 }
@@ -1185,7 +1187,7 @@ function saveShaderpackSettings(){
             sel = opt.getAttribute('value')
         }
     }
-    DropinModUtil.setEnabledShaderpack(CACHE_SETTINGS_INSTANCE_DIR, sel)
+    DropinModUtil.setEnabledShaderpack(CACHE_SETTINGS_INSTANCE_DIR, sel, CACHE_USING_FABRIC_LOADER)
 }
 
 function bindShaderpackButton() {
