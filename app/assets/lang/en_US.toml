@@ -383,3 +383,8 @@ off = "Turned OFF"
 [js.overlay]
 dismiss = "Dismiss"
 latestVersion = "Latest version"
+
+[js.exit]
+updateButton = "Update and close"
+updateTitle = "Install update"
+updateDetail = "After closing the application, an update will be installed, please wait 1 minute before restarting the application!"

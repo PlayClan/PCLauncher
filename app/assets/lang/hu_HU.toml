@@ -383,3 +383,8 @@ off = "Kikapcsolva"
 [js.overlay]
 dismiss = "Elvetés"
 latestVersion = "Legújabb verzió"
+
+[js.exit]
+updateButton = "Frissítés és bezárás"
+updateTitle = "Frissítés telepítése"
+updateDetail = "Az alkalmazás bezárása után egy frissítés települni fog, kérlek várj 1 percet az alkalmazás újbóli elindindítása előtt!"

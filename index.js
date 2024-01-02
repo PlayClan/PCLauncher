@@ -12,9 +12,12 @@ const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, PC_OPCODE, PC_REPLY_TYPE, PC_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
 const LangLoader                        = require('./app/assets/js/langloader')
+const { dialog }                        = require('electron')
 
 // Setup Lang
 LangLoader.setupLanguage()
+
+let isUpdateDownloaded = false
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {
@@ -37,6 +40,7 @@ function initAutoUpdater(event, data) {
         event.sender.send('autoUpdateNotification', 'update-available', info)
     })
     autoUpdater.on('update-downloaded', (info) => {
+        isUpdateDownloaded = true
         event.sender.send('autoUpdateNotification', 'update-downloaded', info)
     })
     autoUpdater.on('update-not-available', (info) => {
@@ -323,6 +327,22 @@ function createWindow() {
     win.removeMenu()
 
     win.resizable = true
+
+    win.on('close', e => {
+        if (process.platform !== 'darwin' && isUpdateDownloaded) {
+            e.preventDefault()
+            dialog.showMessageBox({
+                type: 'warning',
+                buttons: [LangLoader.queryJS('exit.updateButton')],
+                defaultId: 0,
+                title: LangLoader.queryJS('exit.updateTitle'),
+                detail: LangLoader.queryJS('exit.updateDetail'),
+            }).then(({ response, checkboxChecked }) => {
+                win.destroy()
+                app.quit()
+            })
+        }
+    })
 
     win.on('closed', () => {
         win = null
