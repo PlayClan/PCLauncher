@@ -2,6 +2,9 @@ const fs = require('fs-extra')
 const path = require('path')
 const toml = require('toml')
 const merge = require('lodash.merge')
+const { LoggerUtil }         = require('helios-core')
+
+const logger = LoggerUtil.getLogger('LangLoader')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 const dataPath = path.join(sysRoot, '.pclauncher')
