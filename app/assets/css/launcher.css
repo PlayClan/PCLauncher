@@ -3652,7 +3652,7 @@ input:checked + .toggleSwitchSlider:before {
     position: absolute;
     visibility: hidden;
     opacity: 0;
-    width: 145px;
+    min-width: 170px;
     min-height: 150px;
     background-color: rgba(0, 0, 0, 0.75);
     color: #fff;
@@ -3717,12 +3717,13 @@ input:checked + .toggleSwitchSlider:before {
 /* Wrapper container for mojang service information. */
 .mojangStatusContainer {
     display: flex;
+    gap: 10px;
 }
 
 /* Displays the name of the mojang service. */
 .mojangStatusName {
     width: 100%;
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 1px;
     line-height: 12px;
     padding: 6px 0px;
@@ -3733,6 +3734,16 @@ input:checked + .toggleSwitchSlider:before {
     margin-right: 10px;
     font-size: 18.5px;
     color: #848484;
+}
+
+/* Displays the name of the mojang service. */
+.mojangStatusPlayers {
+    width: 100%;
+    font-size: 11px;
+    letter-spacing: 1px;
+    line-height: 12px;
+    padding: 6px 3px;
+    text-align: end;
 }
 
 /* * *

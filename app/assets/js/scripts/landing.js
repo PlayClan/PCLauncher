@@ -215,22 +215,22 @@ server_selection_button.onclick = async e => {
     await toggleServerSelection(true)
 }
 
-// Update Mojang Status Color
-const refreshMojangStatuses = async function(){
-    loggerLanding.info('Refreshing Mojang Statuses..')
+// Update PlayClan Status Color
+const refreshPlayClanStatus = async function(){
+    loggerLanding.info('Refreshing PlayClan Statuses..')
 
     let status = 'grey'
     let tooltipEssentialHTML = ''
-    let tooltipNonEssentialHTML = ''
-
-    const response = await MojangRestAPI.status()
+    
     let statuses
-    if(response.responseStatus === RestResponseStatus.SUCCESS) {
-        statuses = response.data
-    } else {
-        loggerLanding.warn('Unable to refresh Mojang service status.')
-        statuses = MojangRestAPI.getDefaultStatuses()
-    }
+
+    await fetch('https://api.playclan.hu/kliens/status').then(response => {
+        return response.json()
+    }).then(data => {
+        statuses = data
+    }).catch(err => {
+        console.log(err)
+    })
     
     greenCount = 0
     greyCount = 0
@@ -238,22 +238,27 @@ const refreshMojangStatuses = async function(){
     for(let i=0; i<statuses.length; i++){
         const service = statuses[i]
 
-        if(service.essential){
-            tooltipEssentialHTML += `<div class="mojangStatusContainer">
-                <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex(service.status)};">&#8226;</span>
-                <span class="mojangStatusName">${service.name}</span>
-            </div>`
-        } else {
-            tooltipNonEssentialHTML += `<div class="mojangStatusContainer">
-                <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex(service.status)};">&#8226;</span>
-                <span class="mojangStatusName">${service.name}</span>
-            </div>`
+        let isOnline
+        let players
+
+        try {
+            const response = await getServerStatus(47, service.ip, service.port)
+            players = response.players.online + '/' + response.players.max
+            isOnline = true
+        } catch (err) {
+            isOnline = false
+            loggerLanding.warn('Unable to refresh server status, assuming offline.')
+            loggerLanding.debug(err)
         }
 
-        if(service.status === 'yellow' && status !== 'red'){
-            status = 'yellow'
-        } else if(service.status === 'red'){
-            status = 'red'
+        tooltipEssentialHTML += `<div class="mojangStatusContainer">
+            <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex(isOnline ? "green" : "red")};">&#8226;</span>
+            <span class="mojangStatusName">${service.name}</span>
+            <span class="mojangStatusPlayers">${players}</span>
+        </div>`
+
+        if(isOnline){
+            status = 'green'
         } else {
             if(service.status === 'grey'){
                 ++greyCount
@@ -272,7 +277,6 @@ const refreshMojangStatuses = async function(){
     }
     
     document.getElementById('mojangStatusEssentialContainer').innerHTML = tooltipEssentialHTML
-    document.getElementById('mojangStatusNonEssentialContainer').innerHTML = tooltipNonEssentialHTML
     document.getElementById('mojang_status_icon').style.color = MojangRestAPI.statusToHex(status)
 }
 
@@ -286,7 +290,7 @@ const refreshServerStatus = async (fade = false) => {
     try {
 
         const servStat = await getServerStatus(47, serv.hostname, serv.port)
-        console.log(servStat)
+        //console.log(servStat)
         pLabel = Lang.queryJS('landing.players')
         pVal = servStat.players.online + '/' + servStat.players.max
 
@@ -307,13 +311,16 @@ const refreshServerStatus = async (fade = false) => {
     
 }
 
-refreshMojangStatuses()
+//refreshMojangStatuses()
+refreshPlayClanStatus()
 // Server Status is refreshed in uibinder.js on distributionIndexDone.
 
 // Refresh statuses every hour. The status page itself refreshes every day so...
-let mojangStatusListener = setInterval(() => refreshMojangStatuses(true), 60*60*1000)
+//let mojangStatusListener = setInterval(() => refreshMojangStatuses(true), 60*60*1000)
 // Set refresh rate to once every 30 seconds.
 let serverStatusListener = setInterval(() => refreshServerStatus(true), 30000)
+// Set refresh rate to once every 30 seconds.
+let playclanStatusListener = setInterval(() => refreshPlayClanStatus(true), 30000)
 
 /**
  * Shows an error overlay, toggles off the launch area.
