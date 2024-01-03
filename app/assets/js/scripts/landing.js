@@ -44,6 +44,7 @@ const user_text               = document.getElementById('user_text')
 const avatarOverlay           = document.getElementById('avatarOverlay')
 const settingsMediaButton     = document.getElementById('settingsMediaButton')
 const shopButton              = document.getElementById('shopButton')
+const image_seal_container    = document.getElementById('image_seal_container')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
@@ -62,6 +63,7 @@ function toggleLaunchArea(loading){
         avatarOverlay.disabled = true
         settingsMediaButton.disabled = true
         shopButton.disabled = true
+        image_seal_container.disabled = true
     } else {
         launch_details.style.display = 'none'
         launch_content.style.display = 'inline-flex'
@@ -69,6 +71,7 @@ function toggleLaunchArea(loading){
         avatarOverlay.disabled = false
         settingsMediaButton.disabled = false
         shopButton.disabled = false
+        image_seal_container.disabled = false
     }
 }
 
@@ -1930,6 +1933,16 @@ document.getElementById('shopButton').onclick = async () => {
         shopActive = !shopActive
     } else {
         showLaunchFailure(Lang.queryJS('shop.loginError'), Lang.queryJS('shop.loginErrorDesc'))
+    }
+}
+
+
+document.getElementById('image_seal_container').onclick = async () => {
+    if (!document.getElementById('image_seal_container').disabled) {
+        await prepareSettings()
+        switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
+            settingsNavItemListener(document.getElementById('settingsNavAbount'), false)
+        })
     }
 }
 
