@@ -516,7 +516,7 @@ let proc
 let hasRPC = false
 // Joined server regex
 // Change this if your server uses something different.
-const GAME_JOINED_REGEX = /\[.+\]: Sound engine started/
+const GAME_JOINED_REGEX = /\[.+\]: Hardware information/
 const DISCONNECTED_REGEX = /\[.+\]: Disconnected from server/
 const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+|Loading Minecraft .+ with Fabric Loader .+)$/
 const MIN_LINGER = 5000
