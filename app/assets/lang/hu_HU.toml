@@ -199,6 +199,10 @@ errorLaunchLibrary3 = "\"<br>mappában a \"libraries\" mappát töröld ki."
 errorLaunchLibraryButton = "Config mappa megnyitása"
 errorLaunchLibraryButtonAlt = "Libraries mappa megnyitása"
 launched = "Kész. Jó játékot!"
+autoConnectTitle = "Automatikus csatlakozás a szerverre"
+autoConnectContent = "Szeretnéd-e bekapcsolva hagyni az automatikus csatlakozást? Ezzel a beállítással automatikusan csatlakozni fogsz a szerverhez, amikor elindítod a Minecraft-ot."
+autoConnectYes = "Kikapcsolás"
+autoConnectNo = "Maradjon bekapcsolva"
 
 [js.discord]
 loading = "Játék betöltése..."

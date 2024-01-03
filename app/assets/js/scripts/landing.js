@@ -114,6 +114,33 @@ function setLaunchEnabled(val){
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
     loggerLanding.info('Launching game..')
+    if (!ConfigManager.isFirstLaunch() && ConfigManager.getAutoConnect() && !ConfigManager.getAutoConnectAsked()) {
+        setOverlayContent(
+            Lang.queryJS('landing.autoConnectTitle'),
+            Lang.queryJS('landing.autoConnectContent'),
+            Lang.queryJS('landing.autoConnectYes'),
+            Lang.queryJS('landing.autoConnectNo')
+        )
+        setOverlayHandler(() => {
+            ConfigManager.setAutoConnect(false)
+            ConfigManager.setAutoConnectAsked(true)
+            toggleOverlay(false, false)
+            launchGame()
+        })
+        setDismissHandler(() => {
+            ConfigManager.setAutoConnect(true)
+            ConfigManager.setAutoConnectAsked(true)
+            toggleOverlay(false, false)
+            launchGame()
+        })
+        toggleOverlay(true, true)
+    } else {
+        ConfigManager.setAutoConnectAsked(true)
+        launchGame()
+    }
+})
+
+async function launchGame() {
     try {
         if (validateSelectedAccount()) {
             const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
@@ -140,7 +167,7 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         loggerLanding.error('Unhandled error in during launch process.', err)
         showLaunchFailure(Lang.queryJS('landing.errorStartupTitle'), Lang.queryJS('landing.errorConsole'))
     }
-})
+}
 
 // Bind settings button
 document.getElementById('settingsMediaButton').onclick = async e => {

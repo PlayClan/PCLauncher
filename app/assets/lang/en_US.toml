@@ -199,6 +199,10 @@ errorLaunchLibrary3 = "\"<br> folder, delete the \"libraries\" folder."
 errorLaunchLibraryButton = "Open config folder"
 errorLaunchLibraryButtonAlt = "Open libraries folder"
 launched = "Done. Enjoy the server!"
+autoConnectTitle = "Autoconnect to the server"
+autoConnectContent = "Do you want to leave the autoconnect on? With this setting, you will automatically connect to the server when you start Minecraft."
+autoConnectYes = "Turn off"
+autoConnectNo = "Keep it on"
 
 [js.discord]
 loading = "Loading game..."
