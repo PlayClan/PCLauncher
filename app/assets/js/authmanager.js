@@ -380,10 +380,11 @@ async function validateSelectedPlayClanAccount(){
 
     if (responseData.response.status == 1) {
         ConfigManager.updatePlayClanAuthAccount(
-            generateOfflinePlayerUUID(responseData.data.request.name),
+            current.uuid,
             responseData.data.request.playcoin,
             responseData.data.request.jatekido,
-            responseData.response["token-expiry"]
+            responseData.response["token-expiry"],
+            generateOfflinePlayerUUID(responseData.data.request.name),
         )
         ConfigManager.save()
 

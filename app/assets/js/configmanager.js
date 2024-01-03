@@ -369,7 +369,8 @@ exports.updateMicrosoftAuthAccount = function(uuid, accessToken, msAccessToken, 
     return config.authenticationDatabase[uuid]
 }
 
-exports.updatePlayClanAuthAccount = function(uuid, playcoin, playtime, accessExpires) {
+exports.updatePlayClanAuthAccount = function(uuid, playcoin, playtime, accessExpires, newUuid) {
+    config.authenticationDatabase[uuid].uuid = newUuid
     config.authenticationDatabase[uuid].playcoin = playcoin
     config.authenticationDatabase[uuid].playtime = playtime
     config.authenticationDatabase[uuid].accessExpires = accessExpires
