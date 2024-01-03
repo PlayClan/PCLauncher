@@ -1939,10 +1939,12 @@ document.getElementById('shopButton').onclick = async () => {
 
 document.getElementById('image_seal_container').onclick = async () => {
     if (!document.getElementById('image_seal_container').disabled) {
-        await prepareSettings()
-        switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
-            settingsNavItemListener(document.getElementById('settingsNavAbount'), false)
-        })
+        if (!document.getElementById('image_seal_container').getAttribute('update')) {
+            await prepareSettings()
+            switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
+                settingsNavItemListener(document.getElementById('settingsNavAbount'), false)
+            })
+        }
     }
 }
 
