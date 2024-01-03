@@ -117,7 +117,7 @@ function setLaunchEnabled(val){
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
     loggerLanding.info('Launching game..')
-    if (!ConfigManager.isFirstLaunch() && ConfigManager.getAutoConnect() && !ConfigManager.getAutoConnectAsked()) {
+    if (ConfigManager.getAutoConnect() && !ConfigManager.getAutoConnectAsked()) {
         setOverlayContent(
             Lang.queryJS('landing.autoConnectTitle'),
             Lang.queryJS('landing.autoConnectContent'),
