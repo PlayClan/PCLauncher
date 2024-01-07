@@ -370,11 +370,25 @@ exports.updateMicrosoftAuthAccount = function(uuid, accessToken, msAccessToken, 
 }
 
 exports.updatePlayClanAuthAccount = function(uuid, playcoin, playtime, accessExpires, newUuid) {
-    config.authenticationDatabase[uuid].uuid = newUuid
-    config.authenticationDatabase[uuid].playcoin = playcoin
-    config.authenticationDatabase[uuid].playtime = playtime
-    config.authenticationDatabase[uuid].accessExpires = accessExpires
-    return config.authenticationDatabase[uuid]
+    if (newUuid !== uuid) {
+        config.authenticationDatabase[newUuid] = config.authenticationDatabase[uuid]
+        delete config.authenticationDatabase[uuid]
+        if (config.selectedAccount === uuid) {
+            config.selectedAccount = newUuid
+        }
+        exports.save()
+        config.authenticationDatabase[newUuid].uuid = newUuid
+        config.authenticationDatabase[newUuid].playcoin = playcoin
+        config.authenticationDatabase[newUuid].playtime = playtime
+        config.authenticationDatabase[newUuid].accessExpires = accessExpires
+        return config.authenticationDatabase[newUuid]
+    } else {
+        config.authenticationDatabase[uuid].uuid = newUuid
+        config.authenticationDatabase[uuid].playcoin = playcoin
+        config.authenticationDatabase[uuid].playtime = playtime
+        config.authenticationDatabase[uuid].accessExpires = accessExpires
+        return config.authenticationDatabase[uuid]
+    }
 }
 
 /**
@@ -467,9 +481,20 @@ exports.getSelectedAccount = function(){
  * @returns {Object} The selected authenticated account.
  */
 exports.setSelectedAccount = function(uuid){
-    const authAcc = config.authenticationDatabase[uuid]
+    let authAcc = config.authenticationDatabase[uuid]
     if(authAcc != null) {
         config.selectedAccount = uuid
+    } else {
+        for (const [key, value] of Object.entries(config.authenticationDatabase)) {
+            if (value.uuid === uuid) {
+                config.authenticationDatabase[uuid] = config.authenticationDatabase[key]
+                delete config.authenticationDatabase[key]
+                exports.save()
+                config.selectedAccount = uuid
+                authAcc = config.authenticationDatabase[uuid]
+                break
+            }
+        }
     }
     return authAcc
 }
