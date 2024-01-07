@@ -10,8 +10,9 @@
 
 [<p align="center"><img src="https://img.shields.io/github/downloads/PlayClan/PCLauncher/total.svg?style=for-the-badge&label=LET%C3%96LT%C3%89SEK" alt="letöltések">](https://github.com/PlayClan/PCLauncher/releases) <img src="https://img.shields.io/github/release/PlayClan/PCLauncher.svg?style=for-the-badge&label=STABIL%20VERZI%C3%93" alt="stabil verzió"> <img src="https://img.shields.io/github/release/PlayClan/PCLauncher/all.svg?style=for-the-badge&label=B%C3%89TA%20VERZI%C3%93" alt="béta verzió"></p>
 
-![Képernyőkép 1](https://i.imgur.com/K12eFc6.png)
-![Képernyőkép 2](https://i.imgur.com/rcJjXM4.png)
+![Képernyőkép 1](https://i.imgur.com/L4hpYsP.png)
+![Képernyőkép 2](https://i.imgur.com/jAIQuMh.png)
+![Képernyőkép 3](https://i.imgur.com/kMYtsXD.png)
 
 ## Funkciók
 
@@ -31,10 +32,13 @@
   * Nem kell Java-t telepítened a kliens futtatásához.
 * 📰 A Kortdex hírek csatorna natívan bele van építve a kliensbe.
 * ⚙️ Intuitív beállítások kezelés, beleértve a Java beállítások módosítását.
-* Több Minecraft verzió.
-  * Válassz másik Minecraft verziót pár kattintással.
-* Automatikus kliens frissítések. A háttérben frissül a kliens.
-*  Mojang státusz megtekintése.
+* 📝 Több Minecraft verzió.
+  * Válassz másik Minecraft verziót egy kattintással.
+* 🖥️ Automatikus kliens frissítések. A háttérben frissül a kliens.
+* 🌍 PlayClan szerverek státuszainak megtekintése.
+* 🌐 Választható alkalmazás nyelv
+  * Magyar
+  * Angol 
 
 De ez még nem minden! Töltsd le és telepítsd a kliensünket, hogy felfedezd, mit kínál még!
 
@@ -115,7 +119,7 @@ Telepítő készítése más platformokra
 | ----------- | -------------------- |
 | Windows x64 | `npm run dist:win`   |
 | macOS       | `npm run dist:mac`   |
-| Linux x64   | `npm run dist:linux` |
+| Linux       | `npm run dist:linux` |
 
 MacOS-re való buildelés nem minden esetben működhet Windows/Linux rendszereken.
 
