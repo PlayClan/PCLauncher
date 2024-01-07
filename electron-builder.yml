@@ -2,7 +2,7 @@ appId: 'pclauncher'
 productName: 'PlayClan Launcher'
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright © 2023 PlayClan'
+copyright: 'Copyright © 2024 PlayClan'
 
 asar: true
 compression: 'maximum'
