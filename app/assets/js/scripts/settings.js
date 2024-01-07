@@ -1716,14 +1716,14 @@ function settingsUpdateButtonStatus(text, disabled = false, handler = null){
  */
 function populateSettingsUpdateInformation(data){
     if(data != null){
-        settingsUpdateTitle.innerHTML = `${Lang.queryJS('settings.new')} ${isPrerelease(data.version) ? Lang.queryJS('settings.beta') : Lang.queryJS('settings.stable')} ${Lang.queryJS('settings.updateAvailable')}!}`
+        settingsUpdateTitle.innerHTML = `${Lang.queryJS('settings.new')} ${isPrerelease(data.version) ? Lang.queryJS('settings.beta') : Lang.queryJS('settings.stable')} ${Lang.queryJS('settings.updateAvailable')}!`
         settingsUpdateChangelogCont.style.display = null
         settingsUpdateChangelogTitle.innerHTML = data.releaseName
         settingsUpdateChangelogText.innerHTML = data.releaseNotes
         populateVersionInformation(data.version, settingsUpdateVersionValue, settingsUpdateVersionTitle, settingsUpdateVersionCheck)
         
         if(process.platform === 'darwin'){
-            settingsUpdateButtonStatus(Lang.queryJS('updateDarwin'), false, () => {
+            settingsUpdateButtonStatus(Lang.queryJS('settings.updateDarwin'), false, () => {
                 shell.openExternal(data.darwindownload)
             })
         } else {
