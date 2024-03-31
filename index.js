@@ -293,6 +293,14 @@ let win
 
 function createWindow() {
 
+    if (process.defaultApp) {
+        if (process.argv.length >= 2) {
+            app.setAsDefaultProtocolClient('pclauncher', process.execPath, [path.resolve(process.argv[1])])
+        }
+    } else {
+        app.setAsDefaultProtocolClient('pclauncher')
+    }
+
     win = new BrowserWindow({
         width: 980,
         height: 552,
@@ -463,8 +471,40 @@ function getPlatformIcon(filename){
     return path.join(__dirname, 'app', 'assets', 'images', `${filename}.${ext}`)
 }
 
-app.on('ready', createWindow)
-app.on('ready', createMenu)
+if (process.platform !== 'darwin') {
+    const gotTheLock = app.requestSingleInstanceLock()
+    if (!gotTheLock) {
+        app.quit()
+    } else {
+        app.on('second-instance', (event, commandLine, workingDirectory) => {
+            // Someone tried to run a second instance, we should focus our window.
+            if (win) {
+                if (win.isMinimized()) win.restore()
+                win.focus()
+            }
+            // the commandLine is array of strings in which last element is deep link url
+            dialog.showErrorBox('Welcome Back', `You arrived from: ${commandLine.pop()}`)
+        })
+
+        // Create win, load the rest of the app, etc...
+        app.whenReady().then(() => {
+            createWindow()
+            createMenu()
+        })
+    }
+} else {
+    // This method will be called when Electron has finished
+    // initialization and is ready to create browser windows.
+    // Some APIs can only be used after this event occurs.
+    app.whenReady().then(() => {
+        createWindow()
+    })
+    
+    // Handle the protocol. In this case, we choose to show an Error Box.
+    app.on('open-url', (event, url) => {
+        dialog.showErrorBox('Welcome Back', `You arrived from: ${url}`)
+    })
+}
 
 app.on('window-all-closed', () => {
     app.quit()

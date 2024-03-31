@@ -49,8 +49,15 @@ linux:
   synopsis: 'PlayClan Launcher'
   description: 'A PlayClan hivatalos Launchere'
   category: 'Game'
+  mimeTypes: 
+    - 'x-scheme-handler/pclauncher'
 
 
 directories:
   buildResources: 'build'
   output: 'dist'
+
+protocols:
+  name: 'PlayClan Launcher'
+  schemes: 
+    - 'pclauncher'
