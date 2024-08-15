@@ -15,7 +15,7 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = Lang.quer
         state: servSettings.shortId,
         largeImageKey: servSettings.largeImageKey,
         largeImageText: servSettings.largeImageText + " v" + remote.app.getVersion(),
-        smallImageKey: "https://playclan.hu/shop/player_skin?nev=" + ConfigManager.getSelectedAccount().username + "&time=" + Date.now(),
+        smallImageKey: "https://playclan.net/shop/player_skin?nev=" + ConfigManager.getSelectedAccount().username + "&time=" + Date.now(),
         smallImageText: ConfigManager.getSelectedAccount().username,
         startTimestamp: new Date().getTime(),
         instance: false,
@@ -26,7 +26,7 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = Lang.quer
             },
             {
                 label: Lang.queryJS('discord.website'),
-                url: "https://playclan.hu",
+                url: "https://playclan.net",
             },
         ]
     }

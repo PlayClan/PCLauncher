@@ -4,10 +4,10 @@
 title = "PlayClan Launcher"
 
 [ejs.landing]
-websiteURL = "https://playclan.hu"
+websiteURL = "https://playclan.net"
 mediaInstagramURL = "https://www.instagram.com/playclanofficial/"
 mediaYouTubeURL = "https://www.youtube.com/@PlayClan1"
-mediaDiscordURL = "https://dc.playclan.hu"
+mediaDiscordURL = "https://dc.playclan.net"
 
 [ejs.login]
 affiliate = "PlayClan Launcher is not affiliated with Mojang AB."

@@ -318,7 +318,7 @@ function populateAccountListings(){
         const current = ConfigManager.getSelectedAccount()
         if (accounts[i].type === 'playclan') {
             htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${accounts[i].uuid===current.uuid ? 'selected' : ''}>
-                <img src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=true&vr=-25&hr=45&displayHair=true&user=${accounts[i].displayName}&time=${Date.now()}" style="height: 40px; width: 43px;">
+                <img src="https://playclan.net/skin/resources/server/skinRender.php?format=png&headOnly=true&vr=-25&hr=45&displayHair=true&user=${accounts[i].displayName}&time=${Date.now()}" style="height: 40px; width: 43px;">
                 <div class="accountListingName">${accounts[i].displayName} (PlayClan)</div>
             </button>`
         } else {

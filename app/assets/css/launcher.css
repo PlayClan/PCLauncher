@@ -937,6 +937,11 @@ body, button {
     top: 50%;
 }
 
+#waitingButtonContainer {
+    position: fixed;
+    top: 70%;
+}
+
 @keyframes rotateBefore {
     from {
       transform: rotateX(60deg) rotateY(45deg) rotateZ(0deg);
@@ -1017,10 +1022,15 @@ body, button {
 
 #loginOptionCancelContainer {
     position: absolute;
-    bottom: -100px;
+    bottom: 0px;
+}
+#loginOptionCancelContainer2 {
+    position: fixed;
+    top: 70%;
 }
 
-#loginOptionCancelButton {
+#loginOptionCancelButton,
+#loginOptionCancelButton2 {
     background: none;
     border: none;
     padding: 2px 0px;
@@ -1032,14 +1042,18 @@ body, button {
     transition: 0.25s ease;
 }
 #loginOptionCancelButton:hover,
-#loginOptionCancelButton:focus {
+#loginOptionCancelButton:focus,
+#loginOptionCancelButton2:hover,
+#loginOptionCancelButton2:focus {
     text-shadow: 0px 0px 20px lightgrey;
 }
-#loginOptionCancelButton:active {
+#loginOptionCancelButton:active,
+#loginOptionCancelButton2:active {
     text-shadow: 0px 0px 20px rgba(211, 211, 211, 0.75);
     color: rgba(211, 211, 211, 0.75);
 }
-#loginOptionCancelButton:disabled {
+#loginOptionCancelButton:disabled,
+#loginOptionCancelButton2:disabled {
     color: rgba(211, 211, 211, 0.75);
     pointer-events: none;
 }

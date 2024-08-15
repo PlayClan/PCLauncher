@@ -351,15 +351,6 @@ const msftLoginLogger = LoggerUtil.getLogger('Microsoft Login')
 const pcLoginLogger = LoggerUtil.getLogger('PlayClan Login')
 const msftLogoutLogger = LoggerUtil.getLogger('Microsoft Logout')
 
-// Bind the add mojang account button.
-document.getElementById('settingsAddMojangAccount').onclick = (e) => {
-    switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
-        loginViewOnCancel = VIEWS.settings
-        loginViewOnSuccess = VIEWS.settings
-        loginCancelEnabled(true)
-    })
-}
-
 // Bind the add microsoft account button.
 document.getElementById('settingsAddMicrosoftAccount').onclick = (e) => {
     switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
@@ -369,6 +360,7 @@ document.getElementById('settingsAddMicrosoftAccount').onclick = (e) => {
 
 // Bind the add playclan account button.
 document.getElementById('settingsAddPlayClanAccount').onclick = (e) => {
+    loginOptionsViewOnLoginCancel = VIEWS.settings
     switchView(getCurrentView(), VIEWS.waitingpc, 500, 500, () => {
         ipcRenderer.send(PC_OPCODE.OPEN_LOGIN, VIEWS.settings, VIEWS.settings)
     })
@@ -602,37 +594,7 @@ async function processLogOut(val, isLastAccount){
             ipcRenderer.send(MSFT_OPCODE.OPEN_LOGOUT, uuid, isLastAccount)
         })
     } else if(targetAcc.type === 'playclan') {
-        const formData = new FormData()
-        formData.append('type', 'logout')
-        formData.append('data', 'this')
-
-        await fetch('https://playclan.hu/shop/api', {
-            method: "POST",
-            body: formData,
-            headers: {
-                'Authorization': `Bearer ${targetAcc.accessToken}`
-            }
-        })
-
         AuthManager.removePlayClanAccount(uuid).then(() => {
-            if(!isLastAccount && uuid === prevSelAcc.uuid){
-                const selAcc = ConfigManager.getSelectedAccount()
-                refreshAuthAccountSelected(selAcc.uuid)
-                updateSelectedAccount(selAcc)
-                validateSelectedAccount()
-            }
-            if(isLastAccount) {
-                loginOptionsCancelEnabled(false)
-                loginOptionsViewOnLoginSuccess = VIEWS.settings
-                loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-                switchView(getCurrentView(), VIEWS.loginOptions)
-            }
-        })
-        $(parent).fadeOut(250, () => {
-            parent.remove()
-        })
-    } else {
-        AuthManager.removeMojangAccount(uuid).then(() => {
             if(!isLastAccount && uuid === prevSelAcc.uuid){
                 const selAcc = ConfigManager.getSelectedAccount()
                 refreshAuthAccountSelected(selAcc.uuid)
@@ -733,7 +695,6 @@ function refreshAuthAccountSelected(uuid){
 
 const settingsCurrentMicrosoftAccounts = document.getElementById('settingsCurrentMicrosoftAccounts')
 const settingsCurrentPlayClanAccounts = document.getElementById('settingsCurrentPlayClanAccounts')
-const settingsCurrentMojangAccounts = document.getElementById('settingsCurrentMojangAccounts')
 
 function convertSecondsToTime(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -756,7 +717,6 @@ function populateAuthAccounts(){
 
     let microsoftAuthAccountStr = ''
     let playclanAuthAccountStr = ''
-    let mojangAuthAccountStr = ''
 
     authKeys.forEach((val) => {
         const acc = authAccounts[val]
@@ -766,7 +726,7 @@ function populateAuthAccounts(){
         if (acc.type === 'playclan') {
             accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
                 <div class="settingsAuthAccountLeft">
-                    <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${acc.displayName}&time=${Date.now()}">
+                    <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://playclan.net/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${acc.displayName}&time=${Date.now()}">
                 </div>
                 <div class="settingsAuthAccountRight">
                     <div class="settingsAuthAccountDetails">
@@ -817,15 +777,12 @@ function populateAuthAccounts(){
             microsoftAuthAccountStr += accHtml
         } else if(acc.type === 'playclan') {
             playclanAuthAccountStr += accHtml
-        } else {
-            mojangAuthAccountStr += accHtml
         }
 
     })
 
     settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr
     settingsCurrentPlayClanAccounts.innerHTML = playclanAuthAccountStr
-    settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr
 }
 
 /**
@@ -1128,6 +1085,12 @@ document.addEventListener('keydown', async (e) => {
             await reloadDropinMods()
             saveShaderpackSettings()
             await resolveShaderpacksForUI()
+        }
+    }
+    if(getCurrentView() === VIEWS.settings){
+        if(e.key === 'Escape'){
+            fullSettingsSave()
+            switchView(getCurrentView(), VIEWS.landing)
         }
     }
 })

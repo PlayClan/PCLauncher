@@ -27,11 +27,10 @@ const {
     extractJdk
 }                             = require('helios-core/java')
 
-const { dialog }              = require('electron')
-
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')
 const ProcessBuilder          = require('./assets/js/processbuilder')
+const { dialog } = require('electron')
 
 // Launch Elements
 const launch_content          = document.getElementById('launch_content')
@@ -47,6 +46,8 @@ const shopButton              = document.getElementById('shopButton')
 const image_seal_container    = document.getElementById('image_seal_container')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
+
+let webPort; 
 
 /* Launch Progress Wrapper Functions */
 
@@ -210,7 +211,7 @@ function updateSelectedAccount(authUser){
         }
         if (authUser.type == "playclan") {
             if(authUser.uuid != null){
-                document.getElementById('avatarContainer').style.backgroundImage = `url('https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${authUser.displayName}&time=${Date.now()}')`
+                document.getElementById('avatarContainer').style.backgroundImage = `url('https://playclan.net/skin/resources/server/skinRender.php?format=png&headOnly=false&vr=-25&hr=45&displayHair=true&user=${authUser.displayName}&time=${Date.now()}')`
             }
         } else {
             if(authUser.uuid != null){
@@ -254,7 +255,7 @@ const refreshPlayClanStatus = async function(){
     
     let statuses
 
-    await fetch('https://api.playclan.hu/kliens/status').then(response => {
+    await fetch('https://api.playclan.net/kliens/status').then(response => {
         return response.json()
     }).then(data => {
         statuses = data
@@ -522,6 +523,7 @@ let hasRPC = false
 const GAME_JOINED_REGEX = /\[.+\]: Hardware information/
 const DISCONNECTED_REGEX = /\[.+\]: Disconnected from server/
 const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+|Loading Minecraft .+ with Fabric Loader .+)$/
+const WEB_SERVER_PORT = /\[.+\]: Web server started on port \d+/
 const MIN_LINGER = 5000
 
 async function dlAsync(login = true) {
@@ -648,6 +650,7 @@ async function dlAsync(login = true) {
                 DiscordWrapper.updateDetails(Lang.queryJS('discord.loading')) 
                 proc.stdout.on('data', gameStateChange)
             }
+            proc.stdout.on('data', webServerPort)
             proc.stdout.removeListener('data', tempListener)
             proc.stderr.removeListener('data', gameErrorListener)
         }
@@ -675,6 +678,14 @@ async function dlAsync(login = true) {
                 DiscordWrapper.updateDetails(Lang.queryJS('discord.playing'))
             } else if(GAME_JOINED_REGEX.test(data) || DISCONNECTED_REGEX.test(data)){
                 DiscordWrapper.updateDetails(Lang.queryJS('discord.inMainMenu'))
+            }
+                
+        }
+
+        const webServerPort = function(data){
+            data = data.trim()
+            if (WEB_SERVER_PORT.test(data)) {
+                webPort = data.split('port ')[1]
             }
         }
 
@@ -876,7 +887,7 @@ async function requestShopData(token) {
     formData.append('type', 'request')
     formData.append('data', 'all')
 
-    const fullData = await fetch('https://playclan.hu/shop/api', {
+    const fullData = await fetch('https://playclan.net/shop/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -899,7 +910,7 @@ async function requestShopFriends(token) {
     formData.append('type', 'request')
     formData.append('data', 'friends')
 
-    const fullData = await fetch('https://playclan.hu/shop/api', {
+    const fullData = await fetch('https://playclan.net/shop/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -923,7 +934,7 @@ async function requestHasPermission(token) {
     formData.append('data', 'permission')
     formData.append('permission', 'playclan.kinezet')
 
-    const fullData = await fetch('https://playclan.hu/shop/api', {
+    const fullData = await fetch('https://playclan.net/shop/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -950,7 +961,7 @@ async function updateSpecificSetting(token, data, data1, value1, data2, value2) 
         formData.append(data2, value2)
     }
 
-    const fullData = await fetch('https://playclan.hu/shop/api', {
+    const fullData = await fetch('https://playclan.net/shop/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -974,7 +985,7 @@ async function checkExistingPlayer(token, player) {
     formData.append('data', 'exists')
     formData.append('player', player)
 
-    const fullData = await fetch('https://playclan.hu/shop/api', {
+    const fullData = await fetch('https://playclan.net/shop/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -999,7 +1010,7 @@ async function sendPC(token, player, playcoin) {
     formData.append('player', player)
     formData.append('playcoin', playcoin)
 
-    const fullData = await fetch('https://playclan.hu/shop/api', {
+    const fullData = await fetch('https://playclan.net/shop/api', {
         method: "POST",
         body: formData,
         headers: {
@@ -1043,7 +1054,7 @@ async function loadShop(page) {
             <div class="shopDiv" style="width: 20rem">
                 <div class="shopHeader">
                     <span>${Lang.queryJS('shop.loggedInAs')}<br>${data.data.request.name}</span>
-                    <img src="https://playclan.hu/skin/resources/server/skinRender.php?format=png&headOnly=true&vr=-25&hr=45&displayHair=true&user=${data.data.request.name}&aa=true&time=${Date.now()}">
+                    <img src="https://playclan.net/skin/resources/server/skinRender.php?format=png&headOnly=true&vr=-25&hr=45&displayHair=true&user=${data.data.request.name}&aa=true&time=${Date.now()}">
                     <svg fill="#e6e6e6" height="30px" width="30px" version="1.1" id="shopRefresh" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-48.96 -48.96 587.56 587.56" xml:space="preserve" transform="rotate(180)" stroke="#e6e6e6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.97929"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M460.656,132.911c-58.7-122.1-212.2-166.5-331.8-104.1c-9.4,5.2-13.5,16.6-8.3,27c5.2,9.4,16.6,13.5,27,8.3 c99.9-52,227.4-14.9,276.7,86.3c65.4,134.3-19,236.7-87.4,274.6c-93.1,51.7-211.2,17.4-267.6-70.7l69.3,14.5 c10.4,2.1,21.8-4.2,23.9-15.6c2.1-10.4-4.2-21.8-15.6-23.9l-122.8-25c-20.6-2-25,16.6-23.9,22.9l15.6,123.8 c1,10.4,9.4,17.7,19.8,17.7c12.8,0,20.8-12.5,19.8-23.9l-6-50.5c57.4,70.8,170.3,131.2,307.4,68.2 C414.856,432.511,548.256,314.811,460.656,132.911z"></path> </g> </g></svg>
                 </div>
                 <hr>
@@ -1076,7 +1087,7 @@ async function loadShop(page) {
                 for (let i = 0; i < friends.data.request.friends; i++) {
                     if (friends.data.request[i].online == 1) {
                         shopHTML += `<div class="shopPlayer">
-                            <img src="https://playclan.hu/shop/player_skin?nev=${friends.data.request[i].name}&time=${Date.now()}">
+                            <img src="https://playclan.net/shop/player_skin?nev=${friends.data.request[i].name}&time=${Date.now()}">
                             <div>
                                 <h4>${friends.data.request[i].name}</h4>
                                 <p>${Lang.queryJS('shop.profileOnline')}</p>
@@ -1099,7 +1110,7 @@ async function loadShop(page) {
                         <button id="skinUpload">${Lang.queryJS('shop.skinUpload')}</button>
                     </div>
                     <div class="shopUploadColumn">
-                        <img src="https://playclan.hu/shop/player_skin?nev=${data.data.request.name}&format=skin3d&time=${Date.now()}" width="100px" height="200px">
+                        <img src="https://playclan.net/shop/player_skin?nev=${data.data.request.name}&format=skin3d&time=${Date.now()}" width="100px" height="200px">
                     </div>
                 </div>
             </div>
@@ -1283,7 +1294,7 @@ async function loadShop(page) {
     selectedSkinFile = null
 
     document.getElementById('shopFooter').onclick = () => {
-        shell.openExternal("https://playclan.hu/shop/")
+        shell.openExternal("https://playclan.net/shop/")
     }
 
     document.getElementById('skinSelector').onclick = () => {
@@ -1314,7 +1325,7 @@ async function loadShop(page) {
             filePathToBlob(selectedSkinFile).then(blob => {
                 let formData = new FormData();
                 formData.append('image', blob, require('path').basename(selectedSkinFile));
-                fetch('https://playclan.hu/shop/skin_upload_api', {
+                fetch('https://playclan.net/shop/skin_upload_api', {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -1342,7 +1353,7 @@ async function loadShop(page) {
         ipFormData.append('type', 'request')
         ipFormData.append('data', 'ip')
 
-        const ipResponse = await fetch('https://playclan.hu/shop/api', {
+        const ipResponse = await fetch('https://playclan.net/shop/api', {
             method: "POST",
             body: ipFormData,
             headers: {
@@ -1359,7 +1370,7 @@ async function loadShop(page) {
         ipUpdateFormData.append('data', 'ip')
         ipUpdateFormData.append('ip', ipResponse.response["token-ip"]);
 
-        const data = await fetch('https://playclan.hu/shop/api', {
+        const data = await fetch('https://playclan.net/shop/api', {
             method: "POST",
             body: ipUpdateFormData,
             headers: {
@@ -1388,7 +1399,7 @@ async function loadShop(page) {
         ipUpdateFormData.append('data', 'ip')
         ipUpdateFormData.append('ip', document.getElementById("ipProtectionInput").value);
 
-        const data = await fetch('https://playclan.hu/shop/api', {
+        const data = await fetch('https://playclan.net/shop/api', {
             method: "POST",
             body: ipUpdateFormData,
             headers: {
@@ -1413,7 +1424,7 @@ async function loadShop(page) {
         ipUpdateFormData.append('data', 'ip')
         ipUpdateFormData.append('ip', '');
 
-        const data = await fetch('https://playclan.hu/shop/api', {
+        const data = await fetch('https://playclan.net/shop/api', {
             method: "POST",
             body: ipUpdateFormData,
             headers: {
@@ -2261,4 +2272,71 @@ async function loadNews(){
     })
 
     return await promise
+}
+
+let isGameRunning = false
+
+ipcRenderer.on('game-state', (event, arg) => {
+    isGameRunning = arg
+})
+
+ipcRenderer.on('join-server', (event, server) => {
+    joinServer(server)
+})
+
+function joinServer(server) {
+    const accLen = Object.keys(ConfigManager.getAuthAccounts()).length
+    if (accLen >= 1) {
+        if (isGameRunning) {
+            setOverlayContent(
+                "game is running",
+                server,
+                "Ok"
+            )
+            setOverlayHandler(async () => {
+                if (webPort != null) {
+                    const myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                    const urlencoded = new URLSearchParams();
+                    urlencoded.append("connect", "SkyBlock");
+                    urlencoded.append("token", "ok");
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: urlencoded,
+                        redirect: "follow"
+                    };
+
+                    fetch("http://127.0.0.1:" + webPort + "/connect", requestOptions)
+                    .then((response) => response.text())
+                    .then((result) => console.log(result))
+                    .catch((error) => console.error(error));
+                }
+                proc
+                toggleOverlay(false, false)
+            })
+            setDismissHandler(() => {
+                toggleOverlay(false, false)
+            })
+            toggleOverlay(true, true)
+            toggleLaunchArea(false)
+        } else {
+            setOverlayContent(
+                "game is not running",
+                server,
+                "Ok"
+            )
+            setOverlayHandler(() => {
+                document.getElementById('launch_button').click()
+                toggleOverlay(false, false)
+            })
+            setDismissHandler(() => {
+                toggleOverlay(false, false)
+            })
+            toggleOverlay(true, true)
+            toggleLaunchArea(false)
+        }
+    }
 }

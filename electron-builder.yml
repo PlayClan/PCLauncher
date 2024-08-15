@@ -35,6 +35,15 @@ mac:
         - 'arm64'
   artifactName: '${productName}-setup-${version}-${arch}.${ext}'
   category: 'public.app-category.games'
+  notarize: false
+  entitlements: 'build/entitlements.mac.plist'
+  entitlementsInherit: 'build/entitlements.mac.plist'
+  hardenedRuntime: true
+
+dmg:
+  sign: false
+
+afterSign: 'scripts/notarize.js'
 
 # Linux Configuration
 linux: 
@@ -51,7 +60,6 @@ linux:
   category: 'Game'
   mimeTypes: 
     - 'x-scheme-handler/pclauncher'
-
 
 directories:
   buildResources: 'build'

@@ -2,7 +2,7 @@ const remoteMain = require('@electron/remote/main')
 remoteMain.initialize()
 
 // Requirements
-const { app, BrowserWindow, ipcMain, Menu, shell, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, shell, dialog, ipcRenderer } = require('electron')
 const autoUpdater                       = require('electron-updater').autoUpdater
 const ejse                              = require('ejs-electron')
 const fs                                = require('fs')
@@ -12,11 +12,15 @@ const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, PC_OPCODE, PC_REPLY_TYPE, PC_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
 const LangLoader                        = require('./app/assets/js/langloader')
+const electronAppUniversalProtocolClient = require('electron-app-universal-protocol-client').default;
+const http                              = require('http');
 
 // Setup Lang
 LangLoader.setupLanguage()
 
 let isUpdateDownloaded = false
+let localWebServerPort = 0
+let loginSession = '';
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {
@@ -223,83 +227,44 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
     msftLogoutWindow.loadURL('https://login.microsoftonline.com/common/oauth2/v2.0/logout')
 })
 
-const PLAYCLAN_URL = 'https://api.playclan.hu/kliens/success?'
-const SHOP_URL = 'https://playclan.hu/shop/profil'
-const LOGOUT_URL = 'https://playclan.hu/shop/bejelentkezes'
+const PLAYCLAN_URL = 'https://api.playclan.net/kliens/success?'
+const SHOP_URL = 'https://playclan.net/shop/profil'
+const LOGOUT_URL = 'https://playclan.net/shop/bejelentkezes'
 
 // PlayClan Auth Login
 let pcAuthWindow
 let pcAuthSuccess
 let pcAuthViewSuccess
 let pcAuthViewOnClose
+let ipcEventStored
 ipcMain.on(PC_OPCODE.OPEN_LOGIN, (ipcEvent, ...arguments_) => {
+    ipcEventStored = ipcEvent
     if (pcAuthWindow) {
         ipcEvent.reply(PC_OPCODE.REPLY_LOGIN, PC_REPLY_TYPE.ERROR, PC_ERROR.ALREADY_OPEN, pcAuthViewOnClose)
         return
     }
-    pcAuthSuccess = false
+
     pcAuthViewSuccess = arguments_[0]
     pcAuthViewOnClose = arguments_[1]
-    pcAuthWindow = new BrowserWindow({
-        title: 'PlayClan Bejelentkezés',
-        backgroundColor: '#222222',
-        width: 520,
-        height: 600,
-        frame: true,
-        icon: getPlatformIcon('SealCircle')
-    })
 
-    pcAuthWindow.on('closed', () => {
-        pcAuthWindow = undefined
-    })
+    loginSession = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < 100) {
+        loginSession += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
 
-    pcAuthWindow.on('close', () => {
-        if(!pcAuthSuccess) {
-            ipcEvent.reply(PC_OPCODE.REPLY_LOGIN, PC_REPLY_TYPE.ERROR, PC_ERROR.NOT_FINISHED, pcAuthViewOnClose)
-        }
-    })
-    
-    pcAuthWindow.webContents.on('did-navigate', (_, uri) => {
-        if (uri.startsWith(PLAYCLAN_URL)) {
-            let queries = uri.substring(PLAYCLAN_URL.length).toString().split('&')
-            let queryMap = {}
+    require('electron').shell.openExternal("https://sso.playclan.net/accounts?window=pclauncher&session=" + loginSession + "&port=" + localWebServerPort);
 
-            queries.forEach(query => {
-                const [name, value] = query.split('=')
-                queryMap[name] = decodeURI(value)
-            })
-
-            ipcEvent.reply(PC_OPCODE.REPLY_LOGIN, PC_REPLY_TYPE.SUCCESS, queryMap, pcAuthViewSuccess)
-
-            pcAuthSuccess = true
-            pcAuthWindow.close()
-            pcAuthWindow = null
-        }
-        if (uri.startsWith(SHOP_URL)) {
-            pcAuthWindow.loadURL('https://playclan.hu/shop/kijelentkezes')
-        }
-        if (uri.startsWith(LOGOUT_URL)) {
-            pcAuthWindow.loadURL('https://api.playclan.hu/kliens/')
-        }
-    })
-
-    pcAuthWindow.removeMenu()
-    pcAuthWindow.loadURL('https://api.playclan.hu/kliens/')
 })
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
-function createWindow() {
-
-    if (process.defaultApp) {
-        if (process.argv.length >= 2) {
-            app.setAsDefaultProtocolClient('pclauncher', process.execPath, [path.resolve(process.argv[1])])
-        }
-    } else {
-        app.setAsDefaultProtocolClient('pclauncher')
-    }
+async function createWindow() {
 
     win = new BrowserWindow({
         width: 980,
@@ -354,6 +319,127 @@ function createWindow() {
     win.on('closed', () => {
         win = null
     })
+
+    // Create the HTTP server
+    const server = http.createServer((req, res) => {
+        if (req.url.startsWith('/background-image')) {
+            let random = Math.floor(Math.random() * fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length);
+            const image = fs.readFileSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds', random + '.png'));
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'image/png');
+            res.end(image);
+            return;
+        }
+        if (req.url.startsWith('/login?token=')) {
+            const data = req.url.split('/login?')[1].split('&');
+            const token = data[0].split('=')[1];
+            const sso = data[1].split('=')[1];
+            const session = data[2].split('=')[1];
+
+            let isTokenValid = true;
+
+            if (session !== loginSession) {
+                isTokenValid = false;
+            }
+
+            const favicon = fs.readFileSync(path.join(__dirname, 'app', 'assets', 'images', 'SealCircle.ico'));
+
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/html');
+            res.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link rel="icon" href="data:image/x-icon;base64,${favicon.toString('base64')}">
+                    <title>PlayClan Launcher</title>
+                    <style>
+                        body, h1, p {
+                            margin: 0;
+                            padding: 0;
+                            font-family: Arial, sans-serif;
+                        }
+
+                        .container {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                            background-image: url('background-image');
+                            background-size: cover;
+                            background-position: center;
+                        }
+
+                        /* Message box with blur and transparency */
+                        .message-box {
+                            text-align: center;
+                            background-color: rgba(60, 60, 60, 0.6); 
+                            backdrop-filter: blur(10px);
+                            padding: 30px 30px;
+                            border-radius: 8px;
+                            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+                        }
+
+                        .message-box h1 {
+                            font-size: 24px;
+                            color: #fff;
+                            margin-bottom: 10px;
+                        }
+
+                        .message-box p {
+                            font-size: 18px;
+                            color: #fff;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="message-box">
+                            <h1>` + (isTokenValid ? LangLoader.queryJS('login.successTitle') : LangLoader.queryJS('login.errorTitle')) + `</h1>
+                            <p>` + (isTokenValid ? LangLoader.queryJS('login.successDesc') : LangLoader.queryJS('login.errorDesc')) + `</p>
+                        </div>
+                    </div>
+                    <script>window.history.replaceState({}, document.title, "/");</script>
+                </body>
+                </html>
+            `);
+            res.end();
+
+            if (isTokenValid) {
+
+                let queryMap = {}
+                data.forEach(query => {
+                    const [name, value] = query.split('=')
+                    queryMap[name] = decodeURI(value)
+                })
+                setTimeout(() => {
+                    win.focus()
+                    win.show()
+                    ipcEventStored.reply(PC_OPCODE.REPLY_LOGIN, PC_REPLY_TYPE.SUCCESS, queryMap, pcAuthViewSuccess)
+                }, 500);
+            } else {
+                ipcEventStored.reply(PC_OPCODE.REPLY_LOGIN, PC_REPLY_TYPE.ERROR, PC_ERROR.NOT_FINISHED, pcAuthViewOnClose)
+            }
+            return;
+        } else {
+            res.statusCode = 204;
+            res.end();
+            return;
+        }
+    });
+
+    // Listen on a random port
+    server.listen(0, '127.0.0.1', () => {
+        const port = server.address().port;
+        localWebServerPort = port;
+    });
+
+
+    // Ensure the server closes when the app is closed
+    app.on('before-quit', () => {
+        server.close();
+    });
 }
 
 ipcMain.on('hide-window', () => {
@@ -399,12 +485,12 @@ function createMenu() {
         let applicationSubMenu = {
             label: 'Application',
             submenu: [{
-                label: 'A PlayClan Launcher-ről',
+                label: LangLoader.queryJS('macos.applicationLabel'),
                 selector: 'orderFrontStandardAboutPanel:'
             }, {
                 type: 'separator'
             }, {
-                label: 'Kilépés',
+                label: LangLoader.queryJS('macos.quitLabel'),
                 accelerator: 'Command+Q',
                 click: () => {
                     app.quit()
@@ -414,31 +500,31 @@ function createMenu() {
 
         // New edit menu adds support for text-editing keyboard shortcuts
         let editSubMenu = {
-            label: 'Szerkesztés',
+            label: LangLoader.queryJS('macos.editLabel'),
             submenu: [{
-                label: 'Visszavonás',
+                label: LangLoader.queryJS('macos.undoLabel'),
                 accelerator: 'CmdOrCtrl+Z',
                 selector: 'undo:'
             }, {
-                label: 'Mégis',
+                label: LangLoader.queryJS('macos.redoLabel'),
                 accelerator: 'Shift+CmdOrCtrl+Z',
                 selector: 'redo:'
             }, {
                 type: 'separator'
             }, {
-                label: 'Kivágás',
+                label: LangLoader.queryJS('macos.cutLabel'),
                 accelerator: 'CmdOrCtrl+X',
                 selector: 'cut:'
             }, {
-                label: 'Másolás',
+                label: LangLoader.queryJS('macos.copyLabel'),
                 accelerator: 'CmdOrCtrl+C',
                 selector: 'copy:'
             }, {
-                label: 'Beillesztés',
+                label: LangLoader.queryJS('macos.pasteLabel'),
                 accelerator: 'CmdOrCtrl+V',
                 selector: 'paste:'
             }, {
-                label: 'Minden kijelölése',
+                label: LangLoader.queryJS('macos.selectAllLabel'),
                 accelerator: 'CmdOrCtrl+A',
                 selector: 'selectAll:'
             }]
@@ -471,43 +557,30 @@ function getPlatformIcon(filename){
     return path.join(__dirname, 'app', 'assets', 'images', `${filename}.${ext}`)
 }
 
-if (process.platform !== 'darwin') {
-    const gotTheLock = app.requestSingleInstanceLock()
-    if (!gotTheLock) {
-        app.quit()
-    } else {
-        app.on('second-instance', (event, commandLine, workingDirectory) => {
-            // Someone tried to run a second instance, we should focus our window.
-            if (win) {
-                if (win.isMinimized()) win.restore()
-                win.focus()
+ipcMain.on('game-state', (event, arg) => {
+    event.sender.send('game-state', arg)
+})
+
+app.on('ready', async () => {
+    createWindow()
+    createMenu()
+
+    electronAppUniversalProtocolClient.on(
+        'request',
+        async (requestUrl) => {
+            let action = requestUrl.split('://')[1];
+            let before = action.split('/')[0];
+            let after = action.split('/')[1];
+            if (before == 'join-server') {
+                //win.webContents.send('join-server', after);
             }
-            // the commandLine is array of strings in which last element is deep link url
-            dialog.showErrorBox('Welcome Back', `You arrived from: ${commandLine.pop()}`)
-        })
+        },
+    );
 
-        // Create win, load the rest of the app, etc...
-        app.whenReady().then(() => {
-            createWindow()
-            createMenu()
-        })
-    }
-} else {
-    // This method will be called when Electron has finished
-    // initialization and is ready to create browser windows.
-    // Some APIs can only be used after this event occurs.
-    app.whenReady().then(() => {
-        createWindow()
-    })
-    
-    // Handle the protocol. In this case, we choose to show an Error Box.
-    app.on('open-url', (event, url) => {
-        dialog.showErrorBox('Welcome Back', `You arrived from: ${url}`)
-    })
-}
-
-app.on('window-all-closed', () => {
-    app.quit()
+    await electronAppUniversalProtocolClient.initialize({
+        protocol: 'pclauncher',
+        mode: 'production', // Make sure to use 'production' when script is executed in bundled app
+    });
 })
 
 app.on('activate', () => {

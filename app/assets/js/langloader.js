@@ -17,8 +17,8 @@ const firstLaunch = !fs.existsSync(configPath) && !fs.existsSync(configPathLEGAC
 let lang
 
 exports.supportedLanguages = [
-    {fullName: 'Magyar (HU)', code: 'hu_HU'},
     {fullName: 'English (US)', code: 'en_US'},
+    {fullName: 'Magyar (HU)', code: 'hu_HU'},
 ]
 
 exports.loadLanguage = function(id){
@@ -57,10 +57,10 @@ exports.setupLanguage = function(){
         } catch (err){
             logger.error(err)
             logger.info('Configuration file contains malformed JSON or is corrupt.')
-            exports.loadLanguage('hu_HU')
+            exports.loadLanguage('en_US')
         }
     } else {
-        exports.loadLanguage('hu_HU')
+        exports.loadLanguage('en_US')
     }
     // Uncomment this when translations are ready
     //exports.loadLanguage('xx_XX')

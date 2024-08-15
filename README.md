@@ -18,7 +18,7 @@
 
 * 🔒 Teljes fiók kezelés.
   * Több fiók hozzáadása és váltás egy kattintással a fiókok között.
-  * Microsoft + Mojang bejelentkezés, eredeti fiókok számára.
+  * Microsoft bejelentkezés, eredeti fiókok számára.
     * A bejelentkezési adatokat nem tároljuk, egyből továbbítjuk a Microsoftnak/Mojangnak.
   * PlayClan fiók bejelentkezés.
     * Automatikus bejelentkezés a szerverre.
@@ -42,7 +42,7 @@
 
 De ez még nem minden! Töltsd le és telepítsd a kliensünket, hogy felfedezd, mit kínál még!
 
-#### Segítségre van szükséged? [Csatlakozz Discord szerverünkre](https://dc.playclan.hu)
+#### Segítségre van szükséged? [Csatlakozz Discord szerverünkre](https://dc.playclan.net)
 
 ## Letöltés
 
@@ -203,7 +203,7 @@ Ha bármiben elkadtál, csatlakozz Discord szerverünkre, ahol segíthetünk.
 [mainprocess]: https://electronjs.org/docs/tutorial/application-architecture#main-and-renderer-processes 'Main Process'
 [rendererprocess]: https://electronjs.org/docs/tutorial/application-architecture#main-and-renderer-processes 'Renderer Process'
 [chromedebugger]: https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome 'Debugger for Chrome'
-[discord]: https://dc.playclan.hu 'Discord'
+[discord]: https://dc.playclan.net 'Discord'
 [wiki]: https://github.com/dscalzi/HeliosLauncher/wiki 'wiki'
 [fork]: https://github.com/dscalzi/HeliosLauncher 'fork'
 [nebula]: https://github.com/dscalzi/Nebula 'dscalzi/Nebula'
