@@ -2241,6 +2241,11 @@ async function loadNews(){
                         content = content.replace(`"${matches[1]}"`, `"${newsHost + matches[1]}"`)
                     }
 
+                    // Remove height and width attributes from img tags.
+                    content = content.replace(/<img[^>]*>/g, (match) => {
+                        return match.replace(/(height|width)\s*=\s*"\d+"/gi, '')
+                    })
+
                     let link   = el.find('link').text()
                     let title  = el.find('title').text()
                     let author = el.find('dc\\:creator').text()
