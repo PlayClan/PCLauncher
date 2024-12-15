@@ -13,7 +13,7 @@ server = "SERVER"
 offline = "OFFLINE"
 playclanStatus = "PLAYCLAN SERVERS"
 playclanServers = "SERVER STATUSES"
-news = "NEWS"
+news = "PLAYCLAN NEWS"
 start = "START"
 notSelected = "Server not selected"
 wait = "Please wait..."
@@ -311,6 +311,7 @@ loginErrorDesc = "To use this function, you must log in to your PlayClan account
 [js.news]
 loading = "Loading news"
 comments = "comments"
+writtenby = "Written by: "
 
 [js.login]
 errorTitle = "Unknown error during login"

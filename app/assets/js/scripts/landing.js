@@ -2183,7 +2183,7 @@ document.addEventListener('keydown', (e) => {
 function displayArticle(articleObject, index){
     newsArticleTitle.innerHTML = articleObject.title
     newsArticleTitle.href = articleObject.link
-    newsArticleAuthor.innerHTML = 'Írta: ' + articleObject.author
+    newsArticleAuthor.innerHTML = Lang.queryJS('news.writtenby') + articleObject.author
     newsArticleDate.innerHTML = articleObject.displayDate
     newsArticleComments.innerHTML = articleObject.comments
     newsArticleComments.href = articleObject.commentsLink
@@ -2212,7 +2212,7 @@ async function loadNews(){
 
     const promise = new Promise((resolve, reject) => {
         
-        const newsFeed = distroData.rawDistribution.rss
+        const newsFeed = DistroAPI.isDevMode ? "https://playclan.net/shop/feed" : distroData.rawDistribution.rss
         const newsHost = new URL(newsFeed).origin + '/'
         $.ajax({
             url: newsFeed + '?time=' + Date.now(),

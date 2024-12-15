@@ -13,7 +13,7 @@ server = "SZERVER"
 offline = "NEM ELÉRHETŐ"
 playclanStatus = "PLAYCLAN SZERVEREK"
 playclanServers = "SZERVER STÁTUSZOK"
-news = "HÍREK"
+news = "PLAYCLAN HÍREK"
 start = "INDÍTÁS"
 notSelected = "Nincs szerver kiválasztva"
 wait = "Kérlek várj..."
@@ -311,6 +311,7 @@ loginErrorDesc = "Ehhez a funkció használatához a PlayClan fiókodba kell bej
 [js.news]
 loading = "Hírek betöltése"
 comments = "komment"
+writtenby = "Írta: "
 
 [js.login]
 errorTitle = "Ismeretlen hiba a bejelentkezés során"
