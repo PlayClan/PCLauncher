@@ -834,7 +834,7 @@ class ProcessBuilder {
      * declare libraries.
      * 
      * @param {Array.<Object>} mods An array of enabled mods which will be launched with this process.
-     * @returns {{[id: string]: string}} An object containing the paths of each library this server requires.
+     * @returns {{[id: string]: string}} An object containing the paths of each library this module requires.
      */
     _resolveServerLibraries(mods){
         const mdls = this.server.modules
@@ -847,9 +847,7 @@ class ProcessBuilder {
                 libs[mdl.getVersionlessMavenIdentifier()] = mdl.getPath()
                 if(mdl.subModules.length > 0){
                     const res = this._resolveModuleLibraries(mdl)
-                    if(res.length > 0){
-                        libs = {...libs, ...res}
-                    }
+                    libs = {...libs, ...res}
                 }
             }
         }
@@ -858,9 +856,7 @@ class ProcessBuilder {
         for(let i=0; i<mods.length; i++){
             if(mods.sub_modules != null){
                 const res = this._resolveModuleLibraries(mods[i])
-                if(res.length > 0){
-                    libs = {...libs, ...res}
-                }
+                libs = {...libs, ...res}
             }
         }
 
@@ -871,27 +867,25 @@ class ProcessBuilder {
      * Recursively resolve the path of each library required by this module.
      * 
      * @param {Object} mdl A module object from the server distro index.
-     * @returns {Array.<string>} An array containing the paths of each library this module requires.
+     * @returns {{[id: string]: string}} An object containing the paths of each library this server requires.
      */
     _resolveModuleLibraries(mdl){
         if(!mdl.subModules.length > 0){
-            return []
+            return {}
         }
-        let libs = []
+        let libs = {}
         for(let sm of mdl.subModules){
             if(sm.rawModule.type === Type.Library){
 
                 if(sm.rawModule.classpath ?? true) {
-                    libs.push(sm.getPath())
+                    libs[sm.getVersionlessMavenIdentifier()] = sm.getPath()
                 }
             }
             // If this module has submodules, we need to resolve the libraries for those.
             // To avoid unnecessary recursive calls, base case is checked here.
             if(mdl.subModules.length > 0){
                 const res = this._resolveModuleLibraries(sm)
-                if(res.length > 0){
-                    libs = libs.concat(res)
-                }
+                libs = {...libs, ...res}
             }
         }
         return libs
