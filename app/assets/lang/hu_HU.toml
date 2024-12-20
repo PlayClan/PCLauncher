@@ -21,6 +21,7 @@ newsLoading = "Hírek betöltése..."
 newsFailed = "Hírek betöltése sikertelen"
 retry = "Próbáld újra"
 noNews = "Még nincs egy hírek se."
+eventsButton = "Események"
 
 [ejs.login]
 cancel = "Mégse"
@@ -191,6 +192,7 @@ autoConnectTitle = "Automatikus csatlakozás a szerverre"
 autoConnectContent = "Szeretnéd-e bekapcsolva hagyni az automatikus csatlakozást? Ezzel a beállítással automatikusan csatlakozni fogsz a szerverhez, amikor elindítod a Minecraft-ot."
 autoConnectYes = "Kikapcsolás"
 autoConnectNo = "Maradjon bekapcsolva"
+eventsButton = "Események"
 
 [js.discord]
 loading = "Játék betöltése..."
@@ -307,6 +309,7 @@ sendPCErrorRateLimit = "Túl gyorsan próbáltál utalni, kérjek várj egy kics
 sendPCErrorDesc = "Nincs elég PlayCoin egyenleged!"
 loginError = "Bejelentkezési hiba!"
 loginErrorDesc = "Ehhez a funkció használatához a PlayClan fiókodba kell bejelentkezned!"
+appearanceDesc = "Amennyiben egyedi kinézeted obszcén kifejezést, szerver hírdetést, a személyzet tagjához hasonló megjelenést tartalmaz vagy a neved olvashatatlannak minősül, akkor jogodat a kinézet módosításához elvehetjük és szankcióra számíthatsz anélkül, hogy előzetes figyelmeztetést kapnál."
 
 [js.news]
 loading = "Hírek betöltése"
@@ -403,3 +406,11 @@ cutLabel = "Kivágás"
 copyLabel = "Másolás"
 pasteLabel = "Beillesztés"
 selectAllLabel = "Minden kijelölése"
+
+[js.events]
+creator = "Szervező"
+start = "Kezdés"
+end = "Vége"
+error = "Hiba az események betöltése közben"
+errorDesc = "Nem sikerült betölteni az eseményeket. Kérlek próbáld újra."
+retry = "Próbáld újra"

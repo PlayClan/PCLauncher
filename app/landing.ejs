@@ -2,11 +2,25 @@
     <div id="shopContainer">
         <p><%= lang('landing.shopButton') %></p>
     </div>
-    <div id="upper">
+    <div id="upper" style="transition: top 2s ease 0s; left: 0px;">
         <div id="left">
             <div id="image_seal_container">
-                <img id="image_seal" src="assets/images/SealCircle.png"/>
-                <div id="updateAvailableTooltip"><%= lang('landing.updateAvailable') %></div>
+                <div id="update_container">
+                    <img id="image_seal" src="assets/images/SealCircle.png" draggable="false"/>
+                    <div id="updateAvailableTooltip"><%= lang('landing.updateAvailable') %></div>
+                </div>
+                <div id="eventsButtonContainer" style="transition: top 2s ease 0s; left: 0px;">
+                    <button id="eventsButton">
+                        <div id="eventsButtonAlert" style="display: none;"></div>
+                        <span id="eventsButtonText"><%= lang('landing.eventsButton') %></span>
+                        <svg id="eventsButtonSVG" viewBox="0 0 24.87 13.97" style="transform: rotate(90deg);">
+                            <defs>
+                                <style>.arrowLine{fill:none;stroke:#FFF;stroke-width:2px;}</style>
+                            </defs>
+                            <polyline class="arrowLine" points="0.71 13.26 12.56 1.41 24.16 13.02"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
         <div id="center" class="center_shop">
@@ -101,7 +115,7 @@
         </div>
     </div>
     <div id="lower">
-        <div id="left">
+        <div id="left" style="transition: top 2s ease 0s; left: 0px;">
             <div class="bot_wrapper">
                 <div id="content">
                     <div id="server_status_wrapper">
@@ -122,7 +136,7 @@
                 </div>
             </div>
         </div>
-        <div id="center">
+        <div id="center" style="transition: top 2s ease 0s; left: 0px;">
             <div class="bot_wrapper">
                 <div id="content">
                     <button id="newsButton">
@@ -139,7 +153,7 @@
                 </div>
             </div>
         </div>
-        <div id="right">
+        <div id="right" style="transition: top 2s ease 0s; left: 0px;">
             <div class="bot_wrapper">
                 <div id="launch_content">
                     <button id="launch_button"><%= lang('landing.start') %></button>
@@ -215,6 +229,11 @@
             <div id="newsErrorNone" style="display: none;">
                 <span id="nENoneSpan" class="newsErrorContent"><%= lang('landing.noNews') %></span>
             </div>
+        </div>
+    </div>
+    <div id="eventsContainer">
+        <div id="eventsContent">
+            <!-- Events content will be dynamically loaded here -->
         </div>
     </div>
     <script src="./assets/js/scripts/landing.js"></script>

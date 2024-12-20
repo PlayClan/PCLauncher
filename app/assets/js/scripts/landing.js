@@ -43,7 +43,7 @@ const user_text               = document.getElementById('user_text')
 const avatarOverlay           = document.getElementById('avatarOverlay')
 const settingsMediaButton     = document.getElementById('settingsMediaButton')
 const shopButton              = document.getElementById('shopButton')
-const image_seal_container    = document.getElementById('image_seal_container')
+const image_seal              = document.getElementById('image_seal')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
@@ -64,7 +64,7 @@ function toggleLaunchArea(loading){
         avatarOverlay.disabled = true
         settingsMediaButton.disabled = true
         shopButton.disabled = true
-        image_seal_container.disabled = true
+        image_seal.disabled = true
     } else {
         launch_details.style.display = 'none'
         launch_content.style.display = 'inline-flex'
@@ -72,7 +72,7 @@ function toggleLaunchArea(loading){
         avatarOverlay.disabled = false
         settingsMediaButton.disabled = false
         shopButton.disabled = false
-        image_seal_container.disabled = false
+        image_seal.disabled = false
     }
 }
 
@@ -785,6 +785,10 @@ let selectedSkinFile = null
 let newsActive = false
 let newsGlideCount = 0
 
+// Events slide
+let eventsActive = false
+let isAnimating = false
+
 /**
  * Show the news UI via a slide animation.
  * 
@@ -1131,6 +1135,9 @@ async function loadShop(page) {
             </div>
             <div class="shopDiv" id="shop_kinezet" ${page == 'kinezet' ? '' : 'style="display: none"'}>
                 <h2>${Lang.queryJS('shop.appearance')}</h2>
+                <div class="shopDiv warning">
+                    <p>${Lang.queryJS('shop.appearanceDesc')}</p>
+                </div>
                 <hr>`
                 if (kinezetPermission.data.request) {
                     shopHTML += `<div class="row">
@@ -1925,32 +1932,34 @@ function filePathToBlob(filePath) {
 
 //Shop button
 document.getElementById('shopButton').onclick = async () => {
-    if (ConfigManager.getSelectedAccount().type == 'playclan') {
-        $('#landingContainer *').removeAttr('tabindex')
-        if (shopActive) {
-            updateSelectedAccount(ConfigManager.getSelectedAccount())
+    if (!isAnimating) {
+        if (ConfigManager.getSelectedAccount().type == 'playclan') {
             $('#landingContainer *').removeAttr('tabindex')
-            $('#shopContainer *').attr('tabindex', '-1')
+            if (shopActive) {
+                updateSelectedAccount(ConfigManager.getSelectedAccount())
+                $('#landingContainer *').removeAttr('tabindex')
+                $('#shopContainer *').attr('tabindex', '-1')
+            } else {
+
+                shopPage = "profil"
+                loadShop(shopPage)
+
+                $('#landingContainer *').attr('tabindex', '-1')
+                $('#shopContainer, #shopContainer *').removeAttr('tabindex')
+            }
+
+            slideShop(!shopActive)
+            shopActive = !shopActive
         } else {
-
-            shopPage = "profil"
-            loadShop(shopPage)
-
-            $('#landingContainer *').attr('tabindex', '-1')
-            $('#shopContainer, #shopContainer *').removeAttr('tabindex')
+            showLaunchFailure(Lang.queryJS('shop.loginError'), Lang.queryJS('shop.loginErrorDesc'))
         }
-
-        slideShop(!shopActive)
-        shopActive = !shopActive
-    } else {
-        showLaunchFailure(Lang.queryJS('shop.loginError'), Lang.queryJS('shop.loginErrorDesc'))
     }
 }
 
 
-document.getElementById('image_seal_container').onclick = async () => {
-    if (!document.getElementById('image_seal_container').disabled) {
-        if (!document.getElementById('image_seal_container').getAttribute('update')) {
+document.getElementById('image_seal').onclick = async () => {
+    if (!document.getElementById('image_seal').disabled) {
+        if (!document.getElementById('update_container').getAttribute('update')) {
             await prepareSettings()
             switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
                 settingsNavItemListener(document.getElementById('settingsNavAbount'), false)
@@ -1961,22 +1970,24 @@ document.getElementById('image_seal_container').onclick = async () => {
 
 // Bind news button.
 document.getElementById('newsButton').onclick = () => {
-    // Toggle tabbing.
-    if(newsActive){
-        $('#landingContainer *').removeAttr('tabindex')
-        $('#newsContainer *').attr('tabindex', '-1')
-    } else {
-        $('#landingContainer *').attr('tabindex', '-1')
-        $('#newsContainer, #newsContainer *, #lower, #lower #center *').removeAttr('tabindex')
-        if(newsAlertShown){
-            $('#newsButtonAlert').fadeOut(2000)
-            newsAlertShown = false
-            ConfigManager.setNewsCacheDismissed(true)
-            ConfigManager.save()
+    if (!isAnimating) {
+        // Toggle tabbing.
+        if(newsActive){
+            $('#landingContainer *').removeAttr('tabindex')
+            $('#newsContainer *').attr('tabindex', '-1')
+        } else {
+            $('#landingContainer *').attr('tabindex', '-1')
+            $('#newsContainer, #newsContainer *, #lower, #lower #center *').removeAttr('tabindex')
+            if(newsAlertShown){
+                $('#newsButtonAlert').fadeOut(2000)
+                newsAlertShown = false
+                ConfigManager.setNewsCacheDismissed(true)
+                ConfigManager.save()
+            }
         }
+        slide_(!newsActive)
+        newsActive = !newsActive
     }
-    slide_(!newsActive)
-    newsActive = !newsActive
 }
 
 // Array to store article meta.
@@ -2187,7 +2198,7 @@ function displayArticle(articleObject, index){
     newsArticleDate.innerHTML = articleObject.displayDate
     newsArticleComments.innerHTML = articleObject.comments
     newsArticleComments.href = articleObject.commentsLink
-    newsArticleContentScrollable.innerHTML = '<div id="newsArticleContentWrapper"><div class="newsArticleSpacerTop"></div>' + articleObject.content + '<div class="newsArticleSpacerBot"></div></div>'
+    newsArticleContentScrollable.innerHTML = '<div id="newsArticleContentWrapper"><div class="newsArticleSpacerTop"></div>' + articleObject.content + '<div class="newsArticleSpacerBot"></div>'
     Array.from(newsArticleContentScrollable.getElementsByClassName('bbCodeSpoilerButton')).forEach(v => {
         v.onclick = () => {
             const text = v.parentElement.getElementsByClassName('bbCodeSpoilerText')[0]
@@ -2345,3 +2356,122 @@ function joinServer(server) {
         }
     }
 }
+
+//Events button
+document.getElementById('eventsButton').onclick = async () => {
+    isAnimating = true
+    $('#landingContainer *').removeAttr('tabindex')
+    if (eventsActive) {
+        $('#landingContainer *').removeAttr('tabindex')
+        $('#eventsContainer *').attr('tabindex', '-1')
+    } else {
+
+        fetchEvents(true)
+
+        $('#landingContainer *').attr('tabindex', '-1')
+        $('#eventsContainer, #eventsContainer *').removeAttr('tabindex')
+    }
+
+    slideEvents(!eventsActive)
+    eventsActive = !eventsActive
+    setTimeout(() => {
+        isAnimating = false
+    }, 2000)
+}
+
+function slideEvents(right){
+    document.getElementById('eventsButtonAlert').style.display = 'none'
+    const lCUpper = document.querySelector('#landingContainer > #upper')
+    const lCLLeft = document.querySelector('#landingContainer > #lower > #left')
+    const lCLCenter = document.querySelector('#landingContainer > #lower > #center')
+    const lCLRight = document.querySelector('#landingContainer > #lower > #right')
+    const eventsBtn = document.querySelector('#landingContainer > #upper > #left > #image_seal_container > #eventsButtonContainer')
+    const landingContainer = document.getElementById('landingContainer')
+    const eventsContainer = document.querySelector('#landingContainer > #eventsContainer')
+
+    eventsContainer.style.transition = 'right 2s ease'
+    eventsContainer.style.overflowY = 'hidden'
+
+    if(right){
+        lCUpper.style.transition = 'left 2s ease'
+        lCLLeft.style.transition = 'left 2s ease'
+        lCLCenter.style.transition = 'left 2s ease'
+        lCLRight.style.transition = 'left 2s ease'
+        eventsBtn.style.transition = 'left 2s ease'
+
+        landingContainer.style.background = 'rgba(0, 0, 0, 0.50)'
+        eventsContainer.style.right = '0'
+        lCUpper.style.left = '+100%'
+        lCLLeft.style.left = '+100%'
+        lCLCenter.style.left = '+100%'
+        lCLRight.style.left = '+100%'
+        eventsBtn.style.left = '-35vh'
+        setTimeout(() => {
+            if (eventsActive) {
+                eventsContainer.style.overflowY = 'scroll'
+            }
+        }, 2000)
+    } else {
+        eventsContainer.style.overflowY = 'hidden'
+        lCUpper.style.transition = 'left 2s ease'
+        lCLLeft.style.transition = 'left 2s ease'
+        lCLCenter.style.transition = 'left 2s ease'
+        lCLRight.style.transition = 'left 2s ease'
+        eventsBtn.style.transition = 'left 2s ease'
+
+        landingContainer.style.background = null
+        lCUpper.style.left = '0'
+        lCLLeft.style.left = '0'
+        lCLCenter.style.left = '0'
+        lCLRight.style.left = '0'
+        eventsBtn.style.left = '0'
+        eventsContainer.style.right = '100%'
+
+        setTimeout(() => {
+            if (!eventsActive) {
+                lCUpper.style.transition = 'top 2s ease'
+                lCLLeft.style.transition = 'top 2s ease'
+                lCLCenter.style.transition = 'top 2s ease'
+                lCLRight.style.transition = 'top 2s ease'
+                eventsBtn.style.transition = 'top 2s ease'
+            }
+        }, 2000)
+    }
+}
+
+// Fetch events from API
+async function fetchEvents(isManual = false) {
+    try {
+        if (!isManual) {
+            document.getElementById('eventsButtonAlert').style.display = 'block'
+        }
+        const response = await fetch('https://playclan.net/shop/events')
+        const events = await response.json()
+        displayEvents(events)
+    } catch (error) {
+        console.error('Failed to fetch events:', error)
+        const eventsContent = document.getElementById('eventsContent')
+        eventsContent.innerHTML = `<div class="event"><h3>${Lang.queryJS('events.error')}</h3><p>${Lang.queryJS('events.errorDesc')}</p> <button class="eventButton" id="eventRetry">${Lang.queryJS('events.retry')}</button></div>`
+        document.getElementById('eventRetry').onclick = () => fetchEvents(true)
+    }
+}
+
+// Display events in the events container
+function displayEvents(events) {
+    const eventsContent = document.getElementById('eventsContent')
+    eventsContent.innerHTML = events.map(event => `
+        <div class="event" style="border-color: ${event.temporary ? 'lightblue' : 'initial'};">
+            <div>${event.image ? `<img src="${event.image}" alt="${event.title}" draggable="false">` : ''}
+            <h3>${event.title}</h3>
+            <p>${event.creator ? `${Lang.queryJS('events.creator')}: ${event.creator}` : ''}</p>
+            <hr>
+            <p>${Lang.queryJS('events.start')}: ${new Date(event.start_time).toLocaleString()}</p>
+            <p>${Lang.queryJS('events.end')}: ${new Date(event.end_time).toLocaleString()}</p></div>
+            <hr>
+            <p style="user-select: text">${event.text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>').replace(/(?:\r\n|\r|\n)/g, '<br>')}</p>
+        </div>
+    `).join('')
+}
+
+// Initialize events
+fetchEvents()

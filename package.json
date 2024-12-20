@@ -1,6 +1,6 @@
 {
   "name": "pclauncher",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "productName": "PlayClan Launcher",
   "description": "A PlayClan hivatalos Launchere",
   "author": "PlayClan (https://github.com/PlayClan/)",
@@ -34,7 +34,7 @@
     "fs-extra": "^11.2.0",
     "github-syntax-dark": "^0.5.0",
     "got": "^14.4.2",
-    "helios-core": "~2.2.1",
+    "helios-core": "~2.2.3",
     "helios-distribution-types": "^1.3.0",
     "jquery": "^3.7.1",
     "lodash.merge": "^4.6.2",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@electron/notarize": "^2.3.2",
-    "electron": "^31.3.1",
+    "electron": "^33.2.1",
     "electron-builder": "^24.13.3",
     "eslint": "^9.8.0"
   },

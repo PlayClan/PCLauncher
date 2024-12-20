@@ -21,6 +21,7 @@ newsLoading = "Loading news..."
 newsFailed = "Failed to load news"
 retry = "Retry"
 noNews = "No news available"
+eventsButton = "Events"
 
 [ejs.login]
 cancel = "Cancel"
@@ -191,6 +192,7 @@ autoConnectTitle = "Autoconnect to the server"
 autoConnectContent = "Do you want to leave the autoconnect on? With this setting, you will automatically connect to the server when you start Minecraft."
 autoConnectYes = "Turn off"
 autoConnectNo = "Keep it on"
+eventsButton = "Events"
 
 [js.discord]
 loading = "Loading game..."
@@ -307,6 +309,7 @@ sendPCErrorRateLimit = "You tried to refer too quickly, please wait a moment!"
 sendPCErrorDesc = "You don't have enough PlayCoin balance!"
 loginError = "Login error!"
 loginErrorDesc = "To use this function, you must log in to your PlayClan account!"
+appearanceDesc = "If your custom appearance contains obscene language, server advertisement, appearance similar to a staff member, or your name is deemed illegible, your right to change your appearance right may be revoked and you may be penalized without prior warning."
 
 [js.news]
 loading = "Loading news"
@@ -403,3 +406,11 @@ cutLabel = "Cut"
 copyLabel = "Copy"
 pasteLabel = "Paste"
 selectAllLabel = "Select All"
+
+[js.events]
+creator = "Creator"
+start = "Start"
+end = "End"
+error = "Error"
+errorDesc = "An error occurred while loading the events. Please try again later."
+retry = "Retry"

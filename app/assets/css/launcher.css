@@ -2467,7 +2467,7 @@ input:checked + .toggleSwitchSlider:before {
     height: 100%;
     position: relative;
     transition: background 2s ease;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 /* Upper content container. */
@@ -2636,6 +2636,11 @@ input:checked + .toggleSwitchSlider:before {
 
 .shopDiv hr {
     width: 100%;
+}
+
+.shopDiv .warning {
+    color: #e43030;
+    background: rgba(164, 117, 117, 0.25);
 }
 
 .shopHeader {
@@ -3277,42 +3282,42 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Logo image. */
 #image_seal {
-    height: 90px;
-    width: auto;
     position: relative;
+    height: 80px;
+    width: 80px;
     box-sizing: border-box;
-    border-radius: 50%;
+    cursor: pointer;
 }
 
 /* Logo container styles. */
 #image_seal_container {
+    display: flex;
+    flex-direction: column;
     position: relative;
-    height: 70px;
+    top: 50px;
     width: 70px;
-    border-radius: 50%;
-    margin-top: 50px;
-    cursor: pointer
+    align-items: flex-start;
+    height: calc(100% - 50px);
 }
 
 /* Logo container styles w/ update. */
-#image_seal_container[update]{
-    cursor: pointer
+#update_container[update] {
+    cursor: pointer;
+    position: relative;
 }
-#image_seal_container[update]:before,
-#image_seal_container[update]:after {
+#update_container[update]:before {
     cursor: pointer;
     position: absolute;
     content: '';
     height: 100%;
     width: 100%;
-    top: 15%;
-    left: 12%;
     border-radius: 50%;
-    box-shadow: 0 0 15px #43c628;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.65);
     animation: glow-grow 4s ease-out infinite;
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.35);
+    z-index: -1;
 }
-#image_seal_container[update]:before {
+#update_container[update]:before {
     animation-delay: 2s;
 }
 
@@ -3321,9 +3326,7 @@ input:checked + .toggleSwitchSlider:before {
     cursor: pointer;
     visibility: hidden;
     opacity: 0;
-    width: 100px;
-    height: 15px;
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0, 0.75);
     color: #fff;
     text-align: center;
     border-radius: 4px;
@@ -3331,9 +3334,8 @@ input:checked + .toggleSwitchSlider:before {
     position: absolute;
     z-index: 1;
     top: 145%;
-    left: -10px;
     font-family: 'Avenir Medium';
-    font-size: 12px;
+    font-size: 13px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
 }
 #updateAvailableTooltip::after {
@@ -3346,7 +3348,7 @@ input:checked + .toggleSwitchSlider:before {
     border-style: solid;
     border-color: transparent transparent rgb(0, 0, 0) transparent;
 }
-#image_seal_container[update]:hover #updateAvailableTooltip {
+#update_container[update]:hover #updateAvailableTooltip {
     visibility: visible;
     opacity: 1;
     transition-delay: 0s;
@@ -4494,4 +4496,191 @@ input:checked + .toggleSwitchSlider:before {
 /* Class which is applied when the spinner image is spinning. */
 .rotating {
     animation: rotating 10s linear infinite;
+}
+
+#eventsButtonContainer {
+    position: relative;
+    display: inline-block;
+    margin-top: 25vh;
+    z-index: 1;
+}
+
+#eventsButtonAlert {
+    width: 5px;
+    height: 5px;
+    position: absolute;
+    border-radius: 50%;
+    background: red;
+    right: -1px;
+    top: 50%;
+}
+
+#eventsButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#eventsButton:hover #eventsButtonText,
+#eventsButton:focus #eventsButtonText {
+    text-shadow: 0px 0px 20px #fff, 0px 0px 20px #fff;
+}
+
+#eventsButton:active {
+    color: #c7c7c7;
+    text-shadow: 0px 0px 20px #c7c7c7, 0px 0px 20px #c7c7c7;
+}
+
+#eventsButton:hover #eventsButtonSVG,
+#eventsButton:focus #eventsButtonSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #fff);
+}
+
+#eventsButton:active #eventsButtonSVG .arrowLine {
+    stroke: #c7c7c7;
+}
+
+#eventsButton:active #eventsButtonSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+}
+
+#eventsButton:disabled #eventsButtonSVG .arrowLine {
+    stroke: rgba(255, 255, 255, 0.75);
+}
+
+#eventsButtonSVG {
+    height: 11px;
+    margin-left: -2px;
+    transition: 0.25s ease;
+}
+
+#eventsButtonText {
+    color: white;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0px 0px 20px black;
+    font-size: 11px;
+    line-height: 30px;
+    display: flex;
+    transition: 0.25s ease;
+}
+
+#eventsContainer {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+#eventsContainer::-webkit-scrollbar {
+    width: 2px;
+}
+#eventsContainer::-webkit-scrollbar-track {
+    display: none;
+}
+#eventsContainer::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.50);
+}
+
+#eventsContent {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    border-radius: 10px;
+    padding: 20px;
+    padding-right: 140px;
+    flex-wrap: wrap;
+    transition: all 0.5s ease;
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    padding: 10px;
+    margin: 10px;
+    width: 50vh;
+    justify-content: flex-start;
+}
+
+.event hr {
+    width: 100%;
+}
+
+.event h3 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.event p {
+    margin: 10px 0 0;
+    font-size: 16px;
+}
+
+.event img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+.event a {
+    color: #848484;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.25s ease;
+}
+.event a:hover,
+.event a:focus {
+    color: #a2a2a2;
+    outline: none;
+}
+.event a:active {
+    color: #8b8b8b;
+}
+
+.eventButton {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    transition: 0.25s ease;
+    margin: 10px 0;
+    padding: 10px;
+}
+.eventButton:hover,
+.eventButton:focus {
+    background: rgba(54, 54, 54, 0.25);
+    text-shadow: 0px 0px 20px white;
+}
+
+.eventButton:disabled,
+.eventButton:hover:disabled,
+.eventButton:focus:disabled {
+    background: rgba(0, 0, 0, 0.25);
+    text-shadow: revert;
+    cursor: not-allowed;
+    color: gray;
+}
+
+#eventRefresh {
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+#eventRefresh:hover, #eventRefresh:active {
+    filter: drop-shadow(0px 0px 20px #fff);
 }
