@@ -2442,12 +2442,12 @@ function slideEvents(right){
 // Fetch events from API
 async function fetchEvents(isManual = false) {
     try {
-        if (!isManual) {
-            document.getElementById('eventsButtonAlert').style.display = 'block'
-        }
         const response = await fetch('https://playclan.net/shop/events')
         const events = await response.json()
         displayEvents(events)
+        if (!isManual && events.length > 0) {
+            document.getElementById('eventsButtonAlert').style.display = 'block'
+        }
     } catch (error) {
         console.error('Failed to fetch events:', error)
         const eventsContent = document.getElementById('eventsContent')
