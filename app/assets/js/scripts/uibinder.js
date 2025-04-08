@@ -341,8 +341,8 @@ async function validateSelectedAccount(){
             setOverlayContent(
                 Lang.queryJS('uibinder.loginErrorHeader'),
                 accLen > 0
-                    ? Lang.queryJS('uibinder.loginErrorContent', { 'account': selectedAcc.displayName })
-                    : Lang.queryJS('uibinder.loginErrorContentAnotherAccount', { 'account': selectedAcc.displayName }),
+                    ? Lang.queryJS('uibinder.loginErrorContent', { 'username': selectedAcc.displayName })
+                    : Lang.queryJS('uibinder.loginErrorContentAnotherAccount', { 'username': selectedAcc.displayName }),
                 Lang.queryJS('uibinder.login'),
                 Lang.queryJS('uibinder.anotherAccount')
             )
