@@ -2445,12 +2445,32 @@ async function fetchEvents(isManual = false) {
         const response = await fetch('https://playclan.net/shop/events')
         const events = await response.json()
         displayEvents(events)
+        if (events.length === 0) {
+            const eventsContent = document.getElementById('eventsContent')
+            eventsContent.style.position = 'absolute'
+            eventsContent.style.left = '50%'
+            eventsContent.style.top = '50%'
+            eventsContent.style.transform = 'translate(-50%, -50%)'
+            eventsContent.innerHTML = `<div class="event center"><h3>${Lang.queryJS('events.noEvents')}</h3><p>${Lang.queryJS('events.noEventsDesc')}</p> <button class="eventButton" id="eventRetry">${Lang.queryJS('events.retry')}</button></div>`
+            document.getElementById('eventRetry').onclick = () => fetchEvents(true)
+        } else {
+            // remove position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            const eventsContent = document.getElementById('eventsContent')
+            eventsContent.style.position = 'relative'
+            eventsContent.style.left = '0'
+            eventsContent.style.top = '0'
+            eventsContent.style.transform = 'none'
+        }
         if (!isManual && events.length > 0) {
             document.getElementById('eventsButtonAlert').style.display = 'block'
         }
     } catch (error) {
         console.error('Failed to fetch events:', error)
         const eventsContent = document.getElementById('eventsContent')
+        eventsContent.style.position = 'absolute'
+        eventsContent.style.left = '50%'
+        eventsContent.style.top = '50%'
+        eventsContent.style.transform = 'translate(-50%, -50%)'
         eventsContent.innerHTML = `<div class="event"><h3>${Lang.queryJS('events.error')}</h3><p>${Lang.queryJS('events.errorDesc')}</p> <button class="eventButton" id="eventRetry">${Lang.queryJS('events.retry')}</button></div>`
         document.getElementById('eventRetry').onclick = () => fetchEvents(true)
     }
