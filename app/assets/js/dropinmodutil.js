@@ -1,6 +1,6 @@
 const fs        = require('fs-extra')
 const path      = require('path')
-const { ipcRenderer, shell } = require('electron')
+const { ipcRenderer, shell, webUtils } = require('electron')
 const { SHELL_OPCODE } = require('./ipcconstants')
 
 // Group #1: File Name (without .disabled, if any)
@@ -83,7 +83,7 @@ exports.addDropinMods = function(files, modsdir) {
 
     for(let f of files) {
         if(MOD_REGEX.exec(f.name) != null) {
-            fs.moveSync(f.path, path.join(modsdir, f.name))
+            fs.moveSync(webUtils.getPathForFile(f), path.join(modsdir, f.name))
         }
     }
 
