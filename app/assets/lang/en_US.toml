@@ -146,6 +146,11 @@ desc = "Our goal with this launcher is to provide a better gaming experience to 
 cta = "You are just a few clicks away from discovery!"
 button = "COUNTINUE"
 
+[ejs.language]
+header = "Select Language"
+desc = "Please select your preferred language for the launcher. This will change the language of the user interface text."
+next = "Next"
+
 [js.landing]
 pleaseWait = "Loading..."
 errorStartupTitle = "Startup error"

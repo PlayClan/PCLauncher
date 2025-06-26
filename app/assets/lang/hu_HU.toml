@@ -146,6 +146,11 @@ desc = "Ezzel a launcherrel az a célunk hogy egy jobb játékélményt nyújtsu
 cta = "Csak egy pár kattintásra vagy a felfedezéstől!"
 button = "TOVÁBB"
 
+[ejs.language]
+header = "Válassz nyelvet"
+desc = "Kérjük válassza ki a kívánt nyelvet a launcherhez. Ez megváltoztatja a felhasználói felület szövegének nyelvét."
+next = "Következő"
+
 [js.landing]
 pleaseWait = "Betöltés folyamatban..."
 errorStartupTitle = "Elindítási hiba"
