@@ -364,7 +364,6 @@ body, button {
     align-items: center;
 }
 
-
 /*******************************************************************************
  *                                                                             *
  * Language View (language.ejs)                                                  *
@@ -554,6 +553,203 @@ body, button {
 #languageNextContent {
     display: flex;
     align-items: center;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Version View (version.ejs)                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+#versionContainer {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.50);
+}
+
+#versionContainer::-webkit-scrollbar {
+    width: 2px;
+}
+#versionContainer::-webkit-scrollbar-track {
+    display: none;
+}
+#versionContainer::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.50);
+}
+
+#versionContent {
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    padding: 20px;
+    padding-right: 140px;
+    transition: all 0.5s ease;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+#versionMainContent {
+    display: flex;
+    flex-direction: row;
+}
+
+#versionColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    position: relative;
+    right: 10%;
+}
+
+#versionImageSeal {
+    height: 125px;
+    width: 125px;
+    margin-bottom: 5%;
+    margin-top: 10%;
+}
+
+#versionHeader {
+    font-family: 'Avenir Medium';
+    text-align: center;
+    color: white;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    font-size: 20px;
+    text-shadow: white 0px 0px 0px;
+}
+
+#versionDescription {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 100;
+    text-shadow: rgba(255, 255, 255, 0.75) 0px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* version button styles. */
+#versionClose {
+    background: none;
+    font-weight: bold;
+    letter-spacing: 2px;
+    border: none;
+    padding: 15px 5px;
+    margin: 10px 0px;
+    cursor: pointer;
+    position: absolute;
+    bottom: -60%;
+    transition: 0.5s ease;
+}
+#versionClose:disabled {
+    color: rgba(255, 255, 255, 0.75);
+    pointer-events: none;
+}
+#versionClose:hover,
+#versionClose:focus {
+    text-shadow: 0px 0px 20px #fff;
+    outline: none;
+}
+#versionClose:active {
+    color: #c7c7c7;
+    text-shadow: 0px 0px 20px #c7c7c7;
+}
+#versionSVG {
+    -webkit-transform: translate3d(0, 0, 0);
+    overflow: visible;
+    transform: rotate(90deg);
+    margin-left: 20px;
+    transition: 0.25s ease;
+    width: 20px;
+    height: 20px;
+}
+#versionClose:hover #versionSVG,
+#versionClose:focus #versionSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #fff);
+}
+#versionClose:active #versionSVG .arrowLine {
+    stroke: #c7c7c7;
+}
+#versionClose:active #versionSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+}
+#versionClose:disabled #versionSVG .arrowLine {
+    stroke: rgba(255, 255, 255, 0.75);
+}
+
+#versionCloseContent {
+    display: flex;
+    align-items: center;
+}
+
+#versionReleaseNotes {
+    font-size: 16px;
+    height: 100%;
+    width: 60%;
+    position: absolute;
+    right: -18%;
+    overflow-y: scroll;
+}
+
+/* Styles for the changelog elements. */
+#versionReleaseNotes p {
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+#versionReleaseNotes blockquote {
+    border-left: 0.25em solid rgba(126, 126, 126, 0.95);
+    margin: 0px;
+    padding: 0 0 0 1em;
+    color: rgba(255, 255, 255, 0.85);
+}
+#versionReleaseNotes code {
+    padding: 0.1em 0.4em;
+    font-size: 85%;
+    background-color: rgba(255, 255, 255, 0.25);
+    color: white;
+    border-radius: 3px;
+    font-family: 'Avenir Book';
+}
+#versionReleaseNotes li+li {
+    margin-top: .25em;
+}
+#versionReleaseNotes a {
+    font-weight: 400;
+    color: #ffffff;
+    text-decoration: none;
+}
+#versionReleaseNotes a:hover,
+#versionReleaseNotes a:focus {
+    color: #a2a2a2;
+    outline: none;
+}
+#versionReleaseNotes a:active {
+    color: #8b8b8b;
+}
+
+#versionReleaseNotes tt {
+    padding: 0.1em 0.4em;
+    font-size: 86%;
+    background-color: white;
+    border-radius: 3px;
+    color: black;
+    font-weight: bold;
+}
+#versionReleaseNotes .highlight {
+    background: rgba(0, 0, 0, 0.30);
+    user-select: initial;
+    padding: 5px 10px;
+}
+#versionReleaseNotes .highlight pre {
+    margin: 0px;
 }
 
 /*******************************************************************************

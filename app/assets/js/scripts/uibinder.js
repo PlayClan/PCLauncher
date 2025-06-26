@@ -22,7 +22,8 @@ const VIEWS = {
     welcome: '#welcomeContainer',
     waiting: '#waitingContainer',
     waitingpc: '#waitingpcContainer',
-    language: '#languageContainer'
+    language: '#languageContainer',
+    version: '#versionContainer'
 }
 
 // The currently shown view container.
@@ -89,6 +90,8 @@ async function showMainUI(data){
         }
 
         if(ConfigManager.isFirstLaunch()){
+            ConfigManager.setLauncherVersion(remote.app.getVersion())
+            ConfigManager.save()
             currentView = VIEWS.language
             $(VIEWS.language).fadeIn(1000)
         } else if (!ConfigManager.getLanguageAsked()) {
@@ -96,8 +99,13 @@ async function showMainUI(data){
             $(VIEWS.language).fadeIn(1000)
         } else {
             if(isLoggedIn){
-                currentView = VIEWS.landing
-                $(VIEWS.landing).fadeIn(1000)
+                if (ConfigManager.getLauncherVersion() !== remote.app.getVersion()) {
+                    currentView = VIEWS.version
+                    $(VIEWS.version).fadeIn(1000)
+                } else {
+                    currentView = VIEWS.landing
+                    $(VIEWS.landing).fadeIn(1000)
+                }
             } else {
                 loginOptionsCancelEnabled(false)
                 loginOptionsViewOnLoginSuccess = VIEWS.landing

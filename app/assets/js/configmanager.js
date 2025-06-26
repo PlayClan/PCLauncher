@@ -86,6 +86,7 @@ const DEFAULT_CONFIG = {
             language: 'hu_HU',
             autoConnectAsked: false,
             languageAsked: false,
+            launcherVersion: null,
             dataDirectory: dataPath
         }
     },
@@ -850,4 +851,12 @@ exports.getLanguageAsked = function(def = false){
 
 exports.setLanguageAsked = function(languageAsked){
     config.settings.launcher.languageAsked = languageAsked
+}
+
+exports.getLauncherVersion = function(def = false){
+    return !def ? config.settings.launcher.launcherVersion : DEFAULT_CONFIG.settings.launcher.launcherVersion
+}
+
+exports.setLauncherVersion = function(launcherVersion){
+    config.settings.launcher.launcherVersion = launcherVersion
 }

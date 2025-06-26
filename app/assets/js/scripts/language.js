@@ -27,6 +27,10 @@ document.getElementById('languageNext').addEventListener('click', e => {
     if (ConfigManager.getSelectedAccount() == null) {
         switchView(VIEWS.language, VIEWS.welcome, 500, 500)
     } else {
-        switchView(VIEWS.language, VIEWS.landing, 500, 500)
+        if (ConfigManager.getLauncherVersion() !== remote.app.getVersion()) {
+            switchView(VIEWS.language, VIEWS.version, 500, 500)
+        } else {
+            switchView(VIEWS.language, VIEWS.landing, 500, 500)
+        }
     }
 })

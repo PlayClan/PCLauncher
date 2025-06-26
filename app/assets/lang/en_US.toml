@@ -151,6 +151,11 @@ header = "Select Language"
 desc = "Please select your preferred language for the launcher. This will change the language of the user interface text."
 next = "Next"
 
+[ejs.version]
+header = "Release Notes"
+desc = "PlayClan Launcher has been updated to the newest version! Here you can find the latest changes and new features."
+close = "Close"
+
 [js.landing]
 pleaseWait = "Loading..."
 errorStartupTitle = "Startup error"

@@ -151,6 +151,11 @@ header = "Válassz nyelvet"
 desc = "Kérjük válassza ki a kívánt nyelvet a launcherhez. Ez megváltoztatja a felhasználói felület szövegének nyelvét."
 next = "Következő"
 
+[ejs.version]
+header = "Újdonságok"
+desc = "A PlayClan Launcher új verzióra frissült! Itt találhatók a legfrissebb változtatások és újdonságok."
+close = "Bezárás"
+
 [js.landing]
 pleaseWait = "Betöltés folyamatban..."
 errorStartupTitle = "Elindítási hiba"

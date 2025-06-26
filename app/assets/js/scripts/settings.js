@@ -1608,6 +1608,7 @@ function populateAboutVersionInformation(){
  * of the current version. This value is displayed on the UI.
  */
 function populateReleaseNotes(){
+    const versionReleaseNotes = document.getElementById('versionReleaseNotes')
     $.ajax({
         url: 'https://github.com/PlayClan/PCLauncher/releases.atom',
         success: (data) => {
@@ -1639,11 +1640,14 @@ function populateReleaseNotes(){
                             // Display based on selected language
                             const currentLang = ConfigManager.getLanguage();
                             settingsAboutChangelogText.innerHTML = currentLang === 'hu_HU' ? hungarianContent : englishContent;
+                            versionReleaseNotes.innerHTML = currentLang === 'hu_HU' ? hungarianContent : englishContent;
                         } else {
                             settingsAboutChangelogText.innerHTML = removeH2Tags(content);
+                            versionReleaseNotes.innerHTML = removeH2Tags(content);
                         }
                     } else {
                         settingsAboutChangelogText.innerHTML = removeH2Tags(content);
+                        versionReleaseNotes.innerHTML = removeH2Tags(content);
                     }
                     settingsAboutChangelogButton.href = entry.find('link').attr('href')
                 }
@@ -1653,6 +1657,7 @@ function populateReleaseNotes(){
         timeout: 2500
     }).catch(err => {
         settingsAboutChangelogText.innerHTML = Lang.queryJS('settings.changelogError')
+        versionReleaseNotes.innerHTML = Lang.queryJS('settings.changelogError')
     })
 }
 
