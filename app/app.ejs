@@ -1,7 +1,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" http-equiv="Content-Security-Policy" content="script-src 'self' 'sha256-In6B8teKZQll5heMl9bS7CESTbGvuAt3VVV86BUQBDk='"/>
-    <title><%= lang('app.title') %></title>
+    <title><span data-lang='app.title'></span></title>
     <script src="./assets/js/scripts/uicore.js"></script>
     <script src="./assets/js/scripts/uibinder.js"></script>
     <link type="text/css" rel="stylesheet" href="./assets/css/launcher.css">
@@ -43,7 +43,7 @@
         <div id="loadingContent">
             <div id="loadSpinnerContainer">
                 <img id="loadCenterImage" src="assets/images/LoadingSeal.png" draggable="false">
-                <p id="loadCenterText"><%= lang('app.loading') %></p>
+                <p id="loadCenterText"><span data-lang='app.loading'></span></p>
             </div>
         </div>
     </div>

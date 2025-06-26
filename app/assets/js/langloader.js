@@ -88,6 +88,8 @@ exports.updateDOM = function(root = document) {
         const langKey = element.getAttribute('data-lang')
         element.textContent = exports.queryEJS(langKey)
     })
-    
+    // Special cases
+    $('#shopButtonText').text(exports.queryJS('shop.open')).fadeIn(500)
+
     logger.info(`Updated ${elements.length} language elements in the DOM`)
 }

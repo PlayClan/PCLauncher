@@ -1,6 +1,6 @@
 <div id="overlayContainer" style="display: none;">
     <div id="serverSelectContent" style="display: none;">
-        <span id="serverSelectHeader"><%= lang('overlay.serverHeader') %></span>
+        <span id="serverSelectHeader"><span data-lang='overlay.serverHeader'></span></span>
         <div id="serverSelectList">
             <div id="serverSelectListScrollable">
                 <!-- Server listings populated here. -->
@@ -9,21 +9,21 @@
         <div id="serverSelectActions">
             <!-- <button id="serverSelectConfirm" class="overlayKeybindEnter" type="submit">Kiválasztás</button> -->
             <div id="serverSelectCancelWrapper">
-                <button id="serverSelectCancel" class="overlayKeybindEsc"><%= lang('overlay.cancel') %></button>
+                <button id="serverSelectCancel" class="overlayKeybindEsc"><span data-lang='overlay.cancel'></span></button>
             </div>
         </div>
     </div>
     <div id="accountSelectContent" style="display: none;">
-        <span id="accountSelectHeader"><%= lang('overlay.accountHeader') %></span>
+        <span id="accountSelectHeader"><span data-lang='overlay.accountHeader'></span></span>
         <div id="accountSelectList">
             <div id="accountSelectListScrollable">
                 <!-- Accounts populated here. -->
             </div>
         </div>
         <div id="accountSelectActions">
-            <!-- <button id="accountSelectConfirm" class="overlayKeybindEnter" type="submit"><%= lang('overlay.select') %></button> -->
+            <!-- <button id="accountSelectConfirm" class="overlayKeybindEnter" type="submit"><span data-lang='overlay.select'></span></button> -->
             <div id="accountSelectCancelWrapper">
-                <button id="accountSelectCancel" class="overlayKeybindEsc"><%= lang('overlay.cancel') %></button>
+                <button id="accountSelectCancel" class="overlayKeybindEsc"><span data-lang='overlay.cancel'></span></button>
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
         <div id="overlayActionContainer">
             <button id="overlayAcknowledge" class="overlayKeybindEnter">Conare Iterum</button>
             <div id="overlayDismissWrapper">
-                <button id="overlayDismiss" style="display: none;" class="overlayKeybindEsc"><%= lang('overlay.cancel') %></button>
+                <button id="overlayDismiss" style="display: none;" class="overlayKeybindEsc"><span data-lang='overlay.cancel'></span></button>
             </div>
         </div>
     </div>

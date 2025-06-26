@@ -2,21 +2,21 @@
     <div id="settingsContainerLeft">
         <div id="settingsNavContainer">
             <div id="settingsNavHeader">
-                <span id="settingsNavHeaderText"><%= lang('settings.navbar.header') %></span>
+                <span id="settingsNavHeaderText"><span data-lang='settings.navbar.header'></span></span>
             </div>
             <div id="settingsNavItemsContainer">
                 <div id="settingsNavItemsContent">
-                    <button class="settingsNavItem" rSc="settingsTabAccount" id="settingsNavAccount" selected><%= lang('settings.navbar.account') %></button>
-                    <button class="settingsNavItem" rSc="settingsTabMinecraft"><%= lang('settings.navbar.minecraft') %></button>
-                    <button class="settingsNavItem" rSc="settingsTabMods"><%= lang('settings.navbar.mods') %></button>
-                    <button class="settingsNavItem" rSc="settingsTabJava"><%= lang('settings.navbar.java') %></button>
-                    <button class="settingsNavItem" rSc="settingsTabLauncher"><%= lang('settings.navbar.launcher') %></button>
+                    <button class="settingsNavItem" rSc="settingsTabAccount" id="settingsNavAccount" selected><span data-lang='settings.navbar.account'></span></button>
+                    <button class="settingsNavItem" rSc="settingsTabMinecraft"><span data-lang='settings.navbar.minecraft'></span></button>
+                    <button class="settingsNavItem" rSc="settingsTabMods"><span data-lang='settings.navbar.mods'></span></button>
+                    <button class="settingsNavItem" rSc="settingsTabJava"><span data-lang='settings.navbar.java'></span></button>
+                    <button class="settingsNavItem" rSc="settingsTabLauncher"><span data-lang='settings.navbar.launcher'></span></button>
                     <div class="settingsNavSpacer"></div>
-                    <button class="settingsNavItem" rSc="settingsTabAbout" id="settingsNavAbount"><%= lang('settings.navbar.about') %></button>
-                    <button class="settingsNavItem" rSc="settingsTabUpdate" id="settingsNavUpdate"><%= lang('settings.navbar.updates') %></button>
+                    <button class="settingsNavItem" rSc="settingsTabAbout" id="settingsNavAbount"><span data-lang='settings.navbar.about'></span></button>
+                    <button class="settingsNavItem" rSc="settingsTabUpdate" id="settingsNavUpdate"><span data-lang='settings.navbar.updates'></span></button>
                     <div id="settingsNavContentBottom">
                         <div class="settingsNavDivider"></div>
-                        <button id="settingsNavDone"><%= lang('settings.navbar.done') %></button>
+                        <button id="settingsNavDone"><span data-lang='settings.navbar.done'></span></button>
                     </div>
                 </div>
             </div>
@@ -25,17 +25,17 @@
     <div id="settingsContainerRight">
         <div id="settingsTabAccount" class="settingsTab">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText"><%= lang('settings.account.header') %></span>
-                <span class="settingsTabHeaderDesc"><%= lang('settings.account.desc') %></span>
+                <span class="settingsTabHeaderText"><span data-lang='settings.account.header'></span></span>
+                <span class="settingsTabHeaderDesc"><span data-lang='settings.account.desc'></span></span>
             </div>
             <div class="settingsAuthAccountTypeContainer">
                 <div class="settingsAuthAccountTypeHeader">
                     <div class="settingsAuthAccountTypeHeaderLeft">
                         <img src="./assets/images/SealCircle.ico" width="22" height="22" />
-                        <span><%= lang('settings.account.playclan') %></span>
+                        <span><span data-lang='settings.account.playclan'></span></span>
                     </div>
                     <div class="settingsAuthAccountTypeHeaderRight">
-                        <button class="settingsAddAuthAccount" id="settingsAddPlayClanAccount"><%= lang('settings.account.playclanAdd') %></button>
+                        <button class="settingsAddAuthAccount" id="settingsAddPlayClanAccount"><span data-lang='settings.account.playclanAdd'></span></button>
                     </div>
                 </div>
                 
@@ -54,10 +54,10 @@
                             <path fill="#05a6f0" d="M1 12h10v10H1z" />
                             <path fill="#ffba08" d="M12 12h10v10H12z" />
                         </svg>
-                        <span><%= lang('settings.account.microsoft') %></span>
+                        <span><span data-lang='settings.account.microsoft'></span></span>
                     </div>
                     <div class="settingsAuthAccountTypeHeaderRight">
-                        <button class="settingsAddAuthAccount" id="settingsAddMicrosoftAccount"><%= lang('settings.account.microsoftAdd') %></button>
+                        <button class="settingsAddAuthAccount" id="settingsAddMicrosoftAccount"><span data-lang='settings.account.microsoftAdd'></span></button>
                     </div>
                 </div>
                 
@@ -68,11 +68,11 @@
         </div>
         <div id="settingsTabMinecraft" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText"><%= lang('settings.minecraft.header') %></span>
-                <span class="settingsTabHeaderDesc"><%= lang('settings.minecraft.desc') %></span>
+                <span class="settingsTabHeaderText"><span data-lang='settings.minecraft.header'></span></span>
+                <span class="settingsTabHeaderDesc"><span data-lang='settings.minecraft.desc'></span></span>
             </div>
             <div id="settingsGameResolutionContainer">
-                <span class="settingsFieldTitle"><%= lang('settings.minecraft.resolution') %></span>
+                <span class="settingsFieldTitle"><span data-lang='settings.minecraft.resolution'></span></span>
                 <div id="settingsGameResolutionContent">
                     <input type="number" id="settingsGameWidth" min="0" cValue="GameWidth">
                     <div id="settingsGameResolutionCross">&#10006;</div>
@@ -92,7 +92,7 @@
             </div> -->
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%= lang('settings.minecraft.autoconnect') %></span>
+                    <span class="settingsFieldTitle"><span data-lang='settings.minecraft.autoconnect'></span></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -103,8 +103,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%= lang('settings.minecraft.detach') %></span>
-                    <span class="settingsFieldDesc"><%= lang('settings.minecraft.detachDesc') %></span>
+                    <span class="settingsFieldTitle"><span data-lang='settings.minecraft.detach'></span></span>
+                    <span class="settingsFieldDesc"><span data-lang='settings.minecraft.detachDesc'></span></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -116,8 +116,8 @@
         </div>
         <div id="settingsTabMods" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText"><%= lang('settings.mods.header') %></span>
-                <span class="settingsTabHeaderDesc"><%= lang('settings.mods.desc') %></span>
+                <span class="settingsTabHeaderText"><span data-lang='settings.mods.header'></span></span>
+                <span class="settingsTabHeaderDesc"><span data-lang='settings.mods.desc'></span></span>
             </div>
             <div class="settingsSelServContainer">
                 <div class="settingsSelServContent">
@@ -125,37 +125,37 @@
                 </div>
                 <div class="settingsSwitchServerContainer">
                     <div class="settingsSwitchServerContent">
-                        <button class="settingsSwitchServerButton"><%= lang('settings.mods.change') %></button>
+                        <button class="settingsSwitchServerButton"><span data-lang='settings.mods.change'></span></button>
                     </div>
                 </div>
             </div>
             <div id="settingsModsContainer">
                 <div id="settingsReqModsContainer">
-                    <div class="settingsModsHeader"><%= lang('settings.mods.required') %></div>
+                    <div class="settingsModsHeader"><span data-lang='settings.mods.required'></span></div>
                     <div id="settingsReqModsContent">
 
                     </div>
                 </div>
                 <div id="settingsOptModsContainer">
-                    <div class="settingsModsHeader"><%= lang('settings.mods.optional') %></div>
+                    <div class="settingsModsHeader"><span data-lang='settings.mods.optional'></span></div>
                     <div id="settingsOptModsContent">
                         
                     </div>
                 </div>
                 <div id="settingsDropinModsContainer">
-                    <div class="settingsModsHeader"><%= lang('settings.mods.mods') %></div>
-                    <button id="settingsDropinFileSystemButton"><%= lang('settings.mods.add') %> <span id="settingsDropinRefreshNote"><%= lang('settings.mods.refresh') %></span></button>
+                    <div class="settingsModsHeader"><span data-lang='settings.mods.mods'></span></div>
+                    <button id="settingsDropinFileSystemButton"><span data-lang='settings.mods.add'></span> <span id="settingsDropinRefreshNote"><span data-lang='settings.mods.refresh'></span></span></button>
                     <div id="settingsDropinModsContent">
                         
                     </div>
                 </div>
                 <div id="settingsShadersContainer">
-                    <div class="settingsModsHeader"><%= lang('settings.mods.shaders') %></div>
-                    <div id="settingsShaderpackDesc"><%= lang('settings.mods.shadersDesc') %></div>
+                    <div class="settingsModsHeader"><span data-lang='settings.mods.shaders'></span></div>
+                    <div id="settingsShaderpackDesc"><span data-lang='settings.mods.shadersDesc'></span></div>
                     <div id="settingsShaderpackWrapper">
                         <button id="settingsShaderpackButton"> + </button>
                         <div class="settingsSelectContainer">
-                            <div class="settingsSelectSelected" id="settingsShadersSelected"><%= lang('settings.mods.shadersSelect') %></div>
+                            <div class="settingsSelectSelected" id="settingsShadersSelected"><span data-lang='settings.mods.shadersSelect'></span></div>
                             <div class="settingsSelectOptions" id="settingsShadersOptions" hidden>
 
                             </div>
@@ -166,8 +166,8 @@
         </div>
         <div id="settingsTabJava" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText"><%= lang('settings.java.header') %></span>
-                <span class="settingsTabHeaderDesc"><%= lang('settings.java.desc') %></span>
+                <span class="settingsTabHeaderText"><span data-lang='settings.java.header'></span></span>
+                <span class="settingsTabHeaderDesc"><span data-lang='settings.java.desc'></span></span>
             </div>
             <div class="settingsSelServContainer">
                 <div class="settingsSelServContent">
@@ -175,16 +175,16 @@
                 </div>
                 <div class="settingsSwitchServerContainer">
                     <div class="settingsSwitchServerContent">
-                        <button class="settingsSwitchServerButton"><%= lang('settings.java.change') %></button>
+                        <button class="settingsSwitchServerButton"><span data-lang='settings.java.change'></span></button>
                     </div>
                 </div>
             </div>
             <div id="settingsMemoryContainer">
-                <div id="settingsMemoryTitle"><%= lang('settings.java.memory') %></div>
+                <div id="settingsMemoryTitle"><span data-lang='settings.java.memory'></span></div>
                 <div id="settingsMemoryContent">
                     <div id="settingsMemoryContentLeft">
                         <div class="settingsMemoryContentItem">
-                            <span class="settingsMemoryHeader"><%= lang('settings.java.memoryMax') %></span>
+                            <span class="settingsMemoryHeader"><span data-lang='settings.java.memoryMax'></span></span>
                             <div class="settingsMemoryActionContainer">
                                 <div id="settingsMaxRAMRange" class="rangeSlider" cValue="MaxRAM" serverDependent min="3" max="8" value="3" step="0.5">
                                     <div class="rangeSliderBar"></div>
@@ -194,7 +194,7 @@
                             </div>
                         </div>
                         <div class="settingsMemoryContentItem">
-                            <span class="settingsMemoryHeader"><%= lang('settings.java.memoryMin') %></span>
+                            <span class="settingsMemoryHeader"><span data-lang='settings.java.memoryMin'></span></span>
                             <div class="settingsMemoryActionContainer">
                                 <div id="settingsMinRAMRange" class="rangeSlider" cValue="MinRAM" serverDependent min="3" max="8" value="3" step="0.5">
                                     <div class="rangeSliderBar"></div>
@@ -203,16 +203,16 @@
                                 <span id="settingsMinRAMLabel" class="settingsMemoryLabel">3G</span>
                             </div>
                         </div>
-                        <div id="settingsMemoryDesc"><%= lang('settings.java.memoryDesc') %></div>
+                        <div id="settingsMemoryDesc"><span data-lang='settings.java.memoryDesc'></span></div>
                     </div>
                     <div id="settingsMemoryContentRight">
                         <div id="settingsMemoryStatus">
                             <div class="settingsMemoryStatusContainer">
-                                <span class="settingsMemoryStatusTitle"><%= lang('settings.java.memoryTotal') %></span>
+                                <span class="settingsMemoryStatusTitle"><span data-lang='settings.java.memoryTotal'></span></span>
                                 <span id="settingsMemoryTotal" class="settingsMemoryStatusValue">16G</span>
                             </div>
                             <div class="settingsMemoryStatusContainer">
-                                <span class="settingsMemoryStatusTitle"><%= lang('settings.java.memoryAvailable') %></span>
+                                <span class="settingsMemoryStatusTitle"><span data-lang='settings.java.memoryAvailable'></span></span>
                                 <span id="settingsMemoryAvail" class="settingsMemoryStatusValue">7.3G</span>
                             </div>
                         </div>
@@ -220,7 +220,7 @@
                 </div>
             </div>
             <div class="settingsFileSelContainer">
-                <div class="settingsFileSelTitle"><%= lang('settings.java.executable') %></div>
+                <div class="settingsFileSelTitle"><span data-lang='settings.java.executable'></span></div>
                 <div class="settingsFileSelContent">
                     <div id="settingsJavaExecDetails">Kiválasztva: Java 8 Update 172 (x64)</div>
                     <div class="settingsFileSelActions">
@@ -239,13 +239,13 @@
                             </svg>
                         </div>
                         <input class="settingsFileSelVal" id="settingsJavaExecVal" type="text" value="null" cValue="JavaExecutable" serverDependent disabled>
-                        <button class="settingsFileSelButton" id="settingsJavaExecSel" dialogTitle="Select Java Executable" dialogDirectory="false"><%= lang('settings.java.select') %></button>
+                        <button class="settingsFileSelButton" id="settingsJavaExecSel" dialogTitle="Select Java Executable" dialogDirectory="false"><span data-lang='settings.java.select'></span></button>
                     </div>
                 </div>
-                <div class="settingsFileSelDesc"><%= lang('settings.java.execDesc') %> <strong id="settingsJavaReqDesc">Java 8 x64 szükséges.</strong><br><%= lang('settings.java.execPath') %> <strong>bin<%= process.platform === 'win32' ? '\\javaw.exe' : '/java' %></strong>.</div>
+                <div class="settingsFileSelDesc"><span data-lang='settings.java.execDesc'></span> <strong id="settingsJavaReqDesc">Java 8 x64 szükséges.</strong><br><span data-lang='settings.java.execPath'></span> <strong>bin<%= process.platform === 'win32' ? '\\javaw.exe' : '/java' %></strong>.</div>
             </div>
             <div id="settingsJVMOptsContainer">
-                <div id="settingsJVMOptsTitle"><%= lang('settings.java.other') %></div>
+                <div id="settingsJVMOptsTitle"><span data-lang='settings.java.other'></span></div>
                 <div id="settingsJVMOptsContent">
                     <div class="settingsFileSelIcon">
                         <svg class="settingsFileSelSVG" x="0px" y="0px" viewBox="0 0 305.001 305.001">
@@ -263,18 +263,18 @@
                     </div>
                     <input id="settingsJVMOptsVal" cValue="JVMOptions" serverDependent type="text">
                 </div>
-                <div id="settingsJVMOptsDesc"><%- lang('settings.java.otherDesc') %><br><a href="https://docs.oracle.com/javase/8/docs/technotes/tools/<%= process.platform === 'win32' ? 'windows' : 'unix' %>/java.html" id="settingsJvmOptsLink">A Java 8 elérhető opciói</a>.</div>
+                <div id="settingsJVMOptsDesc"><span data-lang='settings.java.otherDesc'></span><br><a href="https://docs.oracle.com/javase/8/docs/technotes/tools/<%= process.platform === 'win32' ? 'windows' : 'unix' %>/java.html" id="settingsJvmOptsLink">A Java 8 elérhető opciói</a>.</div>
             </div>
         </div>
         <div id="settingsTabLauncher" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText"><%= lang('settings.launcher.header') %></span>
-                <span class="settingsTabHeaderDesc"><%= lang('settings.launcher.desc') %></span>
+                <span class="settingsTabHeaderText"><span data-lang='settings.launcher.header'></span></span>
+                <span class="settingsTabHeaderDesc"><span data-lang='settings.launcher.desc'></span></span>
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%= lang('settings.launcher.beta') %></span>
-                    <span class="settingsFieldDesc"><%- lang('settings.launcher.betaDesc') %></span>
+                    <span class="settingsFieldTitle"><span data-lang='settings.launcher.beta'></span></span>
+                    <span class="settingsFieldDesc"><span data-lang='settings.launcher.betaDesc'></span></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -285,8 +285,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%= lang('settings.launcher.discord') %></span>
-                    <span class="settingsFieldDesc"><%= lang('settings.launcher.discordDesc') %></span>
+                    <span class="settingsFieldTitle"><span data-lang='settings.launcher.discord'></span></span>
+                    <span class="settingsFieldDesc"><span data-lang='settings.launcher.discordDesc'></span></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -297,8 +297,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%= lang('settings.launcher.hide') %></span>
-                    <span class="settingsFieldDesc"><%= lang('settings.launcher.hideDesc') %></span>
+                    <span class="settingsFieldTitle"><span data-lang='settings.launcher.hide'></span></span>
+                    <span class="settingsFieldDesc"><span data-lang='settings.launcher.hideDesc'></span></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -309,8 +309,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%= lang('settings.launcher.ipProtection') %></span>
-                    <span class="settingsFieldDesc"><%- lang('settings.launcher.ipProtectionDesc') %></span>
+                    <span class="settingsFieldTitle"><span data-lang='settings.launcher.ipProtection'></span></span>
+                    <span class="settingsFieldDesc"><span data-lang='settings.launcher.ipProtectionDesc'></span></span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -321,12 +321,12 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%= lang('settings.launcher.language') %></span>
-                    <span class="settingsFieldDesc"><%- lang('settings.launcher.languageDesc') %></span>
+                    <span class="settingsFieldTitle"><span data-lang='settings.launcher.language'></span></span>
+                    <span class="settingsFieldDesc"><span data-lang='settings.launcher.languageDesc'></span></span>
                 </div>
                 <div id="settingsShaderpackWrapper">
                     <div class="settingsSelectContainer">
-                        <div class="settingsSelectSelected" id="settingsLanguageSelected"><%= lang('app.language') %></div>
+                        <div class="settingsSelectSelected" id="settingsLanguageSelected"><span data-lang='app.language'></span></div>
                         <div class="settingsSelectOptions" id="settingsLanguageOptions" hidden>
 
                         </div>
@@ -335,7 +335,7 @@
             </div>
             <div class="settingsFileSelContainer">
                 <div class="settingsFileSelContent">
-                    <div class="settingsFieldTitle" id="settingsDataDirTitle"><%= lang('settings.launcher.folder') %></div>
+                    <div class="settingsFieldTitle" id="settingsDataDirTitle"><span data-lang='settings.launcher.folder'></span></div>
                     <div class="settingsFileSelActions">
                         <div class="settingsFileSelIcon">
                             <svg class="settingsFileSelSVG">
@@ -347,22 +347,22 @@
                             </svg>
                         </div>
                         <input class="settingsFileSelVal" type="text" value="null" cValue="DataDirectory" disabled>
-                        <button class="settingsFileSelButton" dialogTitle="Select Data Directory" dialogDirectory="true"><%= lang('settings.launcher.folderChoose') %></button>
+                        <button class="settingsFileSelButton" dialogTitle="Select Data Directory" dialogDirectory="true"><span data-lang='settings.launcher.folderChoose'></span></button>
                     </div>
                 </div>
-                <div class="settingsFileSelDesc"><%- lang('settings.launcher.folderDesc') %></div>
+                <div class="settingsFileSelDesc"><span data-lang='settings.launcher.folderDesc'></span></div>
             </div>
         </div>
         <div id="settingsTabAbout" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText"><%= lang('settings.about.header') %></span>
-                <span class="settingsTabHeaderDesc"><%= lang('settings.about.desc') %></span>
+                <span class="settingsTabHeaderText"><span data-lang='settings.about.header'></span></span>
+                <span class="settingsTabHeaderDesc"><span data-lang='settings.about.desc'></span></span>
             </div>
             <div id="settingsAboutCurrentContainer">
                 <div id="settingsAboutCurrentContent">
                     <div id="settingsAboutCurrentHeadline">
                         <img id="settingsAboutLogo" src="./assets/images/SealCircle.ico">
-                        <span id="settingsAboutTitle"><%= lang('settings.about.title') %></span>
+                        <span id="settingsAboutTitle"><span data-lang='settings.about.title'></span></span>
                     </div>
                     <div id="settingsAboutCurrentVersion">
                         <div id="settingsAboutCurrentVersionCheck">&#10003;</div>
@@ -376,37 +376,37 @@
                     </div>
                 </div>
                 <div id="settingsAboutButtons">
-                    <a href="https://github.com/PlayClan/PCLauncher" id="settingsAboutSourceButton" class="settingsAboutButton"><%= lang('settings.about.source') %></a>
+                    <a href="https://github.com/PlayClan/PCLauncher" id="settingsAboutSourceButton" class="settingsAboutButton"><span data-lang='settings.about.source'></span></a>
                     <!-- The following must be included in third-party usage. -->
-                    <a href="https://github.com/dscalzi/HeliosLauncher" id="settingsAboutSourceButton" class="settingsAboutButton"><%= lang('settings.about.originalSource') %></a>
-                    <a href="https://dc.playclan.net" id="settingsAboutSupportButton" class="settingsAboutButton"><%= lang('settings.about.help') %></a>
-                    <a href="#" id="settingsAboutDevToolsButton" class="settingsAboutButton"><%= lang('settings.about.devtools') %></a>
+                    <a href="https://github.com/dscalzi/HeliosLauncher" id="settingsAboutSourceButton" class="settingsAboutButton"><span data-lang='settings.about.originalSource'></span></a>
+                    <a href="https://dc.playclan.net" id="settingsAboutSupportButton" class="settingsAboutButton"><span data-lang='settings.about.help'></span></a>
+                    <a href="#" id="settingsAboutDevToolsButton" class="settingsAboutButton"><span data-lang='settings.about.devtools'></span></a>
                 </div>
             </div>
             <div class="settingsChangelogContainer">
                 <div class="settingsChangelogContent">
                     <div class="settingsChangelogHeadline">
-                        <div class="settingsChangelogLabel"><%= lang('settings.about.changelog') %></div>
-                        <div class="settingsChangelogTitle"><%= lang('settings.about.changes') %></div>
+                        <div class="settingsChangelogLabel"><span data-lang='settings.about.changelog'></span></div>
+                        <div class="settingsChangelogTitle"><span data-lang='settings.about.changes'></span></div>
                     </div>
                     <div class="settingsChangelogText">
-                        <%= lang('settings.about.noChanges') %>
+                        <span data-lang='settings.about.noChanges'></span>
                     </div>
                 </div>
                 <div class="settingsChangelogActions">
-                    <a class="settingsChangelogButton settingsAboutButton" href="#"><%= lang('settings.about.changesGithub') %></a>
+                    <a class="settingsChangelogButton settingsAboutButton" href="#"><span data-lang='settings.about.changesGithub'></span></a>
                 </div>
             </div>
         </div>
         <div id="settingsTabUpdate" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText"><%= lang('settings.updates.header') %></span>
-                <span class="settingsTabHeaderDesc"><%= lang('settings.updates.desc') %></span>
+                <span class="settingsTabHeaderText"><span data-lang='settings.updates.header'></span></span>
+                <span class="settingsTabHeaderDesc"><span data-lang='settings.updates.desc'></span></span>
             </div>
             <div id="settingsUpdateStatusContainer">
                 <div id="settingsUpdateStatusContent">
                     <div id="settingsUpdateStatusHeadline">
-                        <span id="settingsUpdateTitle"><%= lang('settings.updates.uptodate') %></span>
+                        <span id="settingsUpdateTitle"><span data-lang='settings.updates.uptodate'></span></span>
                     </div>
                     <div id="settingsUpdateVersion">
                         <div id="settingsUpdateVersionCheck">&#10003;</div>
@@ -419,18 +419,18 @@
                         </div>
                     </div>
                     <div id="settingsUpdateActionContainer">
-                        <button id="settingsUpdateActionButton"><%= lang('settings.updates.search') %></button>
+                        <button id="settingsUpdateActionButton"><span data-lang='settings.updates.search'></span></button>
                     </div>
                 </div>
             </div>
             <div class="settingsChangelogContainer">
                 <div class="settingsChangelogContent">
                     <div class="settingsChangelogHeadline">
-                        <div class="settingsChangelogLabel"><%= lang('settings.updates.whatsnew') %></div>
-                        <div class="settingsChangelogTitle"><%= lang('settings.updates.changes') %></div>
+                        <div class="settingsChangelogLabel"><span data-lang='settings.updates.whatsnew'></span></div>
+                        <div class="settingsChangelogTitle"><span data-lang='settings.updates.changes'></span></div>
                     </div>
                     <div class="settingsChangelogText">
-                        <%= lang('settings.updates.noChanges') %>
+                        <span data-lang='settings.updates.noChanges'></span>
                     </div>
                 </div>
             </div>

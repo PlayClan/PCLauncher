@@ -4,14 +4,14 @@
         <div class="cloudBottom"></div>
     </div>-->
     <div id="welcomeContent">
-        <img id="welcomeImageSeal" src="assets/images/SealCircle.ico"/>
-        <span id="welcomeHeader"><%= lang('welcome.header') %></span>
-        <span id="welcomeDescription"><%= lang('welcome.desc') %></span>
+        <img id="welcomeImageSeal" src="assets/images/SealCircle.ico" draggable="false" />
+        <span id="welcomeHeader"><span data-lang='welcome.header'></span></span>
+        <span id="welcomeDescription"><span data-lang='welcome.desc'></span></span>
         <br>
-        <span id="welcomeDescCTA"><%= lang('welcome.cta') %></span>
+        <span id="welcomeDescCTA"><span data-lang='welcome.cta'></span></span>
         <button id="welcomeButton">
             <div id="welcomeButtonContent">
-                <%= lang('welcome.button') %>
+                <span data-lang='welcome.button'></span>
                 <svg id="welcomeSVG" viewBox="0 0 24.87 13.97">
                     <defs>
                         <style>.arrowLine{fill:none;stroke:#FFF;stroke-width:2px;transition: 0.25s ease;}</style>
