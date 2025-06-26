@@ -269,13 +269,18 @@ const refreshPlayClanStatus = async function(){
     for(let i=0; i<statuses.length; i++){
         const service = statuses[i]
 
-        let isOnline
-        let players
+        let isOnline = false
+        let players = "Offline"
 
         try {
             const response = await getServerStatus(47, service.ip, service.port)
-            players = response.players.online + '/' + response.players.max
-            isOnline = true
+            if (response.players.max == 0) {
+                players = "Offline"
+                isOnline = false
+            } else {
+                players = (response.players.online ?? 0) + '/' + (response.players.max ?? 0)
+                isOnline = true
+            }
         } catch (err) {
             isOnline = false
             loggerLanding.warn('Unable to refresh server status, assuming offline.')
@@ -284,7 +289,7 @@ const refreshPlayClanStatus = async function(){
 
         tooltipEssentialHTML += `<div class="mojangStatusContainer">
             <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex(isOnline ? "green" : "red")};">&#8226;</span>
-            <span class="mojangStatusName">${service.name}</span>
+            <span class="mojangStatusName">${service.name ?? "..."}</span>
             <span class="mojangStatusPlayers">${players}</span>
         </div>`
 
