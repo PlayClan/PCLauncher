@@ -278,11 +278,8 @@ body, button {
 */
 
 #welcomeImageSeal {
-    border-radius: 50%;
-    background: rgba(1, 2, 1, 0.5);
     height: 125px;
     width: 125px;
-    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
     margin-bottom: 5%;
     margin-top: 10%;
 }
@@ -363,6 +360,153 @@ body, button {
 }
 
 #welcomeButtonContent {
+    display: flex;
+    align-items: center;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Language View (language.ejs)                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+#languageContainer {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.50);
+}
+
+#languageContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    top: -10%;
+    position: relative;
+}
+
+#languageImageSeal {
+    height: 125px;
+    width: 125px;
+    margin-bottom: 5%;
+    margin-top: 10%;
+}
+
+#languageHeader {
+    font-family: 'Avenir Medium';
+    text-align: center;
+    color: white;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    font-size: 20px;
+    text-shadow: white 0px 0px 0px;
+}
+
+#languageDescription {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 100;
+    text-shadow: rgba(255, 255, 255, 0.75) 0px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Language button styles. */
+#languageButtonHU {
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 15px 10px;
+    margin: 10px 0px;
+    cursor: pointer;
+    transition: 0.5s ease;
+    margin-top: 5%;
+}
+#languageButtonHU:disabled {
+    color: rgba(255, 255, 255, 0.75);
+    pointer-events: none;
+}
+#languageButtonHU:hover,
+#languageButtonHU:focus {
+    text-shadow: 0px 0px 20px #fff;
+    outline: none;
+}
+#languageButtonHU:active {
+    color: #c7c7c7;
+    text-shadow: 0px 0px 20px #c7c7c7;
+}
+#languageSVG {
+    -webkit-transform: translate3d(0, 0, 0);
+    overflow: visible;
+    transform: rotate(90deg);
+    margin-left: 20px;
+    transition: 0.25s ease;
+    width: 20px;
+    height: 20px;
+}
+#languageButtonHU:hover #languageSVG,
+#languageButtonHU:focus #languageSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #fff);
+}
+#languageButtonHU:active #languageSVG .arrowLine {
+    stroke: #c7c7c7;
+}
+#languageButtonHU:active #languageSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+}
+#languageButtonHU:disabled #languageSVG .arrowLine {
+    stroke: rgba(255, 255, 255, 0.75);
+}
+
+#languageButtonHUContent {
+    display: flex;
+    align-items: center;
+}
+
+#languageButtonEN {
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 15px 10px;
+    margin: 10px 0px;
+    cursor: pointer;
+    transition: 0.5s ease;
+    margin-top: 2%;
+}
+#languageButtonEN:disabled {
+    color: rgba(255, 255, 255, 0.75);
+    pointer-events: none;
+}
+#languageButtonEN:hover,
+#languageButtonEN:focus {
+    text-shadow: 0px 0px 20px #fff;
+    outline: none;
+}
+#languageButtonEN:active {
+    color: #c7c7c7;
+    text-shadow: 0px 0px 20px #c7c7c7;
+}
+#languageButtonEN:hover #languageSVG,
+#languageButtonEN:focus #languageSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #fff);
+}
+#languageButtonEN:active #languageSVG .arrowLine {
+    stroke: #c7c7c7;
+}
+#languageButtonEN:active #languageSVG {
+    -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+}
+#languageButtonEN:disabled #languageSVG .arrowLine {
+    stroke: rgba(255, 255, 255, 0.75);
+}
+
+#languageButtonENContent {
     display: flex;
     align-items: center;
 }

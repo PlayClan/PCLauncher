@@ -65,3 +65,8 @@ fs.remove(path.join(os.tmpdir(), ConfigManager.getTempNativeFolder()), (err) => 
         logger.info('Cleaned natives directory.')
     }
 })
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initial translation of all elements
+    LangLoader.updateDOM()
+})

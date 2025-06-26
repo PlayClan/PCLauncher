@@ -21,7 +21,8 @@ const VIEWS = {
     settings: '#settingsContainer',
     welcome: '#welcomeContainer',
     waiting: '#waitingContainer',
-    waitingpc: '#waitingpcContainer'
+    waitingpc: '#waitingpcContainer',
+    language: '#languageContainer'
 }
 
 // The currently shown view container.
@@ -88,8 +89,8 @@ async function showMainUI(data){
         }
 
         if(ConfigManager.isFirstLaunch()){
-            currentView = VIEWS.welcome
-            $(VIEWS.welcome).fadeIn(1000)
+            currentView = VIEWS.language
+            $(VIEWS.language).fadeIn(1000)
         } else {
             if(isLoggedIn){
                 currentView = VIEWS.landing

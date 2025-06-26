@@ -17,8 +17,8 @@ const firstLaunch = !fs.existsSync(configPath) && !fs.existsSync(configPathLEGAC
 let lang
 
 exports.supportedLanguages = [
-    {fullName: 'English (US)', code: 'en_US'},
     {fullName: 'Magyar (HU)', code: 'hu_HU'},
+    {fullName: 'English (US)', code: 'en_US'},
 ]
 
 exports.loadLanguage = function(id){
@@ -57,10 +57,10 @@ exports.setupLanguage = function(){
         } catch (err){
             logger.error(err)
             logger.info('Configuration file contains malformed JSON or is corrupt.')
-            exports.loadLanguage('en_US')
+            exports.loadLanguage('hu_HU')
         }
     } else {
-        exports.loadLanguage('en_US')
+        exports.loadLanguage('hu_HU')
     }
     // Uncomment this when translations are ready
     //exports.loadLanguage('xx_XX')
@@ -72,4 +72,22 @@ exports.setupLanguage = function(){
 exports.selectLanguage = function(langCode){
     // Load selected language
     exports.loadLanguage(langCode)
+    logger.info(`Language set to ${langCode}`)
+    // Update DOM
+    exports.updateDOM()
+}
+
+/**
+ * Updates all elements with data-lang attributes in the document
+ * @param {Document|Element} root - The root element to search from (defaults to document)
+ */
+exports.updateDOM = function(root = document) {
+    const elements = root.querySelectorAll('[data-lang]')
+    
+    elements.forEach(element => {
+        const langKey = element.getAttribute('data-lang')
+        element.textContent = exports.queryEJS(langKey)
+    })
+    
+    logger.info(`Updated ${elements.length} language elements in the DOM`)
 }
