@@ -1022,7 +1022,7 @@ body, button {
 
 #loginOptionCancelContainer {
     position: absolute;
-    bottom: 0px;
+    top: 220px;
 }
 #loginOptionCancelContainer2 {
     position: fixed;

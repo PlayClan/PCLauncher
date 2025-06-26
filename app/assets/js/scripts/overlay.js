@@ -224,6 +224,7 @@ document.getElementById('serverSelectCancel').addEventListener('click', () => {
 })
 
 document.getElementById('accountSelectCancel').addEventListener('click', () => {
+    updateSelectedAccount(ConfigManager.getSelectedAccount())
     toggleOverlay(false)
 })
 

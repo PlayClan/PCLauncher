@@ -13,6 +13,11 @@ let loginOptionsViewCancelHandler
 function loginOptionsCancelEnabled(val){
     if(val){
         $(loginOptionsCancelContainer).show()
+        loginOptionsCancelButton.onclick = (e) => {
+            switchView(getCurrentView(), VIEWS.landing, 500, 500, () => {
+                updateSelectedAccount(ConfigManager.getSelectedAccount())
+            })
+        }
     } else {
         $(loginOptionsCancelContainer).hide()
     }
