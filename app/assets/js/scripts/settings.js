@@ -1218,8 +1218,6 @@ function saveLanguageSettings(){
     if (ConfigManager.getLanguage() !== sel) {
         Lang.selectLanguage(sel)
         ConfigManager.setLanguage(sel)
-        
-        ipcRenderer.send('restart_app');
     }
 }
 
@@ -1623,7 +1621,30 @@ function populateReleaseNotes(){
 
                 if(id === version){
                     settingsAboutChangelogTitle.innerHTML = entry.find('title').text()
-                    settingsAboutChangelogText.innerHTML = entry.find('content').text()
+                    const content = entry.find('content').text();
+                    
+                    // Function to remove h2 tags and their content
+                    const removeH2Tags = (text) => {
+                        return text.replace(/<h2>.*?<\/h2>/gi, '');
+                    };
+                    
+                    // Check if content has an HR tag which divides languages
+                    if (content.includes('<hr>') || content.includes('<hr/>') || content.includes('<hr />')) {
+                        const parts = content.split(/<hr\s*\/?>/i);
+                        if (parts.length >= 2) {
+                            // First part is English, second part is Hungarian
+                            const englishContent = removeH2Tags(parts[0]);
+                            const hungarianContent = removeH2Tags(parts[1]);
+                            
+                            // Display based on selected language
+                            const currentLang = ConfigManager.getLanguage();
+                            settingsAboutChangelogText.innerHTML = currentLang === 'hu_HU' ? hungarianContent : englishContent;
+                        } else {
+                            settingsAboutChangelogText.innerHTML = removeH2Tags(content);
+                        }
+                    } else {
+                        settingsAboutChangelogText.innerHTML = removeH2Tags(content);
+                    }
                     settingsAboutChangelogButton.href = entry.find('link').attr('href')
                 }
             }

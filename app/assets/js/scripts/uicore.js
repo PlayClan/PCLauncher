@@ -138,6 +138,10 @@ document.addEventListener('readystatechange', function () {
     if (document.readyState === 'interactive'){
         loggerUICore.info('UICore Initializing..')
 
+        setTimeout(() => {
+            $('#loadCenterText').animate({opacity: 1})
+        }, 100)
+
         // Bind close button.
         Array.from(document.getElementsByClassName('fCb')).map((val) => {
             val.addEventListener('click', e => {

@@ -4501,14 +4501,14 @@ input:checked + .toggleSwitchSlider:before {
 .serverListingStarTooltip {
     visibility: hidden;
     opacity: 0;
-    width: 85px;
     background-color: rgba(0, 0, 0, 0.40);
     text-align: center;
     border-radius: 4px;
-    position: absolute;
+    position: static;
+    padding: 5px;
     z-index: 1;
     left: 130%;
-    font-size: 10px;
+    font-size: 11px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
 }
 .serverListingStarTooltip::after {

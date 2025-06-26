@@ -74,7 +74,9 @@ exports.selectLanguage = function(langCode){
     exports.loadLanguage(langCode)
     logger.info(`Language set to ${langCode}`)
     // Update DOM
-    exports.updateDOM()
+    setTimeout(() => {
+        exports.updateDOM()
+    }, 500)
 }
 
 /**
@@ -88,8 +90,10 @@ exports.updateDOM = function(root = document) {
         const langKey = element.getAttribute('data-lang')
         element.textContent = exports.queryEJS(langKey)
     })
+    
     // Special cases
     $('#shopButtonText').text(exports.queryJS('shop.open')).fadeIn(500)
+    refreshServerStatus()
 
     logger.info(`Updated ${elements.length} language elements in the DOM`)
 }
