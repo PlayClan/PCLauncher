@@ -91,6 +91,9 @@ async function showMainUI(data){
         if(ConfigManager.isFirstLaunch()){
             currentView = VIEWS.language
             $(VIEWS.language).fadeIn(1000)
+        } else if (!ConfigManager.getLanguageAsked()) {
+            currentView = VIEWS.language
+            $(VIEWS.language).fadeIn(1000)
         } else {
             if(isLoggedIn){
                 currentView = VIEWS.landing

@@ -85,6 +85,7 @@ const DEFAULT_CONFIG = {
             allowIPProtection: true,
             language: 'hu_HU',
             autoConnectAsked: false,
+            languageAsked: false,
             dataDirectory: dataPath
         }
     },
@@ -841,4 +842,12 @@ exports.getAutoConnectAsked = function(def = false){
 
 exports.setAutoConnectAsked = function(autoConnectAsked){
     config.settings.launcher.autoConnectAsked = autoConnectAsked
+}
+
+exports.getLanguageAsked = function(def = false){
+    return !def ? config.settings.launcher.languageAsked : DEFAULT_CONFIG.settings.launcher.languageAsked
+}
+
+exports.setLanguageAsked = function(languageAsked){
+    config.settings.launcher.languageAsked = languageAsked
 }

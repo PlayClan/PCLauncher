@@ -22,5 +22,11 @@ document.getElementById('languageButtonEN').addEventListener('click', e => {
 })
 
 document.getElementById('languageNext').addEventListener('click', e => {
-    switchView(VIEWS.language, VIEWS.welcome, 500, 500)
+    ConfigManager.setLanguageAsked(true)
+    ConfigManager.save()
+    if (ConfigManager.getSelectedAccount() == null) {
+        switchView(VIEWS.language, VIEWS.welcome, 500, 500)
+    } else {
+        switchView(VIEWS.language, VIEWS.landing, 500, 500)
+    }
 })
