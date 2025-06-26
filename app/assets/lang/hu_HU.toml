@@ -344,7 +344,7 @@ uuid = "UUID"
 deleteModHeader = "Nem sikerült törölni a modot:<br>"
 deleteMod = "Győződjön meg arról, hogy a fájl nincs használatban, és próbálja újra."
 errorModHeader = "Nem sikerült a váltás<br>Egy vagy több modnál"
-latesVersion = "Legújabb verzió"
+latestVersion = "Ajánlott verzió"
 javaSelected = "Kiválasztva: Java"
 javaRequired = "Szükséges: Java"
 javaNotFound = "Érvénytelen Java elérés"
@@ -385,7 +385,7 @@ off = "Kikapcsolva"
 
 [js.overlay]
 dismiss = "Elvetés"
-latestVersion = "Legújabb verzió"
+latestVersion = "Ajánlott verzió"
 
 [js.exit]
 updateButton = "Frissítés és bezárás"

@@ -344,7 +344,7 @@ uuid = "UUID"
 deleteModHeader = "Failed to delete mod:<br>"
 deleteMod = "Make sure the file is not in use and try again."
 errorModHeader = "Failed to switch<br>One or more mods"
-latestVersion = "Latest version"
+latestVersion = "Recommended version"
 javaSelected = "Selected: Java"
 javaRequired = "Required: Java"
 javaNotFound = "Invalid Java access"
@@ -385,7 +385,7 @@ off = "Turned OFF"
 
 [js.overlay]
 dismiss = "Dismiss"
-latestVersion = "Latest version"
+latestVersion = "Recommended version"
 
 [js.exit]
 updateButton = "Update and close"
