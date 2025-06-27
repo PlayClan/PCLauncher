@@ -1,6 +1,6 @@
 appId: 'pclauncher'
 productName: 'PlayClan Launcher'
-artifactName: '${productName}-setup-${version}.${ext}'
+artifactName: 'PlayClan-Launcher-setup-${version}.${ext}'
 
 copyright: 'Copyright © 2025 PlayClan'
 
@@ -33,7 +33,7 @@ mac:
       arch:
         - 'x64'
         - 'arm64'
-  artifactName: '${productName}-setup-${version}-${arch}.${ext}'
+  artifactName: 'PlayClan-Launcher-setup-${version}-${arch}.${ext}'
   category: 'public.app-category.games'
   notarize: false
   entitlements: 'build/entitlements.mac.plist'
@@ -52,7 +52,7 @@ linux:
       arch:
         - 'x64'
         - 'arm64'
-  artifactName: '${productName}-${version}-${arch}.${ext}'
+  artifactName: 'PlayClan-Launcher-${version}-${arch}.${ext}'
   maintainer: 'PlayClan'
   vendor: 'PlayClan'
   synopsis: 'PlayClan Launcher'

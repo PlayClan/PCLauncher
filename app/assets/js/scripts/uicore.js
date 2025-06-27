@@ -60,7 +60,8 @@ if(!isDev){
                 loggerAutoUpdater.info('Update ' + info.version + ' ready to be installed.')
                 settingsUpdateButtonStatus(Lang.queryJS('uicore.installNow'), false, () => {
                     if(!isDev){
-                        ipcRenderer.send('autoUpdateAction', 'installUpdateNow')
+                        const window = remote.getCurrentWindow()
+                        window.close()
                     }
                 })
                 showUpdateUI(info)

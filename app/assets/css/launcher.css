@@ -603,6 +603,7 @@ body, button {
     justify-content: center;
     align-items: center;
     width: 70%;
+    height: 100%;
     position: relative;
 }
 
@@ -691,12 +692,22 @@ body, button {
 
 #versionReleaseNotes {
     font-size: 16px;
-    height: 100%;
+    height: 90vh;
     width: 60%;
-    overflow-y: scroll;
+    overflow: auto;
     word-wrap: break-word;
     white-space: normal;
-    overflow-x: hidden;
+}
+
+#versionReleaseNotes::-webkit-scrollbar {
+    width: 2px;
+}
+#versionReleaseNotes::-webkit-scrollbar-track {
+    display: none;
+}
+#versionReleaseNotes::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.50);
 }
 
 /* Styles for the changelog elements. */
