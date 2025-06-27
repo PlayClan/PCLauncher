@@ -47,6 +47,7 @@ if(!isDev){
                 break
             case 'update-available':
                 loggerAutoUpdater.info('New update available', info.version)
+                showUpdateUI(info)
                 
                 if(process.platform === 'darwin'){
                     info.darwindownload = `https://github.com/PlayClan/PCLauncher/releases/download/v${info.version}/PlayClan-Launcher-setup-${info.version}${process.arch === 'arm64' ? '-arm64' : '-x64'}.dmg`

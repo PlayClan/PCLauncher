@@ -722,9 +722,9 @@ body, button {
     margin-top: .25em;
 }
 #versionReleaseNotes a {
-    font-weight: 400;
-    color: #ffffff;
-    text-decoration: none;
+    color: rgba(202, 202, 202, 0.75);
+    transition: 0.25s ease;
+    outline: none;
 }
 #versionReleaseNotes a:hover,
 #versionReleaseNotes a:focus {

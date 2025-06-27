@@ -91,12 +91,29 @@ exports.updateDOM = function(root = document) {
     
     elements.forEach(element => {
         const langKey = element.getAttribute('data-lang')
-        element.textContent = exports.queryEJS(langKey)
+        element.innerHTML = exports.queryEJS(langKey)
     })
 
     // Special cases
     $('#shopButtonText').text(exports.queryJS('shop.open')).fadeIn(500)
     refreshServerStatus()
+
+    const settingsTabUpdate            = document.getElementById('settingsTabUpdate')
+    const settingsUpdateTitle          = document.getElementById('settingsUpdateTitle')
+    const settingsUpdateVersionCheck   = document.getElementById('settingsUpdateVersionCheck')
+    const settingsUpdateVersionTitle   = document.getElementById('settingsUpdateVersionTitle')
+    const settingsUpdateVersionValue   = document.getElementById('settingsUpdateVersionValue')
+    const settingsUpdateChangelogCont  = settingsTabUpdate.getElementsByClassName('settingsChangelogContainer')[0]
+
+    settingsUpdateTitle.innerHTML = Lang.queryJS('settings.noUpdate')
+    settingsUpdateChangelogCont.style.display = 'none'
+    populateVersionInformation(remote.app.getVersion(), settingsUpdateVersionValue, settingsUpdateVersionTitle, settingsUpdateVersionCheck)
+    settingsUpdateButtonStatus(Lang.queryJS('settings.searchForUpdate'), false, () => {
+        if(!isDev){
+            ipcRenderer.send('autoUpdateAction', 'checkForUpdate')
+            settingsUpdateButtonStatus(Lang.queryJS('settings.searchForUpdate') + '...', true)
+        }
+    })
 
     logger.info(`Updated ${elements.length} language elements in the DOM`)
 }
