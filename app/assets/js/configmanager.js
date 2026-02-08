@@ -83,6 +83,7 @@ const DEFAULT_CONFIG = {
             allowDiscord: true,
             allowLauncherHide: true,
             allowIPProtection: true,
+            openAtLogin: false,
             language: 'hu_HU',
             autoConnectAsked: false,
             languageAsked: false,
@@ -827,6 +828,20 @@ exports.getAllowIPProtection = function(def = false){
 
 exports.setAllowIPProtection = function(allowIPProtection){
     config.settings.launcher.allowIPProtection = allowIPProtection
+}
+
+exports.getOpenAtLogin = function(def = false){
+    return !def ? config.settings.launcher.openAtLogin : DEFAULT_CONFIG.settings.launcher.openAtLogin
+}
+
+exports.setOpenAtLogin = function(value){
+    config.settings.launcher.openAtLogin = value
+    const app = require('@electron/remote').app
+    app.setLoginItemSettings({
+        openAtLogin: value,
+        openAsHidden: false,
+        path: app.getPath('exe')
+    })
 }
 
 exports.getLanguage = function(def = false){
