@@ -41,6 +41,7 @@ const launch_details          = document.getElementById('launch_details')
 const launch_progress         = document.getElementById('launch_progress')
 const launch_progress_label   = document.getElementById('launch_progress_label')
 const launch_details_text     = document.getElementById('launch_details_text')
+const launch_cancel_button    = document.getElementById('launch_cancel_button')
 const server_selection_button = document.getElementById('server_selection_button')
 const user_text               = document.getElementById('user_text')
 const avatarOverlay           = document.getElementById('avatarOverlay')
@@ -97,6 +98,13 @@ function setLaunchPercentage(percent){
     launch_progress.setAttribute('max', 100)
     launch_progress.setAttribute('value', percent)
     launch_progress_label.innerHTML = percent + '%'
+    
+    // Hide cancel button when complete/launching
+    if(percent >= 100) {
+        if(launch_cancel_button) launch_cancel_button.style.display = 'none'
+    } else {
+        if(launch_cancel_button) launch_cancel_button.style.display = 'flex'
+    }
 }
 
 /**
@@ -202,6 +210,21 @@ document.getElementById('settingsMediaButton').onclick = async e => {
     if (!document.getElementById('settingsMediaButton').disabled) {
         await prepareSettings()
         switchView(getCurrentView(), VIEWS.settings)
+    }
+}
+
+// Bind launch cancel button
+if(launch_cancel_button){
+    launch_cancel_button.onclick = () => {
+        if(window.currentFullRepairModule) {
+            // Stop the repair module process
+            window.currentFullRepairModule.destroyReceiver()
+            window.currentFullRepairModule = null
+        }
+        // Reset UI
+        toggleLaunchArea(false)
+        remote.getCurrentWindow().setProgressBar(-1)
+        loggerLanding.info('Launch sequence cancelled by user.')
     }
 }
 
@@ -637,6 +660,9 @@ async function dlAsync(login = true) {
         DistroAPI.isDevMode()
     )
 
+    // Store reference for cancellation
+    window.currentFullRepairModule = fullRepairModule
+
     fullRepairModule.spawnReceiver()
 
     fullRepairModule.childProcess.on('error', (err) => {
@@ -776,6 +802,10 @@ async function dlAsync(login = true) {
     remote.getCurrentWindow().setProgressBar(-1)
 
     fullRepairModule.destroyReceiver()
+    window.currentFullRepairModule = null
+
+    // Ensure cancel button is hidden during finalization/launch
+    if(launch_cancel_button) launch_cancel_button.style.display = 'none'
 
     setLaunchDetails(Lang.queryJS('landing.finalizing'))
 

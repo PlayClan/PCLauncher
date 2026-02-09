@@ -25,6 +25,7 @@ eventsButton = "Events"
 errorStartupVersionNotFound = "The version selected for startup launch could not be found. Auto-launch has been disabled."
 offlineTitle = "PLAYCLAN API IS CURRENTLY UNAVAILABLE - OFFLINE MODE"
 offlineContent = "Some features may be limited. Check the status by clicking here."
+cancel = "Cancel the launch"
 
 [ejs.login]
 cancel = "Cancel"

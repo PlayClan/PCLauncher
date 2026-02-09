@@ -94,6 +94,13 @@ exports.updateDOM = function(root = document) {
         element.innerHTML = exports.queryEJS(langKey)
     })
 
+    const titles = root.querySelectorAll('[data-title]')
+    
+    titles.forEach(element => {
+        const langKey = element.getAttribute('data-title')
+        element.title = exports.queryEJS(langKey)
+    })
+
     // Special cases
     $('#shopButtonText').text(exports.queryJS('shop.open')).fadeIn(500)
     refreshServerStatus()
