@@ -124,6 +124,9 @@ function initSettingsValidators(){
  */
 async function initSettingsValues(){
     setLanguageOptions(Lang.supportedLanguages, ConfigManager.getLanguage())
+    const launchOnStartup = ConfigManager.getLaunchOnStartup()
+    const startupVersion = ConfigManager.getStartupVersion()
+    await setStartupVersionOptions(launchOnStartup ? startupVersion : 'noversion')
     const sEls = document.getElementById('settingsContainer').querySelectorAll('[cValue]')
 
     for(const v of sEls) {
@@ -332,6 +335,7 @@ function fullSettingsSave() {
     saveSettingsValues()
     saveModConfiguration()
     saveLanguageSettings()
+    saveStartupVersionSettings()
     ConfigManager.save()
     saveDropinModConfiguration()
     saveShaderpackSettings()
@@ -1218,6 +1222,66 @@ function saveLanguageSettings(){
     if (ConfigManager.getLanguage() !== sel) {
         Lang.selectLanguage(sel)
         ConfigManager.setLanguage(sel)
+    }
+}
+
+function saveStartupVersionSettings(){
+    let sel = null
+    for(let opt of document.getElementById('settingsStartupVersionOptions').childNodes){
+        if(opt.hasAttribute('selected')){
+            sel = opt.getAttribute('value')
+        }
+    }
+    ConfigManager.setStartupVersion(sel)
+    if(sel === 'noversion' || !sel){
+        ConfigManager.setLaunchOnStartup(false)
+    } else {
+        ConfigManager.setLaunchOnStartup(true)
+    }
+}
+
+async function setStartupVersionOptions(selected){
+    const cont = document.getElementById('settingsStartupVersionOptions')
+    const dist = await DistroAPI.getDistribution()
+    cont.innerHTML = ''
+    
+    // Add "noversion" option
+    const noVerDiv = document.createElement('DIV')
+    noVerDiv.innerHTML = Lang.queryJS('settings.noVersionSelected')
+    noVerDiv.setAttribute('value', 'noversion')
+    if(selected === 'noversion' || !selected) {
+        noVerDiv.setAttribute('selected', '')
+        document.getElementById('settingsStartupVersionSelected').innerHTML = Lang.queryJS('settings.noVersionSelected')
+    }
+    noVerDiv.addEventListener('click', function(e) {
+        this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+        for(let sib of this.parentNode.children){
+            sib.removeAttribute('selected')
+        }
+        this.setAttribute('selected', '')
+        closeSettingsSelect()
+    })
+    cont.appendChild(noVerDiv)
+
+    if(dist && dist.servers) {
+        for(let server of dist.servers) {
+            const d = document.createElement('DIV')
+            d.innerHTML = server.rawServer.name
+            d.setAttribute('value', server.rawServer.id)
+            if(server.rawServer.id === selected) {
+                d.setAttribute('selected', '')
+                document.getElementById('settingsStartupVersionSelected').innerHTML = server.rawServer.name
+            }
+            d.addEventListener('click', function(e) {
+                this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+                for(let sib of this.parentNode.children){
+                    sib.removeAttribute('selected')
+                }
+                this.setAttribute('selected', '')
+                closeSettingsSelect()
+            })
+            cont.appendChild(d)
+        }
     }
 }
 

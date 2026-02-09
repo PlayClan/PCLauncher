@@ -104,7 +104,30 @@ async function showMainUI(data){
                     $(VIEWS.version).fadeIn(1000)
                 } else {
                     currentView = VIEWS.landing
-                    $(VIEWS.landing).fadeIn(1000)
+                    $(VIEWS.landing).fadeIn(1000, () => {
+                        if(ConfigManager.getLaunchOnStartup()){
+                            setTimeout(() => {
+                                const startupVer = ConfigManager.getStartupVersion()
+                                if(startupVer && startupVer !== 'noversion'){
+                                    const server = data.getServerById(startupVer)
+                                    if(server){
+                                        updateSelectedServer(server)
+                                        launchGame()
+                                    } else {
+                                        ConfigManager.setLaunchOnStartup(false)
+                                        ConfigManager.save()
+                                        setOverlayHandler(null)
+                                        setOverlayContent(
+                                            Lang.queryJS('landing.errorStartupTitle'),
+                                            Lang.queryJS('landing.errorStartupVersionNotFound'),
+                                            Lang.queryJS('general.close')
+                                        )
+                                        toggleOverlay(true)
+                                    }
+                                }
+                            }, 500)
+                        }
+                    })
                 }
             } else {
                 loginOptionsCancelEnabled(false)

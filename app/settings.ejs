@@ -113,6 +113,32 @@
                     </label>
                 </div>
             </div>
+            <div class="settingsFieldContainer">
+                <div class="settingsFieldLeft">
+                    <span class="settingsFieldTitle"><span data-lang='settings.launcher.ipProtection'></span></span>
+                    <span class="settingsFieldDesc"><span data-lang='settings.launcher.ipProtectionDesc'></span></span>
+                </div>
+                <div class="settingsFieldRight">
+                    <label class="toggleSwitch">
+                        <input type="checkbox" cValue="AllowIPProtection">
+                        <span class="toggleSwitchSlider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="settingsFieldContainer">
+                <div class="settingsFieldLeft">
+                    <span class="settingsFieldTitle"><span data-lang='settings.launcher.startupVersion'></span></span>
+                    <span class="settingsFieldDesc"><span data-lang='settings.launcher.startupVersionDesc'></span></span>
+                </div>
+                <div id="settingsShaderpackWrapper">
+                    <div class="settingsSelectContainer">
+                        <div class="settingsSelectSelected" id="settingsStartupVersionSelected"></div>
+                        <div class="settingsSelectOptions" id="settingsStartupVersionOptions" hidden>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="settingsTabMods" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
@@ -303,18 +329,6 @@
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
                         <input type="checkbox" cValue="AllowLauncherHide">
-                        <span class="toggleSwitchSlider"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="settingsFieldContainer">
-                <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><span data-lang='settings.launcher.ipProtection'></span></span>
-                    <span class="settingsFieldDesc"><span data-lang='settings.launcher.ipProtectionDesc'></span></span>
-                </div>
-                <div class="settingsFieldRight">
-                    <label class="toggleSwitch">
-                        <input type="checkbox" cValue="AllowIPProtection">
                         <span class="toggleSwitchSlider"></span>
                     </label>
                 </div>

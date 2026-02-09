@@ -84,6 +84,8 @@ const DEFAULT_CONFIG = {
             allowLauncherHide: true,
             allowIPProtection: true,
             openAtLogin: false,
+            launchOnStartup: false,
+            startupVersion: 'noversion',
             language: 'hu_HU',
             autoConnectAsked: false,
             languageAsked: false,
@@ -842,6 +844,22 @@ exports.setOpenAtLogin = function(value){
         openAsHidden: false,
         path: app.getPath('exe')
     })
+}
+
+exports.getLaunchOnStartup = function(def = false){
+    return !def ? config.settings.launcher.launchOnStartup : DEFAULT_CONFIG.settings.launcher.launchOnStartup
+}
+
+exports.setLaunchOnStartup = function(value){
+    config.settings.launcher.launchOnStartup = value
+}
+
+exports.getStartupVersion = function(def = false){
+    return !def ? config.settings.launcher.startupVersion : DEFAULT_CONFIG.settings.launcher.startupVersion
+}
+
+exports.setStartupVersion = function(value){
+    config.settings.launcher.startupVersion = value
 }
 
 exports.getLanguage = function(def = false){
