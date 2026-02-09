@@ -6,6 +6,8 @@ copyright: 'Copyright © 2026 PlayClan'
 
 asar: true
 compression: 'maximum'
+npmRebuild: false
+buildDependenciesFromSource: false
 
 files:
   - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,eslint.config.mjs}'
@@ -43,7 +45,7 @@ mac:
 dmg:
   sign: false
 
-afterSign: 'scripts/notarize.js'
+#afterSign: 'scripts/notarize.js'
 
 # Linux Configuration
 linux: 
