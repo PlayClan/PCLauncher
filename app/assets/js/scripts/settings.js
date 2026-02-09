@@ -922,6 +922,9 @@ function bindModsToggleSwitch(){
             } else {
                 document.getElementById(v.getAttribute('formod')).removeAttribute('enabled')
             }
+            saveModConfiguration()
+            saveDropinModConfiguration() // Handles dropin mods if any
+            ConfigManager.save()
         }
     })
 }
@@ -1144,6 +1147,7 @@ function setShadersOptions(arr, selected){
             }
             this.setAttribute('selected', '')
             closeSettingsSelect()
+            saveShaderpackSettings()
         })
         cont.appendChild(d)
     }
@@ -1206,6 +1210,8 @@ function setLanguageOptions(arr, selected){
             }
             this.setAttribute('selected', '')
             closeSettingsSelect()
+            saveLanguageSettings()
+            ConfigManager.save()
         })
         cont.appendChild(d)
     }
@@ -1260,6 +1266,8 @@ async function setStartupVersionOptions(selected){
         }
         this.setAttribute('selected', '')
         closeSettingsSelect()
+        saveStartupVersionSettings()
+        ConfigManager.save()
     })
     cont.appendChild(noVerDiv)
 
@@ -1279,6 +1287,8 @@ async function setStartupVersionOptions(selected){
                 }
                 this.setAttribute('selected', '')
                 closeSettingsSelect()
+                saveStartupVersionSettings()
+                ConfigManager.save()
             })
             cont.appendChild(d)
         }
@@ -1804,6 +1814,30 @@ function prepareUpdateTab(data = null){
     populateSettingsUpdateInformation(data)
 }
 
+function bindInstantSave(){
+    const sEls = document.getElementById('settingsContainer').querySelectorAll('[cValue]')
+    Array.from(sEls).map((v) => {
+        if(v.tagName === 'INPUT'){
+            if(v.type === 'text' || v.type === 'number'){
+                v.onchange = () => {
+                    saveSettingsValues()
+                    ConfigManager.save()
+                }
+            } else if(v.type === 'checkbox'){
+                v.onchange = () => {
+                    saveSettingsValues()
+                    ConfigManager.save()
+                }
+            }
+        } else if(v.tagName === 'DIV' && v.classList.contains('rangeSlider')){
+            v.onchange = () => {
+                saveSettingsValues()
+                ConfigManager.save()
+            }
+        }
+    })
+}
+
 /**
  * Settings preparation functions.
  */
@@ -1818,6 +1852,7 @@ async function prepareSettings(first = false) {
         setupSettingsTabs()
         initSettingsValidators()
         prepareUpdateTab()
+        bindInstantSave()
     } else {
         await prepareModsTab()
     }
