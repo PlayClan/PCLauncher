@@ -4,7 +4,6 @@ language = "English (US)"
 
 [ejs.landing]
 shopButton = "PlayClan Shop"
-updateAvailable = "Update available"
 shopOpen = "OPEN SHOP"
 playername = "Playername"
 edit = "Edit"
@@ -168,6 +167,7 @@ desc = "PlayClan Launcher has been updated to the newest version! Here you can f
 close = "Close"
 
 [js.landing]
+updateAvailable = "Update available v{v} - Click to install"
 gameRunningTitle = "Game already running"
 gameRunningContent = "An instance of Minecraft is already running. Are you sure you want to launch another?"
 launchAnyway = "Launch Anyway"

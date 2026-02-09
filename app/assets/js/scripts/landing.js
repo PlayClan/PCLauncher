@@ -303,10 +303,16 @@ const refreshPlayClanStatus = async function(){
     let statuses
 
     await fetch('https://api.playclan.net/kliens/status').then(response => {
+        if(response.ok) {
+            AuthManager.isAPIUnavailable = false
+        } else {
+            AuthManager.isAPIUnavailable = true
+        }
         return response.json()
     }).then(data => {
         statuses = data
     }).catch(err => {
+        AuthManager.isAPIUnavailable = true
         console.log(err)
         statuses = []
     })

@@ -39,6 +39,11 @@ body, html, div {
     padding: 0px;
 }
 
+body, html {
+    overflow: hidden;
+    height: 100%;
+}
+
 /* Reset p presets. */
 p {
     -webkit-margin-before: 0em;
@@ -2916,6 +2921,41 @@ input:checked + .toggleSwitchSlider:before {
     line-height: 24px;
     left: 50px;
 }
+
+/* API offline overlay moved from inline styles in landing.ejs */
+#apiOfflineOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+    cursor: pointer;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    pointer-events: none;
+}
+#apiOfflineOverlay .playclan-status-link {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 0;
+    backdrop-filter: blur(2px);
+}
+#apiOfflineOverlay .offline-title {
+    color: #ff4d4d;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+    font-size: 14px;
+    display: block;
+}
+#apiOfflineOverlay .offline-content {
+    color: #ddd;
+    text-shadow: 1px 1px 2px #000;
+    font-size: 11px;
+    display: block;
+    margin-top: 2px;
+}
+
 #landingContainer > #lower > #center {
     position: relative;
     transition: top 2s ease;
@@ -3718,6 +3758,7 @@ input:checked + .toggleSwitchSlider:before {
     cursor: pointer;
     position: relative;
 }
+/*
 #update_container[update]:before {
     cursor: pointer;
     position: absolute;
@@ -3733,6 +3774,8 @@ input:checked + .toggleSwitchSlider:before {
 #update_container[update]:before {
     animation-delay: 2s;
 }
+*/
+
 
 /* Update available tooltip styles. */
 #updateAvailableTooltip {
@@ -5128,4 +5171,36 @@ input:checked + .toggleSwitchSlider:before {
 
 #eventRefresh:hover, #eventRefresh:active {
     filter: drop-shadow(0px 0px 20px #fff);
+}
+/* Update Available Overlay Styles */
+#updateAvailableOverlay {
+    position: absolute;
+    top: -22px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 9000;
+    cursor: pointer;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    pointer-events: none;
+}
+
+#updateAvailableContent {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 40%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.3) 80%, rgba(0, 0, 0, 00) 100%);
+    padding-bottom: 8px;
+    padding-top: 30px;
+}
+
+#updateAvailableText {
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: 0px 0px 10px #000;
+    font-size: 14px;
+    transition: text-shadow 0.2s ease;
+}
+
+#updateAvailableOverlay:hover #updateAvailableText {
+    text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.8), 0px 0px 10px #000;
 }

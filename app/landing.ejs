@@ -1,4 +1,9 @@
 <div id="landingContainer" style="display: none;">
+    <div id="updateAvailableOverlay">
+        <div id="updateAvailableContent">
+            <span id="updateAvailableText"></span>
+        </div>
+    </div>
     <div id="shopContainer">
         <p><span data-lang='landing.shopButton'></span></p>
     </div>
@@ -179,10 +184,10 @@
             </div>
         </div>
     </div>
-    <div id="apiOfflineOverlay" style="position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; z-index: 100; cursor: pointer; transform: translateY(100%); opacity: 0; transition: transform 0.5s ease, opacity 0.5s ease; pointer-events: none;">
-        <div name="playclanStatusLink" style="background: rgba(0, 0, 0, 0.7); padding: 8px 0; backdrop-filter: blur(2px);">
-            <span style="color: #ff4d4d; font-weight: bold; text-shadow: 1px 1px 2px #000; font-size: 14px; display: block;" data-lang="landing.offlineTitle"></span>
-            <span style="color: #ddd; text-shadow: 1px 1px 2px #000; font-size: 11px; display: block; margin-top: 2px;" data-lang="landing.offlineContent"></span>
+    <div id="apiOfflineOverlay">
+        <div name="playclanStatusLink" class="playclan-status-link">
+            <span class="offline-title" data-lang="landing.offlineTitle"></span>
+            <span class="offline-content" data-lang="landing.offlineContent"></span>
         </div>
     </div>
     <div id="newsContainer">

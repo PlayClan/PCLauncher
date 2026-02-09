@@ -30,12 +30,15 @@
 * ☕ **Automatikus Java ellenőrzés.**
   * Ha nem kompatibilis Java verzió van telepítve, akkor automatikus letöltjük a megfelelő verziót *neked*.
   * Nem kell Java-t telepítened a kliens futtatásához.
-* 📰 A Kortdex hírek csatorna natívan bele van építve a kliensbe.
+* 📰 A PlayClan hírek csatorna natívan bele van építve a kliensbe.
 * ⚙️ Intuitív beállítások kezelés, beleértve a Java beállítások módosítását.
 * 📝 Több Minecraft verzió.
   * Válassz másik Minecraft verziót egy kattintással.
 * 🖥️ Automatikus kliens frissítések. A háttérben frissül a kliens.
+* 🚀 Launcher automatikus indítása a rendszerrel.
+* 🎮 Kiválasztott Minecraft verzió automatikus elindítása.
 * 🌍 PlayClan szerverek státuszainak megtekintése.
+* 🛜 Offline mód támogatás.
 * 🌐 Választható alkalmazás nyelv
   * Magyar
   * Angol 

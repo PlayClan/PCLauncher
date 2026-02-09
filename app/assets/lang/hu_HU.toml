@@ -4,7 +4,6 @@ language = "Magyar (HU)"
 
 [ejs.landing]
 shopButton = "PlayClan Shop"
-updateAvailable = "Frissítés elérhető"
 shopOpen = "SHOP MEGNYITÁSA"
 playername = "Játékosnév"
 edit = "Szerkeszt"
@@ -168,6 +167,7 @@ desc = "A PlayClan Launcher új verzióra frissült! Itt találhatók a legfriss
 close = "Bezárás"
 
 [js.landing]
+updateAvailable = "Frissítés elérhető v{v} - Kattints a telepítéshez"
 gameRunningTitle = "A játék már fut"
 gameRunningContent = "Egy Minecraft példány már fut. Biztosan indítani akarsz egy másikat?"
 launchAnyway = "Indítás mindenképp"

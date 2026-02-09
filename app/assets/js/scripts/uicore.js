@@ -108,26 +108,24 @@ function changeAllowPrerelease(val){
 }
 
 function showUpdateUI(info){
-    //TODO Make this message a bit more informative `${info.version}`
-    document.getElementById('update_container').setAttribute('update', true)
-    document.getElementById('update_container').onclick = async () => {
-        /*setOverlayContent('Update Available', 'A new update for the launcher is available. Would you like to install now?', 'Install', 'Later')
-        setOverlayHandler(() => {
-            if(!isDev){
-                ipcRenderer.send('autoUpdateAction', 'installUpdateNow')
-            } else {
-                console.error('Cannot install updates in development environment.')
-                toggleOverlay(false)
-            }
-        })
-        setDismissHandler(() => {
-            toggleOverlay(false)
-        })
-        toggleOverlay(true, true)*/
-        await prepareSettings()
-        switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
-            settingsNavItemListener(document.getElementById('settingsNavUpdate'), false)
-        })
+    const updateOverlay = document.getElementById('updateAvailableOverlay')
+    const updateText = document.getElementById('updateAvailableText')
+    
+    if(updateOverlay){
+        if(updateText){
+             const version = info && info.version ? info.version : ''
+             updateText.innerHTML = Lang.queryJS('landing.updateAvailable').replace('{v}', version)
+        }
+        updateOverlay.style.opacity = '1'
+        updateOverlay.style.transform = 'translateY(0)'
+        updateOverlay.style.pointerEvents = 'auto'
+
+        updateOverlay.onclick = async () => {
+            await prepareSettings()
+            switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
+                settingsNavItemListener(document.getElementById('settingsNavUpdate'), false)
+            })
+        }
     }
 }
 
