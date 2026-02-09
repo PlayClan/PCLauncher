@@ -4355,6 +4355,14 @@ input:checked + .toggleSwitchSlider:before {
     cursor: default;
     pointer-events: none;
 }
+/* Style for when the game is running */
+#launch_button.running {
+    color: #4CAF50; /* Green color to indicate running */
+    text-shadow: 0px 0px 10px #4CAF50;
+}
+#launch_button.running:hover {
+    text-shadow: 0px 0px 20px #4CAF50;
+}
 
 /* Launch details main container, hidden until launch processing begins. */
 #launch_details {

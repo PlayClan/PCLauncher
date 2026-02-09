@@ -165,6 +165,10 @@ desc = "A PlayClan Launcher új verzióra frissült! Itt találhatók a legfriss
 close = "Bezárás"
 
 [js.landing]
+gameRunningTitle = "A játék már fut"
+gameRunningContent = "Egy Minecraft példány már fut. Biztosan indítani akarsz egy másikat?"
+launchAnyway = "Indítás mindenképp"
+cancel = "Mégsem"
 pleaseWait = "Betöltés folyamatban..."
 errorStartupTitle = "Elindítási hiba"
 errorStartupVersionNotFound = "A kiválasztott indítási verzió nem található. Az automatikus indítás ki lett kapcsolva."

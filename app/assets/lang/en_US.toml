@@ -165,6 +165,10 @@ desc = "PlayClan Launcher has been updated to the newest version! Here you can f
 close = "Close"
 
 [js.landing]
+gameRunningTitle = "Game already running"
+gameRunningContent = "An instance of Minecraft is already running. Are you sure you want to launch another?"
+launchAnyway = "Launch Anyway"
+cancel = "Cancel"
 pleaseWait = "Loading..."
 errorStartupTitle = "Startup error"
 errorStartupVersionNotFound = "The version selected for startup launch could not be found. Auto-launch has been disabled."

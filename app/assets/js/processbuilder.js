@@ -85,22 +85,22 @@ class ProcessBuilder {
         if(ConfigManager.getLaunchDetached()){
             child.unref()
         }
+        
+        ipcRenderer.send('game-launched')
 
         child.stdout.setEncoding('utf8')
         child.stderr.setEncoding('utf8')
 
         child.stdout.on('data', (data) => {
-            ipcRenderer.send('game-state', true)
             data.trim().split('\n').forEach(x => console.log(`\x1b[32m[Minecraft]\x1b[0m ${x}`))
             
         })
         child.stderr.on('data', (data) => {
-            ipcRenderer.send('game-state', true)
             data.trim().split('\n').forEach(x => console.log(`\x1b[31m[Minecraft]\x1b[0m ${x}`))
         })
         child.on('close', (code, signal) => {
             logger.info('Exited with code', code)
-            ipcRenderer.send('game-state', false)
+            ipcRenderer.send('game-exited')
             fs.remove(tempNativePath, (err) => {
                 if(err){
                     logger.warn('Error while deleting temp dir', err)

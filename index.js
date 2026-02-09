@@ -557,6 +557,20 @@ function getPlatformIcon(filename){
     return path.join(__dirname, 'app', 'assets', 'images', `${filename}.${ext}`)
 }
 
+let runningInstanceCount = 0
+
+ipcMain.on('game-launched', (event) => {
+    runningInstanceCount++
+    event.sender.send('game-state', runningInstanceCount > 0)
+})
+
+ipcMain.on('game-exited', (event) => {
+    if(runningInstanceCount > 0){
+        runningInstanceCount--
+    }
+    event.sender.send('game-state', runningInstanceCount > 0)
+})
+
 ipcMain.on('game-state', (event, arg) => {
     event.sender.send('game-state', arg)
 })

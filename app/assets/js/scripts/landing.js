@@ -32,6 +32,8 @@ const DiscordWrapper          = require('./assets/js/discordwrapper')
 const ProcessBuilder          = require('./assets/js/processbuilder')
 const { dialog } = require('electron')
 
+let isGameRunning = false
+
 // Launch Elements
 const launch_content          = document.getElementById('launch_content')
 const launch_details          = document.getElementById('launch_details')
@@ -118,6 +120,27 @@ function setLaunchEnabled(val){
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
     loggerLanding.info('Launching game..')
+    if(isGameRunning){
+        setOverlayContent(
+            Lang.queryJS('landing.gameRunningTitle'),
+            Lang.queryJS('landing.gameRunningContent'),
+            Lang.queryJS('landing.launchAnyway'),
+            Lang.queryJS('landing.cancel')
+        )
+        setOverlayHandler(() => {
+            toggleOverlay(false, false)
+            onLaunchConfirmed()
+        })
+        setDismissHandler(() => {
+            toggleOverlay(false, false)
+        })
+        toggleOverlay(true, true)
+    } else {
+        onLaunchConfirmed()
+    }
+})
+
+function onLaunchConfirmed(){
     if (ConfigManager.getAutoConnect() && !ConfigManager.getAutoConnectAsked()) {
         setOverlayContent(
             Lang.queryJS('landing.autoConnectTitle'),
@@ -142,7 +165,7 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         ConfigManager.setAutoConnectAsked(true)
         launchGame()
     }
-})
+}
 
 async function launchGame() {
     try {
@@ -2295,10 +2318,13 @@ async function loadNews(){
     return await promise
 }
 
-let isGameRunning = false
-
 ipcRenderer.on('game-state', (event, arg) => {
     isGameRunning = arg
+    if(isGameRunning){
+        document.getElementById('launch_button').classList.add('running')
+    } else {
+        document.getElementById('launch_button').classList.remove('running')
+    }
 })
 
 ipcRenderer.on('join-server', (event, server) => {
