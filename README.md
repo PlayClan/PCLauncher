@@ -83,7 +83,7 @@ Amennyiben szeretnéd bővíteni a Launcher-t, vagy csak saját magadnak szeretn
 
 **Rendszerkövetelmények**
 
-* [Node.js][nodejs] v18
+* [Node.js][nodejs] v22
 
 ---
 

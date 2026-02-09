@@ -2,13 +2,13 @@ appId: 'pclauncher'
 productName: 'PlayClan Launcher'
 artifactName: 'PlayClan-Launcher-setup-${version}.${ext}'
 
-copyright: 'Copyright © 2025 PlayClan'
+copyright: 'Copyright © 2026 PlayClan'
 
 asar: true
 compression: 'maximum'
 
 files:
-  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,.eslintrc.json}'
+  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,eslint.config.mjs}'
 
 extraResources:
   - 'libraries'
@@ -56,7 +56,7 @@ linux:
   maintainer: 'PlayClan'
   vendor: 'PlayClan'
   synopsis: 'PlayClan Launcher'
-  description: 'A PlayClan hivatalos Launchere'
+  description: 'PlayClan Launcher'
   category: 'Game'
   mimeTypes: 
     - 'x-scheme-handler/pclauncher'

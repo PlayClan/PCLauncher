@@ -232,7 +232,7 @@ async function validateSelectedMicrosoftAccount(){
             )
             ConfigManager.save()
             return true
-        } catch(err) {
+        } catch(_err) {
             return false
         }
     } else {
@@ -251,7 +251,7 @@ async function validateSelectedMicrosoftAccount(){
             ConfigManager.save()
             return true
         }
-        catch(err) {
+        catch(_err) {
             return false
         }
     }
@@ -279,8 +279,8 @@ async function validateSelectedPlayClanAccount(){
         throw new Error('Sikertelen kommunikáció a szerverrel.');
     }).then(data => {
         return data
-    }).catch((error) => {
-        console.log(error)
+    }).catch((_error) => {
+        console.log(_error)
         isServerDown = true;
         return null
     });
