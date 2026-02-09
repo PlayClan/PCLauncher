@@ -381,7 +381,15 @@ const refreshPlayClanStatus = async function(){
 
     const offlineOverlay = document.getElementById('apiOfflineOverlay')
     if(offlineOverlay) {
-        offlineOverlay.style.display = AuthManager.isAPIUnavailable ? 'block' : 'none'
+        if(AuthManager.isAPIUnavailable){
+            offlineOverlay.style.opacity = '1'
+            offlineOverlay.style.transform = 'translateY(0)'
+            offlineOverlay.style.pointerEvents = 'auto'
+        } else {
+            offlineOverlay.style.opacity = '0'
+            offlineOverlay.style.transform = 'translateY(100%)'
+            offlineOverlay.style.pointerEvents = 'none'
+        }
     }
     
     document.getElementById('mojangStatusEssentialContainer').innerHTML = tooltipEssentialHTML
@@ -706,7 +714,9 @@ async function dlAsync(login = true) {
             loggerLaunchSuite.warn('API is offline, skipping download of invalid files.')
             const offlineOverlay = document.getElementById('apiOfflineOverlay')
             if(offlineOverlay) {
-                offlineOverlay.style.display = 'block'
+                offlineOverlay.style.opacity = '1'
+                offlineOverlay.style.transform = 'translateY(0)'
+                offlineOverlay.style.pointerEvents = 'auto'
             }
 
             // Create empty provision for latestServerResourcePack.json to prevent game complaints
@@ -763,7 +773,9 @@ async function dlAsync(login = true) {
                     AuthManager.isAPIUnavailable = true // Force set to true
                     const offlineOverlay = document.getElementById('apiOfflineOverlay')
                     if(offlineOverlay) {
-                        offlineOverlay.style.display = 'block'
+                        offlineOverlay.style.opacity = '1'
+                        offlineOverlay.style.transform = 'translateY(0)'
+                        offlineOverlay.style.pointerEvents = 'auto'
                     }
                     
                     // Re-enable launch area if it was mistakenly hidden by close handler race condition
