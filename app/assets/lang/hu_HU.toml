@@ -23,6 +23,8 @@ retry = "Próbáld újra"
 noNews = "Még nincs egy hírek se."
 eventsButton = "Események"
 errorStartupVersionNotFound = "Az automatikus indításhoz kiválasztott verzió nem található. Az automatikus indítás ki lett kapcsolva."
+offlineTitle = "A PLAYCLAN API JELENLEG NEM ELÉRHETŐ - OFFLINE MÓD"
+offlineContent = "Néhány funkció korlátozott lehet. Ellenőrizd a státuszt ide kattintva."
 
 [ejs.login]
 cancel = "Mégse"

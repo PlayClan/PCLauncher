@@ -3,6 +3,7 @@
  */
 // Requirements
 const { URL }                 = require('url')
+const fs                      = require('fs')
 const {
     MojangRestAPI,
     getServerStatus
@@ -284,7 +285,22 @@ const refreshPlayClanStatus = async function(){
         statuses = data
     }).catch(err => {
         console.log(err)
+        statuses = []
     })
+    
+    if(!statuses) statuses = []
+
+    if(AuthManager.isAPIUnavailable) {
+        status = 'red'
+        tooltipEssentialHTML += `<div class="mojangStatusContainer">
+            <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex("red")};">&#8226;</span>
+            <span class="mojangStatusName">PlayClan API</span>
+            <span class="mojangStatusPlayers">Offline</span>
+        </div>`
+        tooltipEssentialHTML += `<div class="mojangStatusContainer" style="justify-content: center;">
+            <a href="#" name="playclanStatusLink" style="color: #ff4d4d; text-decoration: none; user-select: none; cursor: pointer;">status.playclan.hu</a>
+        </div>`
+    }
     
     greenCount = 0
     greyCount = 0
@@ -315,7 +331,7 @@ const refreshPlayClanStatus = async function(){
             <span class="mojangStatusName">${service.name ?? "..."}</span>
             <span class="mojangStatusPlayers">${players}</span>
         </div>`
-
+        
         if(isOnline){
             status = 'green'
         } else {
@@ -334,9 +350,32 @@ const refreshPlayClanStatus = async function(){
             status = 'green'
         }
     }
+
+    // Force red if API is offline
+    if(AuthManager.isAPIUnavailable){
+        status = 'red'
+    }
+
+    const offlineOverlay = document.getElementById('apiOfflineOverlay')
+    if(offlineOverlay) {
+        offlineOverlay.style.display = AuthManager.isAPIUnavailable ? 'block' : 'none'
+    }
     
     document.getElementById('mojangStatusEssentialContainer').innerHTML = tooltipEssentialHTML
     document.getElementById('mojang_status_icon').style.color = MojangRestAPI.statusToHex(status)
+
+    const statusLink = document.getElementsByName('playclanStatusLink')
+    if(statusLink){
+        for(let i=0; i<statusLink.length; i++){
+            statusLink[i].addEventListener('click', (e) => {
+                e.preventDefault()
+                shell.openExternal('https://status.playclan.hu')
+            })
+            statusLink[i].addEventListener('dragstart', (e) => {
+                e.preventDefault()
+            })
+        }
+    }
 }
 
 const refreshServerStatus = async (fade = false) => {
@@ -604,8 +643,16 @@ async function dlAsync(login = true) {
         loggerLaunchSuite.error('Error during launch', err)
         showLaunchFailure(Lang.queryJS('landing.errorLaunch'), err.message || Lang.queryJS('landing.errorConsole'))
     })
+    let isNetworkError = false
+    fullRepairModule.childProcess.stderr.on('data', (data) => {
+        const str = data.toString()
+        if (str.includes('ECONNREFUSED') || str.includes('ETIMEDOUT') || str.includes('ENOTFOUND')) {
+             isNetworkError = true
+        }
+    })
+
     fullRepairModule.childProcess.on('close', (code, _signal) => {
-        if(code !== 0){
+        if(code !== 0 && !AuthManager.isAPIUnavailable && !isNetworkError){
             loggerLaunchSuite.error(`Full Repair Module exited with code ${code}, assuming error.`)
             showLaunchFailure(Lang.queryJS('landing.errorLaunch'), Lang.queryJS('landing.errorConsole'))
         }
@@ -627,18 +674,99 @@ async function dlAsync(login = true) {
     
 
     if(invalidFileCount > 0) {
-        loggerLaunchSuite.info('Downloading files.')
-        setLaunchDetails(Lang.queryJS('landing.downloading'))
-        setLaunchPercentage(0)
-        try {
-            await fullRepairModule.download(percent => {
-                setDownloadPercentage(percent)
-            })
-            setDownloadPercentage(100)
-        } catch(err) {
-            loggerLaunchSuite.error('Error during file download.')
-            showLaunchFailure(Lang.queryJS('landing.errorDownload'), err.displayable || Lang.queryJS('landing.errorConsole'))
-            return
+        
+        // Skip download if offline
+        if(AuthManager.isAPIUnavailable) {
+            loggerLaunchSuite.warn('API is offline, skipping download of invalid files.')
+            const offlineOverlay = document.getElementById('apiOfflineOverlay')
+            if(offlineOverlay) {
+                offlineOverlay.style.display = 'block'
+            }
+
+            // Create empty provision for latestServerResourcePack.json to prevent game complaints
+            try {
+                const serverId = ConfigManager.getSelectedServer()
+                const instanceDir = ConfigManager.getInstanceDirectory()
+                const configPath = path.join(instanceDir, serverId, 'config')
+                const targetFile = path.join(configPath, 'latestServerResourcePack.json')
+                
+                if(!fs.existsSync(configPath)){
+                    fs.mkdirSync(configPath, { recursive: true })
+                }
+                
+                fs.writeFileSync(targetFile, '{}')
+                loggerLaunchSuite.info('Created empty latestServerResourcePack.json due to offline mode.')
+                
+            } catch(writeErr) {
+                loggerLaunchSuite.warn('Failed to write empty latestServerResourcePack.json', writeErr)
+            }
+        } else {
+            loggerLaunchSuite.info('Downloading files.')
+            setLaunchDetails(Lang.queryJS('landing.downloading'))
+            setLaunchPercentage(0)
+            try {
+                const downloadPromise = fullRepairModule.download(percent => {
+                    setDownloadPercentage(percent)
+                })
+                const failurePromise = new Promise((resolve, reject) => {
+                    // Monitor process exit
+                    fullRepairModule.childProcess.once('close', (code) => {
+                        if(code !== 0) {
+                            reject(new Error('Child process exited with code ' + code)) 
+                        }
+                    })
+                    // Monitor stderr for immediate network error detection
+                    fullRepairModule.childProcess.stderr.on('data', (data) => {
+                        const str = data.toString()
+                        if (str.includes('ECONNREFUSED') || str.includes('ETIMEDOUT') || str.includes('ENOTFOUND')) {
+                            isNetworkError = true
+                            reject(new Error('Network error deteced: ' + str.substring(0, 100))) 
+                        }
+                    })
+                })
+                
+                await Promise.race([downloadPromise, failurePromise])
+                setDownloadPercentage(100)
+            } catch(err) {
+                loggerLaunchSuite.error('Error during file download.')
+                const errStr = (err.stack ? err.stack : err).toString()
+                if(AuthManager.isAPIUnavailable || errStr.includes('ECONNREFUSED') || errStr.includes('ETIMEDOUT') || isNetworkError) {
+                    loggerLaunchSuite.warn('Download error ignored due to offline status/network error. Attempting to launch anyway.')
+                    
+                    // Show offline banner if not already visible
+                    AuthManager.isAPIUnavailable = true // Force set to true
+                    const offlineOverlay = document.getElementById('apiOfflineOverlay')
+                    if(offlineOverlay) {
+                        offlineOverlay.style.display = 'block'
+                    }
+                    
+                    // Re-enable launch area if it was mistakenly hidden by close handler race condition
+                    toggleOverlay(false)
+                    toggleLaunchArea(true)
+
+                    // Create empty provision for latestServerResourcePack.json to prevent game complaints
+                    try {
+                        const serverId = ConfigManager.getSelectedServer()
+                        const instanceDir = ConfigManager.getInstanceDirectory()
+                        const configPath = path.join(instanceDir, serverId, 'config')
+                        const targetFile = path.join(configPath, 'latestServerResourcePack.json')
+                        
+                        if(!fs.existsSync(configPath)){
+                            fs.mkdirSync(configPath, { recursive: true })
+                        }
+                        
+                        fs.writeFileSync(targetFile, '{}')
+                        loggerLaunchSuite.info('Created empty latestServerResourcePack.json due to offline mode (recovery).')
+                        
+                    } catch(writeErr) {
+                        loggerLaunchSuite.warn('Failed to write empty latestServerResourcePack.json', writeErr)
+                    }
+
+                } else {
+                    showLaunchFailure(Lang.queryJS('landing.errorDownload'), err.displayable || Lang.queryJS('landing.errorConsole'))
+                    return
+                }
+            }
         }
     } else {
         loggerLaunchSuite.info('No invalid files, skipping download.')
@@ -666,6 +794,23 @@ async function dlAsync(login = true) {
     if(login) {
         const authUser = ConfigManager.getSelectedAccount()
         loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
+
+        if(AuthManager.isAPIUnavailable) {
+            loggerLaunchSuite.info('Offline mode detected. Disabling "KeepTheResourcePack" mod to prevent crash.')
+            if(serv.modules) {
+                const originalCount = serv.modules.length;
+                serv.modules = serv.modules.filter(m => {
+                    const name = (m.rawModule.name || "").toLowerCase()
+                    const id = (m.rawModule.id || "").toLowerCase()
+                    // Check against potential naming conventions for the mod
+                    return !name.includes('keeptheresourcepack') && !id.includes('keeptheresourcepack')
+                })
+                if(serv.modules.length < originalCount){
+                    loggerLaunchSuite.info(`Successfully removed "KeepTheResourcePack" from mod list.`)
+                }
+            }
+        }
+
         let pb = new ProcessBuilder(serv, versionData, modLoaderData, authUser, remote.app.getVersion())
         setLaunchDetails(Lang.queryJS('landing.launching'))
 

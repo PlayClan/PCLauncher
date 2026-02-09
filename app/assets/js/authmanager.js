@@ -22,6 +22,9 @@ const log = LoggerUtil.getLogger('AuthManager')
 
 const AUTH_MODE = { FULL: 0, MS_REFRESH: 1, MC_REFRESH: 2 }
 
+exports.isAPIUnavailable = false
+
+
 /**
  * Perform the full MS Auth flow in a given mode.
  * 
@@ -279,9 +282,12 @@ async function validateSelectedPlayClanAccount(){
     }).catch((error) => {
         console.log(error)
         isServerDown = true;
+        return null
     });
 
-    if (responseData.response.status == 1) {
+    exports.isAPIUnavailable = isServerDown
+
+    if (responseData && responseData.response && responseData.response.status == 1) {
         ConfigManager.updatePlayClanAuthAccount(
             current.uuid,
             responseData.data.request.playcoin,
