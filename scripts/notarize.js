@@ -1,5 +1,4 @@
 require('dotenv').config();
-const { notarize } = require('@electron/notarize');
 
 exports.default = async function notarizing(context) {
   const { electronPlatformName, appOutDir } = context;  
@@ -7,6 +6,7 @@ exports.default = async function notarizing(context) {
     return;
   }
 
+  const { notarize } = await import('@electron/notarize');
   const appName = context.packager.appInfo.productFilename;
 
   return await notarize({
