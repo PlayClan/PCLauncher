@@ -40,6 +40,8 @@ class ProcessBuilder {
         this.usingLiteLoader = false
         this.usingFabricLoader = false
         this.llPath = null
+        this._resolvedMojangLibraries = null
+        this._resolvedMojangNativePath = null
     }
     
     /**
@@ -48,6 +50,8 @@ class ProcessBuilder {
     build(){
         fs.ensureDirSync(this.gameDir)
         const tempNativePath = path.join(os.tmpdir(), ConfigManager.getTempNativeFolder(), crypto.pseudoRandomBytes(16).toString('hex'))
+        this._ensureNativeDirectory(tempNativePath)
+        this._resolveMojangLibraries(tempNativePath)
         process.throwDeprecation = true
         this.setupLiteLoader()
         logger.info('Using liteloader:', this.usingLiteLoader)
@@ -433,6 +437,12 @@ class ProcessBuilder {
         args.push('-Xms' + ConfigManager.getMinRAM(this.server.rawServer.id))
         args = args.concat(ConfigManager.getJVMOptions(this.server.rawServer.id))
 
+        // Some mod-loader manifests do not include the vanilla natives_directory
+        // property. Keep the extracted-native path usable in that case.
+        if(!args.some(arg => typeof arg === 'string' && arg.startsWith('-Djava.library.path='))){
+            args.push('-Djava.library.path=' + tempNativePath)
+        }
+
         // Main Java Class
         args.push(this.modManifest.mainClass)
 
@@ -721,11 +731,18 @@ class ProcessBuilder {
      * @returns {{[id: string]: string}} An object containing the paths of each library mojang declares.
      */
     _resolveMojangLibraries(tempNativePath){
-        const nativesRegex = /.+:natives-([^-]+)(?:-(.+))?/
+        const nativesRegex = /^.+:natives-([^-:]+)(?:-(.+))?$/
         const libs = {}
 
+        if(this._resolvedMojangLibraries != null && this._resolvedMojangNativePath === tempNativePath){
+            return this._resolvedMojangLibraries
+        }
+
         const libArr = this.vanillaManifest.libraries
-        fs.ensureDirSync(tempNativePath)
+        const nativeLibraryPath = this._getNativeLibraryDirectory(tempNativePath)
+        this._ensureNativeDirectory(nativeLibraryPath)
+        let nativeArtifactCount = 0
+        let extractedNativeFileCount = 0
         for(let i=0; i<libArr.length; i++){
             const lib = libArr[i]
             if(isLibraryCompatible(lib.rules, lib.natives)){
@@ -739,51 +756,8 @@ class ProcessBuilder {
                     // Location of native zip.
                     const to = path.join(this.libPath, artifact.path)
 
-                    let zip = new AdmZip(to)
-                    let zipEntries = zip.getEntries()
-
-                    // Unzip the native zip.
-                    for(let i=0; i<zipEntries.length; i++){
-                        const fileName = zipEntries[i].entryName
-
-                        let shouldExclude = false
-
-                        // Exclude noted files.
-                        exclusionArr.forEach(function(exclusion){
-                            if(fileName.indexOf(exclusion) > -1){
-                                shouldExclude = true
-                            }
-                        })
-
-                        // Extract the file.
-                        if(!shouldExclude){
-                            fs.writeFile(path.join(tempNativePath, fileName), zipEntries[i].getData(), (err) => {
-                                if(err){
-                                    logger.error('Error while extracting native library:', err)
-                                }
-                            })
-                        }
-
-                    }
-                }
-                // 1.19+ logic
-                else if(lib.name.includes('natives-')) {
-
-                    const regexTest = nativesRegex.exec(lib.name)
-                    // const os = regexTest[1]
-                    const arch = regexTest[2] ?? 'x64'
-
-                    if(arch != process.arch) {
-                        continue
-                    }
-
-                    // Extract the native library.
-                    const exclusionArr = lib.extract != null ? lib.extract.exclude : ['META-INF/', '.git', '.sha1']
-                    const artifact = lib.downloads.artifact
-
-                    // Location of native zip.
-                    const to = path.join(this.libPath, artifact.path)
-
+                    this._validateNativeArtifact(to, lib.name)
+                    nativeArtifactCount++
                     let zip = new AdmZip(to)
                     let zipEntries = zip.getEntries()
 
@@ -804,15 +778,73 @@ class ProcessBuilder {
                             }
                         })
 
-                        const extractName = fileName.includes('/') ? fileName.substring(fileName.lastIndexOf('/')) : fileName
+                        // Extract the file.
+                        if(!shouldExclude){
+                            const destination = this._nativeExtractionPath(nativeLibraryPath, fileName)
+                            fs.ensureDirSync(path.dirname(destination))
+                            fs.writeFileSync(destination, zipEntries[i].getData())
+                            extractedNativeFileCount++
+                        }
+
+                    }
+                }
+                // 1.19+ logic
+                else if(lib.name.includes('natives-')) {
+
+                    const regexTest = nativesRegex.exec(lib.name)
+                    if(regexTest == null) {
+                        logger.warn('Skipping native library with an unrecognised classifier:', lib.name)
+                        continue
+                    }
+
+                    const nativeOs = regexTest[1]
+                    const arch = regexTest[2] ?? 'x64'
+                    const expectedOs = getMojangOS() === 'osx' ? 'macos' : getMojangOS()
+
+                    if(nativeOs !== expectedOs) {
+                        continue
+                    }
+
+                    if(arch != process.arch) {
+                        continue
+                    }
+
+                    // Extract the native library.
+                    const exclusionArr = lib.extract != null ? lib.extract.exclude : ['META-INF/', '.git', '.sha1']
+                    const artifact = lib.downloads.artifact
+
+                    // Location of native zip.
+                    const to = path.join(this.libPath, artifact.path)
+
+                    this._validateNativeArtifact(to, lib.name)
+                    nativeArtifactCount++
+                    let zip = new AdmZip(to)
+                    let zipEntries = zip.getEntries()
+
+                    // Unzip the native zip.
+                    for(let i=0; i<zipEntries.length; i++){
+                        if(zipEntries[i].isDirectory) {
+                            continue
+                        }
+
+                        const fileName = zipEntries[i].entryName
+
+                        let shouldExclude = false
+
+                        // Exclude noted files.
+                        exclusionArr.forEach(function(exclusion){
+                            if(fileName.indexOf(exclusion) > -1){
+                                shouldExclude = true
+                            }
+                        })
+
+                        const extractName = path.basename(fileName)
 
                         // Extract the file.
                         if(!shouldExclude){
-                            fs.writeFile(path.join(tempNativePath, extractName), zipEntries[i].getData(), (err) => {
-                                if(err){
-                                    logger.error('Error while extracting native library:', err)
-                                }
-                            })
+                            const destination = this._nativeExtractionPath(nativeLibraryPath, extractName)
+                            fs.writeFileSync(destination, zipEntries[i].getData())
+                            extractedNativeFileCount++
                         }
 
                     }
@@ -828,7 +860,99 @@ class ProcessBuilder {
             }
         }
 
+        if(nativeArtifactCount > 0 && extractedNativeFileCount === 0){
+            throw new Error(`Native library archives were found, but no files were extracted to ${nativeLibraryPath}.`)
+        }
+
+        logger.info(`Extracted ${extractedNativeFileCount} native files to ${nativeLibraryPath}`)
+        this._resolvedMojangLibraries = libs
+        this._resolvedMojangNativePath = tempNativePath
         return libs
+    }
+
+    /**
+     * Resolve the directory expected by java.library.path from the vanilla JVM
+     * arguments. Minecraft 26.2 uses ${natives_directory}/java, while older
+     * manifests point java.library.path directly at ${natives_directory}.
+     *
+     * @param {string} tempNativePath The root native directory.
+     * @returns {string} The directory containing extracted JVM native libraries.
+     */
+    _getNativeLibraryDirectory(tempNativePath){
+        const jvmArguments = this.vanillaManifest.arguments?.jvm ?? []
+        for(const argument of jvmArguments){
+            const values = typeof argument === 'string'
+                ? [argument]
+                : Array.isArray(argument?.value)
+                    ? argument.value
+                    : [argument?.value]
+
+            for(const value of values){
+                if(typeof value !== 'string' || !value.startsWith('-Djava.library.path=')){
+                    continue
+                }
+
+                const configuredPath = value.substring('-Djava.library.path='.length)
+                const resolvedPath = configuredPath.replace('${natives_directory}', tempNativePath)
+                if(!resolvedPath.includes('${')){
+                    return path.normalize(resolvedPath)
+                }
+            }
+        }
+
+        return tempNativePath
+    }
+
+    /**
+     * Ensure the path passed to the JVM is a real directory.
+     *
+     * @param {string} tempNativePath The path to store the native libraries.
+     * @returns {string} The validated native directory path.
+     */
+    _ensureNativeDirectory(tempNativePath){
+        if(typeof tempNativePath !== 'string' || tempNativePath.trim().length === 0){
+            throw new Error('The native library directory path is empty.')
+        }
+
+        try {
+            fs.ensureDirSync(tempNativePath)
+            if(!fs.statSync(tempNativePath).isDirectory()){
+                throw new Error('The native library path is not a directory.')
+            }
+        } catch(err) {
+            logger.error(`Unable to prepare native library directory: ${tempNativePath}`, err)
+            throw err
+        }
+
+        return tempNativePath
+    }
+
+    /**
+     * Validate a downloaded native JAR before attempting extraction.
+     *
+     * @param {string} artifactPath The local native JAR path.
+     * @param {string} libraryName The Maven library name for diagnostics.
+     */
+    _validateNativeArtifact(artifactPath, libraryName){
+        if(typeof artifactPath !== 'string' || !fs.existsSync(artifactPath) || !fs.statSync(artifactPath).isFile()){
+            throw new Error(`Native library artifact is missing or is not a file for ${libraryName}: ${artifactPath}`)
+        }
+    }
+
+    /**
+     * Resolve a native archive entry under the validated extraction directory.
+     *
+     * @param {string} tempNativePath The path to store the native libraries.
+     * @param {string} fileName The archive entry name.
+     * @returns {string} The safe extraction path.
+     */
+    _nativeExtractionPath(tempNativePath, fileName){
+        const nativeRoot = path.resolve(this._ensureNativeDirectory(tempNativePath))
+        const destination = path.resolve(nativeRoot, fileName)
+        if(destination !== nativeRoot && !destination.startsWith(nativeRoot + path.sep)){
+            throw new Error(`Refusing to extract native archive entry outside the native directory: ${fileName}`)
+        }
+        return destination
     }
 
     /**

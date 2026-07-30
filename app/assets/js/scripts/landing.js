@@ -53,6 +53,22 @@ const loggerLanding = LoggerUtil.getLogger('Landing')
 
 let webPort; 
 
+const playClanStatusLinkSelector = '[data-playclan-status-link]'
+document.addEventListener('click', (e) => {
+    const statusLink = e.target.closest?.(playClanStatusLinkSelector)
+    if(statusLink == null){
+        return
+    }
+
+    e.preventDefault()
+    shell.openExternal('https://status.playclan.hu')
+})
+document.addEventListener('dragstart', (e) => {
+    if(e.target.closest?.(playClanStatusLinkSelector) != null){
+        e.preventDefault()
+    }
+})
+
 /* Launch Progress Wrapper Functions */
 
 /**
@@ -327,7 +343,7 @@ const refreshPlayClanStatus = async function(){
             <span class="mojangStatusPlayers">Offline</span>
         </div>`
         tooltipEssentialHTML += `<div class="mojangStatusContainer" style="justify-content: center;">
-            <a href="#" name="playclanStatusLink" style="color: #ff4d4d; text-decoration: none; user-select: none; cursor: pointer;">status.playclan.hu</a>
+            <a href="#" data-playclan-status-link style="color: #ff4d4d; text-decoration: none; user-select: none; cursor: pointer;">status.playclan.hu</a>
         </div>`
     }
     
@@ -400,19 +416,6 @@ const refreshPlayClanStatus = async function(){
     
     document.getElementById('mojangStatusEssentialContainer').innerHTML = tooltipEssentialHTML
     document.getElementById('mojang_status_icon').style.color = MojangRestAPI.statusToHex(status)
-
-    const statusLink = document.getElementsByName('playclanStatusLink')
-    if(statusLink){
-        for(let i=0; i<statusLink.length; i++){
-            statusLink[i].addEventListener('click', (e) => {
-                e.preventDefault()
-                shell.openExternal('https://status.playclan.hu')
-            })
-            statusLink[i].addEventListener('dragstart', (e) => {
-                e.preventDefault()
-            })
-        }
-    }
 }
 
 const refreshServerStatus = async (fade = false) => {
